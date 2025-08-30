@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Upload, FileText, Download, Edit, Trash2, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+
+
 interface Prescription {
   id: string;
   petId: string;
@@ -175,7 +177,11 @@ const PrescriptionManager: React.FC<Props> = ({ petId }) => {
 
       {/* Add Prescription Form */}
       {showAddForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{
+          background: 'linear-gradient(135deg, rgba(0,188,212,0.6) 0%, rgba(156,39,176,0.6) 100%)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)'
+        }}>
           <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-900">Add Prescription</h3>

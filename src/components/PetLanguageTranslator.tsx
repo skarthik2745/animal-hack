@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Mic, Play, Square, Volume2, RotateCcw, Loader2 } from 'lucide-react';
 import { Card } from './Card';
 
@@ -99,14 +99,95 @@ const PetLanguageTranslator: React.FC = () => {
     "🐹 Hamsters make soft squeaks when they're content"
   ];
 
+  useEffect(() => {
+    const createRollingBones = () => {
+      const container = document.querySelector('.translator-page');
+      if (!container) return;
+      
+      const colors = ['#F5DEB3', '#DEB887', '#D2B48C', '#F4A460', '#CD853F'];
+      
+      for (let i = 0; i < 35; i++) {
+        const bone = document.createElement('div');
+        bone.className = 'rolling-bone';
+        bone.innerHTML = '🦴';
+        bone.style.color = colors[Math.floor(Math.random() * colors.length)];
+        bone.style.top = Math.random() * 90 + 5 + '%';
+        bone.style.right = '-60px';
+        bone.style.animationDelay = i * 1 + 's';
+        bone.style.animationDuration = '15s';
+        bone.style.fontSize = (Math.random() * 20 + 30) + 'px';
+        container.appendChild(bone);
+      }
+    };
+    
+    createRollingBones();
+    const interval = setInterval(createRollingBones, 15000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 pt-20">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">🎙️ Pet Language Translator</h1>
-          <p className="text-lg text-gray-600">Record your pet's sounds and get fun AI translations!</p>
-          <p className="text-sm text-gray-500 mt-2">*For entertainment purposes - not scientifically accurate</p>
-        </div>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Poppins:wght@400;500;600&display=swap');
+        .translator-page {
+          position: relative;
+          min-height: 100vh;
+          padding-top: 80px;
+          background: linear-gradient(135deg, #FFF8DC 0%, #E6F3FF 100%);
+          overflow: hidden;
+        }
+        
+        .rolling-bone {
+          position: absolute;
+          animation: rollBone linear infinite;
+          z-index: 0;
+        }
+        
+        @keyframes rollBone {
+          0% {
+            transform: translateX(0) rotate(0deg);
+            right: -60px;
+          }
+          100% {
+            transform: translateX(-100vw) rotate(-360deg);
+            right: 100vw;
+          }
+        }
+        
+        .translator-heading {
+          font-family: 'Fredoka One', cursive;
+          font-size: 4rem;
+          background: linear-gradient(90deg, #FF6B35, #F7931E, #FFD23F);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-shadow: 0px 4px 12px rgba(255, 107, 53, 0.3);
+          margin-bottom: 1rem;
+        }
+        
+        .translator-subtext {
+          font-family: 'Poppins', sans-serif;
+          font-size: 1.3rem;
+          font-weight: 500;
+          color: #4A5568;
+        }
+        
+        .translator-disclaimer {
+          font-family: 'Poppins', sans-serif;
+          font-size: 1rem;
+          color: #718096;
+          margin-top: 0.5rem;
+        }
+      `}</style>
+      
+      <div className="translator-page">
+        <div className="max-w-4xl mx-auto px-4 py-8" style={{position: 'relative', zIndex: 1}}>
+          <div className="text-center mb-8">
+            <h1 className="translator-heading">Pet Language Translator</h1>
+            <p className="translator-subtext">Record your pet's sounds and get fun AI translations!</p>
+            <p className="translator-disclaimer">*For entertainment purposes - not scientifically accurate</p>
+          </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recording Section */}
@@ -254,8 +335,9 @@ const PetLanguageTranslator: React.FC = () => {
             ))}
           </div>
         </Card>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

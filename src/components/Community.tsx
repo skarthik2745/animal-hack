@@ -7,6 +7,217 @@ import { useAuth } from '../AuthContext';
 import ChatScreen from './ChatScreen';
 import toast from 'react-hot-toast';
 
+// Community Page Styles
+const communityStyles = `
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.community-container {
+  background: linear-gradient(135deg, #e6f3ff 0%, #f0f8ff 50%, #fff8f0 100%);
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.floating-animals {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.floating-animal {
+  position: absolute;
+  font-size: 24px;
+  opacity: 0.7;
+  animation: floatAnimals 15s linear infinite;
+  user-select: none;
+}
+
+@keyframes floatAnimals {
+  0% {
+    transform: translateX(-50px) translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateX(var(--end-x)) translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.community-heading {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 900;
+  font-size: 3.5rem;
+  text-align: center;
+  background: linear-gradient(135deg, #14b8a6 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 2;
+  letter-spacing: 2px;
+  filter: drop-shadow(0 2px 4px rgba(20, 184, 166, 0.2));
+}
+
+.community-subtext {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.25rem;
+  color: #8b5cf6;
+  text-align: center;
+  max-width: 48rem;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+  position: relative;
+  z-index: 2;
+  font-weight: 700;
+}
+
+.modern-search-bar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.modern-search-bar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.search-input {
+  border-radius: 16px;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.search-input:focus {
+  border-color: #14b8a6;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+  background: white;
+}
+
+.filter-select {
+  border-radius: 16px;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.filter-select:focus {
+  border-color: #14b8a6;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+  background: white;
+}
+
+.gradient-btn-join {
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.gradient-btn-join:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4), 0 0 20px rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, #059669 0%, #0891b2 100%);
+}
+
+.gradient-btn-share {
+  background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.gradient-btn-share:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4), 0 0 20px rgba(245, 158, 11, 0.3);
+  background: linear-gradient(135deg, #d97706 0%, #dc2626 100%);
+}
+
+.gradient-btn-create {
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.gradient-btn-create:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4), 0 0 20px rgba(139, 92, 246, 0.3);
+  background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
+}
+
+.community-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.community-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-animal { animation: none; }
+}
+`;
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleElement = document.createElement('style');
+  styleElement.textContent = communityStyles;
+  document.head.appendChild(styleElement);
+}
+
 interface Community {
   id: string;
   name: string;
@@ -87,6 +298,32 @@ const Community: React.FC = () => {
     privacy: 'public' as 'public' | 'private',
     logo: ''
   });
+
+  // Generate floating animal emojis
+  useEffect(() => {
+    const createFloatingAnimals = () => {
+      const container = document.querySelector('.floating-animals');
+      if (!container) return;
+      
+      container.innerHTML = '';
+      
+      const animalEmojis = ['🐶', '🐱', '🐹', '🐰', '🦜', '🐢', '🐕', '🐈', '🐇', '🐦', '🦮', '🐕‍🦺', '🐓', '🐾'];
+      
+      for (let i = 0; i < 80; i++) {
+        const animal = document.createElement('div');
+        animal.className = 'floating-animal';
+        animal.textContent = animalEmojis[Math.floor(Math.random() * animalEmojis.length)];
+        animal.style.left = Math.random() * 100 + '%';
+        animal.style.fontSize = (Math.random() * 10 + 20) + 'px';
+        animal.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        animal.style.animationDelay = Math.random() * -15 + 's';
+        animal.style.setProperty('--end-x', (Math.random() * 200 - 100) + 'px');
+        container.appendChild(animal);
+      }
+    };
+    
+    createFloatingAnimals();
+  }, []);
 
   useEffect(() => {
     const savedCommunities = localStorage.getItem('animalCommunities');
@@ -456,58 +693,59 @@ const Community: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
+    <div className="community-container py-20 px-4 sm:px-6 lg:px-8">
+      <div className="floating-animals"></div>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            🐾 Animal Lovers Community
+          <h1 className="community-heading">
+            Animal Lovers Community
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="community-subtext">
             Connect with fellow animal lovers, share experiences, and build a stronger community for animal welfare
           </p>
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+        <div className="modern-search-bar p-6 mb-8">
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-teal-500 h-5 w-5" />
               <input
                 type="text"
-                placeholder="Search communities..."
+                placeholder="🔍 Search communities..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="search-input w-full pl-12 pr-4 py-3 text-gray-700 placeholder-gray-500"
               />
             </div>
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="filter-select px-4 py-3 text-gray-700"
             >
-              <option value="">All Categories</option>
+              <option value="">🏷️ All Categories</option>
               {categories.map(category => (
                 <option key={category} value={category}>{category}</option>
               ))}
             </select>
             <input
               type="text"
-              placeholder="Filter by location..."
+              placeholder="📍 Filter by location..."
               value={locationFilter}
               onChange={(e) => setLocationFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="filter-select px-4 py-3 text-gray-700 placeholder-gray-500"
             />
-            <Button onClick={() => setShowCreateForm(true)} className="bg-emerald-600 hover:bg-emerald-700">
+            <button onClick={() => setShowCreateForm(true)} className="gradient-btn-create px-6 py-3 flex items-center">
               <Plus className="h-4 w-4 mr-2" />
               Create Community
-            </Button>
+            </button>
           </div>
         </div>
 
         {/* Communities Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {filteredCommunities.map((community) => (
-            <Card key={community.id} className="overflow-hidden hover:shadow-xl transition-shadow">
+            <div key={community.id} className="community-card">
               <div className="relative h-48">
                 <img
                   src={community.logo}
@@ -520,7 +758,7 @@ const Community: React.FC = () => {
                   </Badge>
                 </div>
               </div>
-              <CardContent className="p-6">
+              <div className="p-6">
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 mb-1">{community.name}</h3>
@@ -555,33 +793,30 @@ const Community: React.FC = () => {
 
                 <div className="flex space-x-2">
                   {user && community.members.some(member => member.id === user.id) ? (
-                    <Button
+                    <button
                       onClick={() => openCommunityChat(community)}
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-700"
-                      size="sm"
+                      className="gradient-btn-join flex-1 px-4 py-2 text-sm flex items-center justify-center"
                     >
                       <MessageCircle className="h-4 w-4 mr-1" />
                       Open Chat
-                    </Button>
+                    </button>
                   ) : (
-                    <Button
+                    <button
                       onClick={() => joinCommunity(community.id)}
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-700"
-                      size="sm"
+                      className="gradient-btn-join flex-1 px-4 py-2 text-sm flex items-center justify-center"
                     >
                       Join Community
-                    </Button>
+                    </button>
                   )}
-                  <Button
+                  <button
                     onClick={() => shareContent(community.name, 'community')}
-                    variant="outline"
-                    size="sm"
+                    className="gradient-btn-share px-4 py-2 text-sm flex items-center justify-center"
                   >
                     <Share2 className="h-4 w-4" />
-                  </Button>
+                  </button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
 
@@ -870,9 +1105,9 @@ const Community: React.FC = () => {
             <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-medium text-gray-900 mb-2">No communities found</h3>
             <p className="text-gray-600 mb-4">Try adjusting your search filters or create a new community.</p>
-            <Button onClick={() => setShowCreateForm(true)} className="bg-emerald-600 hover:bg-emerald-700">
+            <button onClick={() => setShowCreateForm(true)} className="gradient-btn-create px-8 py-3">
               Create Your First Community
-            </Button>
+            </button>
           </div>
         )}
       </div>

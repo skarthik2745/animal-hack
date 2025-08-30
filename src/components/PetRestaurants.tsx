@@ -2,6 +2,83 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Search, MapPin, Phone, Mail, Upload, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+// Modern Pet Theme CSS
+const petThemeStyles = `
+:root{
+  --rose-600:#FF3B5E;
+  --rose-400:#FF97B1;
+  --sunset:#FF7A45;
+}
+
+.page-bg{
+  position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden;
+  background: linear-gradient(135deg, #FFFEF7 0%, #F5F5DC 50%, #FAF0E6 100%);
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(218,165,32,0.05) 35px, rgba(218,165,32,0.05) 70px),
+    url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23DAA520' fill-opacity='0.08'%3E%3Cpath d='M20 16c-1.5 0-2.5 1-2.5 2.5s1 2.5 2.5 2.5 2.5-1 2.5-2.5-1-2.5-2.5-2.5z'/%3E%3Cpath d='M15 12c-1 0-1.5 0.5-1.5 1.5s0.5 1.5 1.5 1.5 1.5-0.5 1.5-1.5-0.5-1.5-1.5-1.5z'/%3E%3Cpath d='M25 12c-1 0-1.5 0.5-1.5 1.5s0.5 1.5 1.5 1.5 1.5-0.5 1.5-1.5-0.5-1.5-1.5-1.5z'/%3E%3Cpath d='M15 22c-1 0-1.5 0.5-1.5 1.5s0.5 1.5 1.5 1.5 1.5-0.5 1.5-1.5-0.5-1.5-1.5-1.5z'/%3E%3Cpath d='M25 22c-1 0-1.5 0.5-1.5 1.5s0.5 1.5 1.5 1.5 1.5-0.5 1.5-1.5-0.5-1.5-1.5-1.5z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.page-bg::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(255,182,193,0.3), transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(173,216,230,0.3), transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(221,160,221,0.2), transparent 50%);
+  animation: floatBubbles 20s ease-in-out infinite;
+}
+
+.page-bg::after{
+  content:"";
+  position:absolute; inset:0;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23FFB6C1' fill-opacity='0.1'%3E%3Cpath d='M30 25c-2.5 0-4.5 2-4.5 4.5s2 4.5 4.5 4.5 4.5-2 4.5-4.5-2-4.5-4.5-4.5z'/%3E%3Cpath d='M22 20c-1.5 0-2.5 1-2.5 2.5s1 2.5 2.5 2.5 2.5-1 2.5-2.5-1-2.5-2.5-2.5z'/%3E%3Cpath d='M38 20c-1.5 0-2.5 1-2.5 2.5s1 2.5 2.5 2.5 2.5-1 2.5-2.5-1-2.5-2.5-2.5z'/%3E%3Cpath d='M22 35c-1.5 0-2.5 1-2.5 2.5s1 2.5 2.5 2.5 2.5-1 2.5-2.5-1-2.5-2.5-2.5z'/%3E%3Cpath d='M38 35c-1.5 0-2.5 1-2.5 2.5s1 2.5 2.5 2.5 2.5-1 2.5-2.5-1-2.5-2.5-2.5z'/%3E%3C/g%3E%3C/svg%3E");
+  animation: pawFloat 25s linear infinite;
+}
+
+@keyframes floatBubbles{
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-20px) rotate(120deg); }
+  66% { transform: translateY(-10px) rotate(240deg); }
+}
+
+@keyframes pawFloat{
+  0% { transform: translateX(0px) translateY(0px); }
+  25% { transform: translateX(10px) translateY(-15px); }
+  50% { transform: translateX(-5px) translateY(-25px); }
+  75% { transform: translateX(-15px) translateY(-10px); }
+  100% { transform: translateX(0px) translateY(0px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 1s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .page-bg::before, .page-bg::after { animation: none; }
+  .animate-fadeIn { animation: none; }
+}
+
+.btn {
+  display:inline-flex; align-items:center; gap:10px;
+  border-radius:10px; padding:10px 16px; font-weight:600;
+  transition: transform .16s ease, box-shadow .16s ease, background-color .16s ease;
+  border: none; cursor: pointer; pointer-events: auto;
+}
+`;
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleElement = document.createElement('style');
+  styleElement.textContent = petThemeStyles;
+  document.head.appendChild(styleElement);
+}
+
 interface Restaurant {
   id: string;
   name: string;
@@ -39,6 +116,46 @@ const PetRestaurants: React.FC = () => {
   ];
 
   useEffect(() => {
+    // Generate animated galaxy stars
+    const createGalaxyStars = () => {
+      const container = document.querySelector('.galaxy-stars');
+      if (!container) return;
+      
+      for (let i = 0; i < 50; i++) {
+        const star = document.createElement('div');
+        star.className = 'galaxy-star';
+        
+        const starType = Math.random();
+        if (starType > 0.7) {
+          star.classList.add('star-violet');
+        } else if (starType > 0.4) {
+          star.classList.add('star-blue');
+        } else {
+          star.classList.add('star-white');
+        }
+        
+        const size = Math.random() * 8 + 4;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = '-20px';
+        star.style.animationDelay = Math.random() * 5 + 's';
+        star.style.animationDuration = (Math.random() * 6 + 8) + 's';
+        
+        container.appendChild(star);
+        
+        setTimeout(() => {
+          if (star.parentNode) {
+            star.parentNode.removeChild(star);
+          }
+        }, 15000);
+      }
+    };
+    
+    createGalaxyStars();
+    
+    const interval = setInterval(createGalaxyStars, 1000);
+    
     const sampleData: Restaurant[] = [
       {
         id: '1',
@@ -91,6 +208,8 @@ const PetRestaurants: React.FC = () => {
       setRestaurants(stored);
       setFilteredRestaurants(stored);
     }
+    
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -150,40 +269,146 @@ const PetRestaurants: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: '#FFF8F0' }}>
-      <div className="max-w-7xl mx-auto">
+    <>
+      <style>{`
+        .galaxy-container {
+          background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%);
+          min-height: 100vh;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .galaxy-stars {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100vh;
+          pointer-events: none;
+          z-index: 0;
+        }
+        
+        .galaxy-star {
+          position: absolute;
+          border-radius: 50%;
+          animation: floatDown linear infinite;
+        }
+        
+        .star-white {
+          background: white;
+          box-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 255, 255, 0.6);
+        }
+        
+        .star-blue {
+          background: #87ceeb;
+          box-shadow: 0 0 18px rgba(135, 206, 235, 0.9), 0 0 35px rgba(135, 206, 235, 0.7);
+        }
+        
+        .star-violet {
+          background: #dda0dd;
+          box-shadow: 0 0 20px rgba(221, 160, 221, 0.9), 0 0 40px rgba(221, 160, 221, 0.6);
+        }
+        
+        @keyframes floatDown {
+          0% {
+            transform: translateY(-50px) scale(0.5);
+            opacity: 0;
+          }
+          5% {
+            opacity: 1;
+          }
+          95% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(calc(100vh + 100px)) scale(1.5);
+            opacity: 0;
+          }
+        }
+        
+        .galaxy-content {
+          position: relative;
+          z-index: 1;
+        }
+      `}</style>
+      
+      <div className="galaxy-container">
+        <div className="galaxy-stars"></div>
+        
+        <div className="galaxy-content min-h-screen py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
         
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+          <h1 className="text-5xl font-bold mb-4 animate-fadeIn" style={{ 
+            fontFamily: 'Playfair Display, serif',
+            background: 'linear-gradient(135deg, #00cfff, #39ff14)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 30px rgba(0, 207, 255, 0.5)',
+            fontWeight: 700,
+            letterSpacing: '1px'
+          }}>
             🐾 Pet-Friendly Restaurants
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+          <p className="text-xl max-w-3xl mx-auto mb-8 animate-fadeIn" style={{ 
+            color: '#ff6ec7',
+            fontFamily: 'Playfair Display, serif',
+            fontStyle: 'italic',
+            fontWeight: 500,
+            textShadow: '0 0 15px rgba(255, 110, 199, 0.3)'
+          }}>
             Discover restaurants where you and your furry friends are welcome!
           </p>
           
           <button
             onClick={() => setShowForm(true)}
-            className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-4 rounded-2xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center mx-auto"
+            className="btn btn-primary inline-flex items-center gap-3 px-8 py-4 rounded-xl font-semibold transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-lg"
+            style={{
+              backgroundColor: '#FF3B5E',
+              color: '#fff',
+              border: 'none',
+              cursor: 'pointer',
+              zIndex: 10,
+              position: 'relative'
+            }}
           >
-            <Plus className="h-6 w-6 mr-2" />
+            <Plus className="h-6 w-6" />
             Register Your Restaurant
           </button>
         </div>
 
         {/* Search & Filters */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <div className="rounded-2xl p-6 mb-8 relative z-10" style={{
+          backgroundColor: '#ffffff',
+          border: '1px solid #F2E9EB',
+          boxShadow: '0 6px 18px rgba(43,43,43,0.08)',
+          borderRadius: '16px'
+        }}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
             {/* Search */}
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" style={{ color: '#B8860B' }} />
               <input
                 type="text"
                 placeholder="Search restaurants or locations..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500"
+                className="w-full pl-10 pr-4 py-3 rounded-xl transition-all duration-200"
+                style={{
+                  border: '1.5px solid #F2E9EB',
+                  backgroundColor: '#ffffff',
+                  color: '#2B2B2B'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#DAA520';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(218, 165, 32, 0.1)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#F2E9EB';
+                  e.target.style.boxShadow = 'none';
+                }}
               />
             </div>
 
@@ -193,11 +418,25 @@ const PetRestaurants: React.FC = () => {
                 <button
                   key={facility.name}
                   onClick={() => toggleFacility(facility.name)}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                    selectedFacilities.includes(facility.name)
-                      ? 'bg-green-500 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                  className="btn-chip px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 relative z-10"
+                  style={{
+                    backgroundColor: selectedFacilities.includes(facility.name) ? '#FF97B1' : '#ffffff',
+                    color: selectedFacilities.includes(facility.name) ? '#fff' : '#FF3B5E',
+                    border: '1.5px solid #FF97B1',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!selectedFacilities.includes(facility.name)) {
+                      e.currentTarget.style.backgroundColor = '#FF97B1';
+                      e.currentTarget.style.color = '#fff';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!selectedFacilities.includes(facility.name)) {
+                      e.currentTarget.style.backgroundColor = '#ffffff';
+                      e.currentTarget.style.color = '#FF3B5E';
+                    }
+                  }}
                 >
                   {facility.icon} {facility.name}
                 </button>
@@ -211,7 +450,21 @@ const PetRestaurants: React.FC = () => {
           {filteredRestaurants.map(restaurant => (
             <div
               key={restaurant.id}
-              className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300"
+              className="overflow-hidden transition-all duration-300 transform hover:scale-102 relative z-10"
+              style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '16px',
+                border: '1px solid #F2E9EB',
+                boxShadow: '0 6px 18px rgba(43,43,43,0.08)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = '0 12px 32px rgba(255, 59, 94, 0.15), 0 6px 18px rgba(43,43,43,0.08)';
+                e.currentTarget.style.transform = 'scale(1.02)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = '0 6px 18px rgba(43,43,43,0.08)';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
             >
               <img
                 src={restaurant.image}
@@ -220,23 +473,30 @@ const PetRestaurants: React.FC = () => {
               />
 
               <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <h3 className="text-xl font-bold mb-2" style={{ 
+                  fontFamily: 'Poppins, sans-serif',
+                  color: '#2B2B2B'
+                }}>
                   {restaurant.name}
                 </h3>
                 
-                <div className="flex items-center text-gray-600 mb-3">
-                  <MapPin className="h-4 w-4 mr-2 text-blue-500" />
-                  <span className="text-sm">{restaurant.location}</span>
+                <div className="flex items-center mb-3">
+                  <MapPin className="h-4 w-4 mr-2" style={{ color: '#FF7A45' }} />
+                  <span className="text-sm" style={{ color: '#6E6E6E' }}>{restaurant.location}</span>
                 </div>
 
-                <p className="text-gray-700 text-sm mb-4">{restaurant.description}</p>
+                <p className="text-sm mb-4" style={{ color: '#6E6E6E' }}>{restaurant.description}</p>
 
                 <div className="mb-4">
                   <div className="flex flex-wrap gap-2">
                     {restaurant.facilities.map(facility => (
                       <span
                         key={facility}
-                        className="inline-flex items-center px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full"
+                        className="inline-flex items-center px-2 py-1 text-xs rounded-full"
+                        style={{
+                          backgroundColor: 'rgba(255, 151, 177, 0.15)',
+                          color: '#FF3B5E'
+                        }}
                       >
                         {getFacilityIcon(facility)} {facility}
                       </span>
@@ -247,16 +507,38 @@ const PetRestaurants: React.FC = () => {
                 <div className="flex space-x-3">
                   <button
                     onClick={() => window.open(`tel:${restaurant.phone}`)}
-                    className="flex-1 text-white py-2 px-4 rounded-lg transition-colors text-sm font-medium flex items-center justify-center"
-                    style={{ backgroundColor: '#4CAF50' }}
+                    className="btn btn-primary flex-1 py-2 px-4 rounded-lg text-sm font-semibold flex items-center justify-center transition-all duration-200 transform hover:-translate-y-0.5"
+                    style={{
+                      backgroundColor: '#FF3B5E',
+                      color: '#fff',
+                      border: 'none',
+                      cursor: 'pointer'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#E5324F';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#FF3B5E';
+                    }}
                   >
                     <Phone className="h-4 w-4 mr-1" />
                     Contact
                   </button>
                   <button
                     onClick={() => window.open(`https://maps.google.com/?q=${encodeURIComponent(restaurant.location)}`, '_blank')}
-                    className="flex-1 text-white py-2 px-4 rounded-lg transition-colors text-sm font-medium flex items-center justify-center"
-                    style={{ backgroundColor: '#3F51B5' }}
+                    className="btn btn-accent flex-1 py-2 px-4 rounded-lg text-sm font-semibold flex items-center justify-center transition-all duration-200 transform hover:-translate-y-0.5"
+                    style={{
+                      backgroundColor: '#FF7A45',
+                      color: '#111',
+                      border: 'none',
+                      cursor: 'pointer'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#E6693D';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#FF7A45';
+                    }}
                   >
                     <MapPin className="h-4 w-4 mr-1" />
                     Location
@@ -269,23 +551,42 @@ const PetRestaurants: React.FC = () => {
 
         {/* No Results */}
         {filteredRestaurants.length === 0 && (
-          <div className="text-center py-16">
+          <div className="text-center py-16 relative z-10">
             <div className="text-6xl mb-4">🐾</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">No restaurants found</h3>
-            <p className="text-gray-600">Try adjusting your search or filters</p>
+            <h3 className="text-2xl font-bold mb-4" style={{ color: '#2B2B2B' }}>No restaurants found</h3>
+            <p style={{ color: '#6E6E6E' }}>Try adjusting your search or filters</p>
           </div>
         )}
 
         {/* Registration Form */}
         {showForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 flex items-center justify-center p-4" style={{
+            backgroundColor: 'rgba(11,11,11,0.55)',
+            zIndex: 1000
+          }}>
+            <div className="p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto" style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '16px',
+              border: '1px solid #F2E9EB',
+              boxShadow: '0 6px 18px rgba(43,43,43,0.08)'
+            }}>
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <h2 className="text-2xl font-bold" style={{ 
+                  fontFamily: 'Poppins, sans-serif',
+                  color: '#2B2B2B'
+                }}>
                   Register Your Restaurant
                 </h2>
-                <button onClick={() => setShowForm(false)} className="text-gray-500 hover:text-gray-700">
-                  <X className="h-6 w-6" />
+                <button 
+                  onClick={() => setShowForm(false)} 
+                  className="w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200"
+                  style={{
+                    backgroundColor: '#ffffff',
+                    color: '#FF3B5E',
+                    border: '1px solid #F2E9EB'
+                  }}
+                >
+                  <X className="h-5 w-5" />
                 </button>
               </div>
 
@@ -390,14 +691,24 @@ const PetRestaurants: React.FC = () => {
                 <div className="flex space-x-4">
                   <button
                     type="submit"
-                    className="flex-1 bg-green-500 text-white py-3 rounded-xl font-semibold hover:bg-green-600"
+                    className="btn btn-primary flex-1 py-3 rounded-xl font-semibold transition-all duration-200"
+                    style={{
+                      backgroundColor: '#FF3B5E',
+                      color: '#fff',
+                      border: 'none'
+                    }}
                   >
                     Register Restaurant
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowForm(false)}
-                    className="flex-1 border border-gray-300 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-50"
+                    className="btn btn-outline flex-1 py-3 rounded-xl font-semibold transition-all duration-200"
+                    style={{
+                      backgroundColor: '#ffffff',
+                      color: '#FF3B5E',
+                      border: '1.5px solid #FF97B1'
+                    }}
                   >
                     Cancel
                   </button>
@@ -406,8 +717,10 @@ const PetRestaurants: React.FC = () => {
             </div>
           </div>
         )}
+        </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

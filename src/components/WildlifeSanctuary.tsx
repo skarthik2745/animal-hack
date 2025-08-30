@@ -480,6 +480,38 @@ const WildlifeSanctuary: React.FC = () => {
     fetchSanctuaries();
   }, [selectedCountry, selectedRegion, selectedType]);
 
+  // Generate animated stars
+  useEffect(() => {
+    const createStars = () => {
+      const container = document.querySelector('.starry-background');
+      if (!container) return;
+      
+      container.innerHTML = '';
+      
+      for (let i = 0; i < 2500; i++) {
+        const star = document.createElement('div');
+        const size = Math.random();
+        if (size > 0.9) {
+          star.className = 'star large';
+        } else if (size > 0.7) {
+          star.className = 'star medium';
+        } else {
+          star.className = 'star';
+        }
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        container.appendChild(star);
+      }
+    };
+    
+    createStars();
+    
+    const interval = setInterval(createStars, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   const toggleFavorite = (sanctuaryId: string) => {
     const newFavorites = favorites.includes(sanctuaryId)
       ? favorites.filter(id => id !== sanctuaryId)
@@ -724,12 +756,211 @@ const WildlifeSanctuary: React.FC = () => {
   const stories = posts.filter(post => post.isStory && post.storyExpiry && new Date(post.storyExpiry) > new Date());
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 pt-20 px-4">
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
+        
+        .wildlife-container {
+          background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+          min-height: 100vh;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .starry-background {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          pointer-events: none;
+          z-index: 0;
+        }
+        
+        .wildlife-container > * {
+          position: relative;
+          z-index: 1;
+        }
+        
+        .star {
+          position: absolute;
+          background: white;
+          border-radius: 50%;
+          width: 1px;
+          height: 1px;
+          box-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+          animation: twinkle 2s infinite;
+        }
+        
+        .star.medium {
+          width: 2px;
+          height: 2px;
+          box-shadow: 0 0 4px rgba(255, 255, 255, 0.9);
+          animation: twinkle 2.5s infinite;
+        }
+        
+        .star.large {
+          width: 3px;
+          height: 3px;
+          box-shadow: 0 0 6px rgba(255, 255, 255, 1);
+          animation: twinkle 3s infinite;
+        }
+        
+        @keyframes twinkle {
+          0%, 100% { 
+            opacity: 0.2;
+            transform: scale(0.8);
+          }
+          25% {
+            opacity: 0.6;
+            transform: scale(1);
+          }
+          50% { 
+            opacity: 1;
+            transform: scale(1.2);
+          }
+          75% {
+            opacity: 0.6;
+            transform: scale(1);
+          }
+        }
+        
+        .wildlife-heading {
+          font-family: 'Poppins', sans-serif;
+          font-weight: 900;
+          font-size: 3.5rem;
+          text-align: center;
+          background: linear-gradient(135deg, #ffd700 0%, #ff6b6b 50%, #4ecdc4 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+          margin-bottom: 1rem;
+          position: relative;
+          z-index: 2;
+          letter-spacing: 1px;
+        }
+        
+        .wildlife-subtext {
+          font-family: 'Poppins', sans-serif;
+          font-size: 1.25rem;
+          color: #e0e6ed;
+          text-align: center;
+          max-width: 48rem;
+          margin: 0 auto 2rem;
+          line-height: 1.6;
+          position: relative;
+          z-index: 2;
+          font-weight: 700;
+        }
+        
+        .search-btn {
+          background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+          border: none;
+          border-radius: 12px;
+          color: white;
+          font-weight: 600;
+          font-family: 'Poppins', sans-serif;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        .search-btn:hover {
+          transform: translateY(-2px) scale(1.05);
+          box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+          background: linear-gradient(135deg, #ee5a24 0%, #d63031 100%);
+        }
+        
+        .website-btn {
+          background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+          border: none;
+          border-radius: 12px;
+          color: white;
+          font-weight: 600;
+          font-family: 'Poppins', sans-serif;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+        }
+        
+        .website-btn:hover {
+          transform: translateY(-2px) scale(1.05);
+          box-shadow: 0 8px 25px rgba(0, 184, 148, 0.4);
+          background: linear-gradient(135deg, #00a085 0%, #00896b 100%);
+        }
+        
+        .location-btn {
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #ffd700;
+          border-radius: 12px;
+          color: #ffd700;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          backdrop-filter: blur(10px);
+        }
+        
+        .location-btn:hover {
+          background: #ffd700;
+          color: #1a1a2e;
+          transform: scale(1.1);
+          box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        .favorite-btn {
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #ff6b6b;
+          border-radius: 12px;
+          color: #ff6b6b;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          backdrop-filter: blur(10px);
+        }
+        
+        .favorite-btn:hover {
+          background: #ff6b6b;
+          color: white;
+          transform: scale(1.1);
+          box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        .favorite-btn.active {
+          background: #ff6b6b;
+          color: white;
+        }
+        
+        .share-btn {
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #4ecdc4;
+          border-radius: 12px;
+          color: #4ecdc4;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          backdrop-filter: blur(10px);
+        }
+        
+        .share-btn:hover {
+          background: #4ecdc4;
+          color: white;
+          transform: scale(1.1);
+          box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+          .star { animation: none; }
+        }
+      `}</style>
+      
+      <div className="wildlife-container pt-20 px-4">
       <div className="max-w-7xl mx-auto">
+        <div className="starry-background"></div>
+        
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">🌿 Wildlife Sanctuaries</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <h1 className="wildlife-heading">
+            🌿 Wildlife Sanctuaries
+          </h1>
+          <p className="wildlife-subtext">
             Explore wildlife sanctuaries worldwide and follow their conservation stories
           </p>
         </div>
@@ -880,17 +1111,15 @@ const WildlifeSanctuary: React.FC = () => {
                         <div className="flex space-x-2">
                           <button
                             onClick={() => toggleFavorite(sanctuary.id)}
-                            className={`p-2 rounded-full transition-colors ${
-                              favorites.includes(sanctuary.id)
-                                ? 'bg-red-100 text-red-600'
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            className={`favorite-btn p-2 ${
+                              favorites.includes(sanctuary.id) ? 'active' : ''
                             }`}
                           >
                             <Heart className="h-4 w-4" fill={favorites.includes(sanctuary.id) ? 'currentColor' : 'none'} />
                           </button>
                           <button
                             onClick={() => shareContent(sanctuary.name, 'sanctuary')}
-                            className="p-2 text-gray-400 hover:text-emerald-600 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
+                            className="share-btn p-2"
                           >
                             <Share2 className="h-4 w-4" />
                           </button>
@@ -940,34 +1169,31 @@ const WildlifeSanctuary: React.FC = () => {
 
                       <div className="flex space-x-2">
                         {sanctuary.website && sanctuary.website !== 'Not available' ? (
-                          <Button
+                          <button
                             onClick={() => window.open(sanctuary.website.startsWith('http') ? sanctuary.website : `https://${sanctuary.website}`, '_blank')}
-                            className="flex-1 bg-emerald-600 hover:bg-emerald-700"
-                            size="sm"
+                            className="website-btn flex-1 px-4 py-2 text-sm"
                           >
                             Visit Website
-                          </Button>
+                          </button>
                         ) : (
-                          <Button
+                          <button
                             onClick={() => window.open(`https://www.google.com/search?q=${encodeURIComponent(sanctuary.name + ' official website')}`, '_blank')}
-                            className="flex-1 bg-emerald-600 hover:bg-emerald-700"
-                            size="sm"
+                            className="search-btn flex-1 px-4 py-2 text-sm"
                           >
                             Search Online
-                          </Button>
+                          </button>
                         )}
-                        <Button
+                        <button
                           onClick={() => {
                             const query = sanctuary.coordinates?.lat && sanctuary.coordinates?.lng 
                               ? `${sanctuary.coordinates.lat},${sanctuary.coordinates.lng}`
                               : encodeURIComponent(sanctuary.name + ' ' + sanctuary.location);
                             window.open(`https://maps.google.com/?q=${query}`, '_blank');
                           }}
-                          variant="outline"
-                          size="sm"
+                          className="location-btn p-2"
                         >
                           <Map className="h-4 w-4" />
-                        </Button>
+                        </button>
                       </div>
                     </CardContent>
                   </Card>
@@ -1911,7 +2137,8 @@ const WildlifeSanctuary: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

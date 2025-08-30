@@ -107,12 +107,11 @@ const PetDoctors: React.FC = () => {
   });
 
   useEffect(() => {
-    // Load chat sessions from localStorage
     const savedChats = localStorage.getItem('doctorChats');
     if (savedChats) {
       setChatSessions(JSON.parse(savedChats));
     }
-    // Load dummy doctors
+    
     setDoctors([
       {
         id: '1',
@@ -171,7 +170,6 @@ const PetDoctors: React.FC = () => {
       }
     ]);
 
-    // Load real hospitals
     setHospitals([
       {
         id: '1',
@@ -242,14 +240,12 @@ const PetDoctors: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Handle openChat parameter when doctors are loaded
     const urlParams = new URLSearchParams(window.location.search);
     const openChatId = urlParams.get('openChat');
     if (openChatId && doctors.length > 0) {
       const doctor = doctors.find(d => d.id === openChatId);
       if (doctor) {
         openChat(doctor);
-        // Clear the URL parameter
         window.history.replaceState({}, '', '/pet-doctors');
       }
     }
@@ -349,7 +345,7 @@ const PetDoctors: React.FC = () => {
     }
     setSelectedDoctor(doctor);
     setShowChat(true);
-    setActiveTab('doctors'); // Ensure we're on the right tab
+    setActiveTab('doctors');
   };
 
   const sendMessage = () => {
@@ -381,7 +377,6 @@ const PetDoctors: React.FC = () => {
     localStorage.setItem('doctorChats', JSON.stringify(updatedSessions));
     setChatMessage('');
 
-    // Simulate doctor response after 2 seconds
     setTimeout(() => {
       const doctorResponse: Message = {
         id: (Date.now() + 1).toString(),
@@ -450,40 +445,86 @@ const PetDoctors: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8" style={{ 
+      background: 'linear-gradient(135deg, #E8F5E8 0%, #FFFFFF 100%)',
+      backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%232ECC71" fill-opacity="0.03"%3E%3Cpath d="M30 30c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zm0 0c0 11.046 8.954 20 20 20s20-8.954 20-20-8.954-20-20-20-20 8.954-20 20z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+      backgroundSize: '60px 60px'
+    }}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Pet Doctors & Hospitals
+          <h1 
+            className="text-4xl sm:text-5xl font-bold mb-4"
+            style={{ 
+              background: 'linear-gradient(135deg, #2ECC71 0%, #3498DB 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textShadow: '0 4px 8px rgba(0,0,0,0.15)',
+              fontFamily: 'Poppins, sans-serif'
+            }}
+          >
+            🐾 Pet Doctors & Hospitals
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl" style={{ color: '#7F8C8D', fontFamily: 'Nunito, sans-serif' }}>
             Find qualified veterinarians and trusted animal hospitals near you
           </p>
         </div>
 
         {/* Tab Navigation */}
         <div className="flex justify-center mb-8">
-          <div className="bg-gray-100 p-1 rounded-lg">
+          <div className="flex gap-4 p-2 bg-white rounded-xl shadow-lg" style={{ border: '1px solid #F5F6FA' }}>
             <button
               onClick={() => setActiveTab('doctors')}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === 'doctors'
-                  ? 'bg-white text-emerald-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+              className={`px-8 py-4 rounded-xl text-sm font-bold transition-all duration-300 flex items-center transform hover:scale-105 ${
+                activeTab === 'doctors' ? 'shadow-lg' : 'hover:shadow-md'
               }`}
+              style={{ 
+                backgroundColor: activeTab === 'doctors' ? '#2ECC71' : 'white',
+                color: activeTab === 'doctors' ? 'white' : '#2ECC71',
+                border: activeTab === 'doctors' ? 'none' : '2px solid #2ECC71',
+                borderRadius: '10px'
+              }}
+              onMouseEnter={(e) => {
+                if (activeTab !== 'doctors') {
+                  e.currentTarget.style.backgroundColor = '#2ECC71';
+                  e.currentTarget.style.color = 'white';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (activeTab !== 'doctors') {
+                  e.currentTarget.style.backgroundColor = 'white';
+                  e.currentTarget.style.color = '#2ECC71';
+                }
+              }}
             >
-              <Stethoscope className="h-4 w-4 inline mr-2" />
+              <span className="mr-2">🩺</span>
               Veterinary Doctors
             </button>
             <button
               onClick={() => setActiveTab('hospitals')}
-              className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === 'hospitals'
-                  ? 'bg-white text-emerald-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+              className={`px-8 py-4 rounded-xl text-sm font-bold transition-all duration-300 flex items-center transform hover:scale-105 ${
+                activeTab === 'hospitals' ? 'shadow-lg' : 'hover:shadow-md'
               }`}
+              style={{ 
+                backgroundColor: activeTab === 'hospitals' ? '#3498DB' : 'white',
+                color: activeTab === 'hospitals' ? 'white' : '#3498DB',
+                border: activeTab === 'hospitals' ? 'none' : '2px solid #3498DB',
+                borderRadius: '10px'
+              }}
+              onMouseEnter={(e) => {
+                if (activeTab !== 'hospitals') {
+                  e.currentTarget.style.backgroundColor = '#3498DB';
+                  e.currentTarget.style.color = 'white';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (activeTab !== 'hospitals') {
+                  e.currentTarget.style.backgroundColor = 'white';
+                  e.currentTarget.style.color = '#3498DB';
+                }
+              }}
             >
-              <Building2 className="h-4 w-4 inline mr-2" />
+              <span className="mr-2">🏥</span>
               Veterinary Hospitals
             </button>
           </div>
@@ -493,17 +534,42 @@ const PetDoctors: React.FC = () => {
         {activeTab === 'doctors' && (
           <div>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Veterinary Doctors</h2>
-              <Button onClick={() => setShowDoctorForm(true)}>
-                <Plus className="h-4 w-4 mr-2" />
+              <h2 
+                className="text-3xl font-bold"
+                style={{ 
+                  background: 'linear-gradient(135deg, #2ECC71 0%, #3498DB 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                  fontFamily: 'Poppins, sans-serif'
+                }}
+              >
+                Veterinary Doctors
+              </h2>
+              <button
+                onClick={() => setShowDoctorForm(true)}
+                className="px-8 py-4 rounded-xl font-bold text-white transition-all duration-300 transform hover:scale-105 flex items-center shadow-lg hover:shadow-xl"
+                style={{ 
+                  background: 'linear-gradient(135deg, #2ECC71 0%, #3498DB 100%)',
+                  border: 'none'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(46, 204, 113, 0.5)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+                }}
+              >
+                <Plus className="h-5 w-5 mr-2" />
                 Register as Doctor
-              </Button>
+              </button>
             </div>
 
             {/* Doctor Registration Form */}
             {showDoctorForm && (
-              <Card className="p-6 mb-8">
-                <h3 className="text-xl font-bold mb-4">Doctor Registration</h3>
+              <div className="bg-white rounded-2xl shadow-lg p-6 mb-8" style={{ border: '1px solid #E0F2F1' }}>
+                <h3 className="text-xl font-bold mb-4" style={{ color: '#1A237E' }}>Doctor Registration</h3>
                 <form onSubmit={handleDoctorSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <input
                     type="text"
@@ -511,7 +577,8 @@ const PetDoctors: React.FC = () => {
                     value={doctorForm.name}
                     onChange={(e) => setDoctorForm({ ...doctorForm, name: e.target.value })}
                     required
-                    className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                    className="px-4 py-3 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                   />
                   <input
                     type="text"
@@ -519,7 +586,8 @@ const PetDoctors: React.FC = () => {
                     value={doctorForm.specialization}
                     onChange={(e) => setDoctorForm({ ...doctorForm, specialization: e.target.value })}
                     required
-                    className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                    className="px-4 py-3 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                   />
                   <input
                     type="text"
@@ -527,7 +595,8 @@ const PetDoctors: React.FC = () => {
                     value={doctorForm.experience}
                     onChange={(e) => setDoctorForm({ ...doctorForm, experience: e.target.value })}
                     required
-                    className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                    className="px-4 py-3 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                   />
                   <input
                     type="tel"
@@ -535,7 +604,8 @@ const PetDoctors: React.FC = () => {
                     value={doctorForm.phone}
                     onChange={(e) => setDoctorForm({ ...doctorForm, phone: e.target.value })}
                     required
-                    className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                    className="px-4 py-3 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                   />
                   <input
                     type="email"
@@ -543,7 +613,8 @@ const PetDoctors: React.FC = () => {
                     value={doctorForm.email}
                     onChange={(e) => setDoctorForm({ ...doctorForm, email: e.target.value })}
                     required
-                    className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                    className="px-4 py-3 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                   />
                   <div>
                     <input
@@ -555,44 +626,61 @@ const PetDoctors: React.FC = () => {
                     />
                     <label
                       htmlFor="doctor-photo"
-                      className="flex items-center justify-center px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-emerald-400"
+                      className="flex items-center justify-center px-4 py-3 border-2 border-dashed rounded-xl cursor-pointer hover:border-teal-400 transition-colors"
+                      style={{ borderColor: '#E0F2F1' }}
                     >
                       <Upload className="h-4 w-4 mr-2" />
                       Upload Profile Picture
                     </label>
                   </div>
                   <div className="md:col-span-2 flex space-x-4">
-                    <Button type="submit">Register</Button>
-                    <Button type="button" variant="outline" onClick={() => setShowDoctorForm(false)}>
+                    <button 
+                      type="submit"
+                      className="px-6 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105"
+                      style={{ backgroundColor: '#00BFA6', color: 'white' }}
+                    >
+                      Register
+                    </button>
+                    <button 
+                      type="button" 
+                      onClick={() => setShowDoctorForm(false)}
+                      className="px-6 py-3 rounded-xl font-medium transition-all duration-300"
+                      style={{ border: '2px solid #E0F2F1', color: '#424242' }}
+                    >
                       Cancel
-                    </Button>
+                    </button>
                   </div>
                 </form>
-              </Card>
+              </div>
             )}
 
             {/* Doctors Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {doctors.map((doctor) => (
-                <Card key={doctor.id} className="overflow-hidden">
-                  <CardContent className="p-6">
+                <div 
+                  key={doctor.id} 
+                  className="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl transform hover:scale-105"
+                  style={{ border: '1px solid #E0F2F1' }}
+                >
+                  <div className="p-6">
                     <div className="flex flex-col items-center text-center">
                       <div className="relative mb-4">
                         <img
                           src={doctor.profilePicture}
                           alt={doctor.name}
-                          className="w-24 h-24 rounded-full object-cover cursor-pointer hover:opacity-90 transition-opacity border-4 border-emerald-100"
+                          className="w-24 h-24 rounded-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                          style={{ border: '4px solid #2ECC71' }}
                           onClick={() => openImageViewer(doctor.profilePicture)}
                         />
                         {doctor.verified && (
-                          <Badge variant="success" className="absolute -top-1 -right-1">
+                          <div className="absolute -top-1 -right-1 bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
                             ✓
-                          </Badge>
+                          </div>
                         )}
                       </div>
-                      <h3 className="text-lg font-bold text-gray-900 mb-1">{doctor.name}</h3>
-                      <p className="text-emerald-600 font-medium mb-2">{doctor.specialization}</p>
-                      <p className="text-gray-600 text-sm mb-2">Experience: {doctor.experience}</p>
+                      <h3 className="text-lg font-bold mb-1" style={{ color: '#2C3E50', fontFamily: 'Poppins, sans-serif' }}>{doctor.name}</h3>
+                      <p className="font-medium mb-2" style={{ color: '#2ECC71' }}>{doctor.specialization}</p>
+                      <p className="text-sm mb-2" style={{ color: '#7F8C8D' }}>Experience: {doctor.experience}</p>
                       
                       {/* Rating */}
                       <div className="flex items-center mb-3">
@@ -601,51 +689,74 @@ const PetDoctors: React.FC = () => {
                             key={i}
                             className={`h-4 w-4 ${
                               i < Math.floor(doctor.rating)
-                                ? 'text-yellow-400 fill-current'
-                                : 'text-gray-300'
+                                ? 'fill-current'
+                                : ''
                             }`}
+                            style={{ color: '#FFC107' }}
                           />
                         ))}
-                        <span className="ml-2 text-sm text-gray-600">{doctor.rating}</span>
+                        <span className="ml-2 text-sm" style={{ color: '#7F8C8D' }}>{doctor.rating}</span>
                       </div>
                       
-                      <div className="flex items-center text-gray-600 mb-4">
+                      <div className="flex items-center mb-4" style={{ color: '#7F8C8D' }}>
                         <Phone className="h-4 w-4 mr-2" />
                         <span className="text-sm">{doctor.phone}</span>
                       </div>
                       
                       {/* Action Buttons */}
                       <div className="flex flex-col w-full space-y-2">
-                        <Button 
-                          size="sm" 
-                          className="w-full"
+                        <button 
+                          className="w-full px-4 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                          style={{ backgroundColor: '#27AE60', color: 'white', borderRadius: '10px' }}
                           onClick={() => handleCall(doctor.phone)}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#229954';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#27AE60';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                          }}
                         >
-                          <Phone className="h-4 w-4 mr-2" />
+                          <Phone className="h-4 w-4 mr-2 inline" />
                           Contact
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="w-full"
+                        </button>
+                        <button 
+                          className="w-full px-4 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                          style={{ backgroundColor: '#2980B9', color: 'white', borderRadius: '10px' }}
                           onClick={() => openChat(doctor)}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#21618C';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#2980B9';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                          }}
                         >
-                          <MessageCircle className="h-4 w-4 mr-2" />
+                          <MessageCircle className="h-4 w-4 mr-2 inline" />
                           Message
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="w-full"
+                        </button>
+                        <button 
+                          className="w-full px-4 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                          style={{ backgroundColor: '#F1C40F', color: '#2C3E50', borderRadius: '10px' }}
                           onClick={() => openAppointmentForm('doctor', doctor.id)}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#F39C12';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#F1C40F';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                          }}
                         >
-                          <Calendar className="h-4 w-4 mr-2" />
+                          <Calendar className="h-4 w-4 mr-2 inline" />
                           Book Appointment
-                        </Button>
+                        </button>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -655,17 +766,42 @@ const PetDoctors: React.FC = () => {
         {activeTab === 'hospitals' && (
           <div>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Veterinary Hospitals</h2>
-              <Button onClick={() => setShowHospitalForm(true)}>
-                <Plus className="h-4 w-4 mr-2" />
+              <h2 
+                className="text-3xl font-bold"
+                style={{ 
+                  background: 'linear-gradient(135deg, #2ECC71 0%, #3498DB 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                  fontFamily: 'Poppins, sans-serif'
+                }}
+              >
+                Veterinary Hospitals
+              </h2>
+              <button
+                onClick={() => setShowHospitalForm(true)}
+                className="px-8 py-4 rounded-xl font-bold text-white transition-all duration-300 transform hover:scale-105 flex items-center shadow-lg hover:shadow-xl"
+                style={{ 
+                  background: 'linear-gradient(135deg, #2ECC71 0%, #3498DB 100%)',
+                  border: 'none'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(52, 152, 219, 0.5)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+                }}
+              >
+                <Plus className="h-5 w-5 mr-2" />
                 Register Hospital
-              </Button>
+              </button>
             </div>
 
             {/* Hospital Registration Form */}
             {showHospitalForm && (
-              <Card className="p-6 mb-8">
-                <h3 className="text-xl font-bold mb-4">Hospital Registration</h3>
+              <div className="bg-white rounded-2xl shadow-lg p-6 mb-8" style={{ border: '1px solid #E0F2F1' }}>
+                <h3 className="text-xl font-bold mb-4" style={{ color: '#1A237E' }}>Hospital Registration</h3>
                 <form onSubmit={handleHospitalSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <input
                     type="text"
@@ -673,7 +809,8 @@ const PetDoctors: React.FC = () => {
                     value={hospitalForm.name}
                     onChange={(e) => setHospitalForm({ ...hospitalForm, name: e.target.value })}
                     required
-                    className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                    className="px-4 py-3 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                   />
                   <input
                     type="text"
@@ -681,7 +818,8 @@ const PetDoctors: React.FC = () => {
                     value={hospitalForm.address}
                     onChange={(e) => setHospitalForm({ ...hospitalForm, address: e.target.value })}
                     required
-                    className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                    className="px-4 py-3 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                   />
                   <input
                     type="tel"
@@ -689,7 +827,8 @@ const PetDoctors: React.FC = () => {
                     value={hospitalForm.phone}
                     onChange={(e) => setHospitalForm({ ...hospitalForm, phone: e.target.value })}
                     required
-                    className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                    className="px-4 py-3 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                   />
                   <input
                     type="email"
@@ -697,29 +836,37 @@ const PetDoctors: React.FC = () => {
                     value={hospitalForm.email}
                     onChange={(e) => setHospitalForm({ ...hospitalForm, email: e.target.value })}
                     required
-                    className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                    className="px-4 py-3 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                   />
                   <input
                     type="url"
                     placeholder="Website URL"
                     value={hospitalForm.website}
                     onChange={(e) => setHospitalForm({ ...hospitalForm, website: e.target.value })}
-                    className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                    className="px-4 py-3 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                   />
                   <input
                     type="text"
                     placeholder="Services (comma separated)"
                     value={hospitalForm.services}
                     onChange={(e) => setHospitalForm({ ...hospitalForm, services: e.target.value })}
-                    className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                    className="px-4 py-3 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                   />
                   <div>
-                    <Button type="button" variant="outline" onClick={getCurrentLocation} className="w-full">
+                    <button 
+                      type="button" 
+                      onClick={getCurrentLocation} 
+                      className="w-full px-4 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center"
+                      style={{ border: '2px solid #E0F2F1', color: '#424242' }}
+                    >
                       <MapPin className="h-4 w-4 mr-2" />
                       Get GPS Location
-                    </Button>
+                    </button>
                     {location && (
-                      <p className="text-sm text-green-600 mt-1">
+                      <p className="text-sm mt-1" style={{ color: '#00BFA6' }}>
                         Location: {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
                       </p>
                     )}
@@ -734,26 +881,42 @@ const PetDoctors: React.FC = () => {
                     />
                     <label
                       htmlFor="hospital-photo"
-                      className="flex items-center justify-center px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-emerald-400 w-full"
+                      className="flex items-center justify-center px-4 py-3 border-2 border-dashed rounded-xl cursor-pointer hover:border-teal-400 transition-colors w-full"
+                      style={{ borderColor: '#E0F2F1' }}
                     >
                       <Upload className="h-4 w-4 mr-2" />
                       Upload Hospital Image
                     </label>
                   </div>
                   <div className="md:col-span-2 flex space-x-4">
-                    <Button type="submit">Register Hospital</Button>
-                    <Button type="button" variant="outline" onClick={() => setShowHospitalForm(false)}>
+                    <button 
+                      type="submit"
+                      className="px-6 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105"
+                      style={{ backgroundColor: '#00BFA6', color: 'white' }}
+                    >
+                      Register Hospital
+                    </button>
+                    <button 
+                      type="button" 
+                      onClick={() => setShowHospitalForm(false)}
+                      className="px-6 py-3 rounded-xl font-medium transition-all duration-300"
+                      style={{ border: '2px solid #E0F2F1', color: '#424242' }}
+                    >
                       Cancel
-                    </Button>
+                    </button>
                   </div>
                 </form>
-              </Card>
+              </div>
             )}
 
             {/* Hospitals Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {hospitals.map((hospital) => (
-                <Card key={hospital.id} className="overflow-hidden">
+                <div 
+                  key={hospital.id} 
+                  className="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl transform hover:scale-105"
+                  style={{ border: '1px solid #E0F2F1' }}
+                >
                   <div className="relative">
                     <img
                       src={hospital.image}
@@ -762,8 +925,8 @@ const PetDoctors: React.FC = () => {
                       onClick={() => openImageViewer(hospital.image)}
                     />
                   </div>
-                  <CardContent className="p-4">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2">{hospital.name}</h3>
+                  <div className="p-4">
+                    <h3 className="text-lg font-bold mb-2" style={{ color: '#2C3E50', fontFamily: 'Poppins, sans-serif' }}>{hospital.name}</h3>
                     
                     {/* Rating */}
                     <div className="flex items-center mb-3">
@@ -772,33 +935,35 @@ const PetDoctors: React.FC = () => {
                           key={i}
                           className={`h-4 w-4 ${
                             i < Math.floor(hospital.rating)
-                              ? 'text-yellow-400 fill-current'
-                              : 'text-gray-300'
+                              ? 'fill-current'
+                              : ''
                           }`}
+                          style={{ color: '#FFC107' }}
                         />
                       ))}
-                      <span className="ml-2 text-sm text-gray-600">{hospital.rating}</span>
+                      <span className="ml-2 text-sm" style={{ color: '#7F8C8D' }}>{hospital.rating}</span>
                     </div>
                     
                     <div className="space-y-2 mb-4">
-                      <div className="flex items-start text-gray-600">
-                        <MapPin className="h-4 w-4 mr-2 mt-0.5 text-emerald-600" />
+                      <div className="flex items-start" style={{ color: '#7F8C8D' }}>
+                        <MapPin className="h-4 w-4 mr-2 mt-0.5" style={{ color: '#2ECC71' }} />
                         <span className="text-sm">{hospital.address}</span>
                       </div>
-                      <div className="text-xs text-gray-500 ml-6">
+                      <div className="text-xs ml-6" style={{ color: '#7F8C8D' }}>
                         GPS: {hospital.latitude.toFixed(4)}, {hospital.longitude.toFixed(4)}
                       </div>
-                      <div className="flex items-center text-gray-600">
+                      <div className="flex items-center" style={{ color: '#7F8C8D' }}>
                         <Phone className="h-4 w-4 mr-2" />
                         <span className="text-sm">{hospital.phone}</span>
                       </div>
-                      <div className="flex items-center text-gray-600">
+                      <div className="flex items-center" style={{ color: '#7F8C8D' }}>
                         <Globe className="h-4 w-4 mr-2" />
                         <a
                           href={hospital.website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-emerald-600 hover:underline"
+                          className="text-sm hover:underline"
+                          style={{ color: '#2ECC71' }}
                         >
                           Visit Website
                         </a>
@@ -807,50 +972,79 @@ const PetDoctors: React.FC = () => {
                     
                     <div className="flex flex-wrap gap-1 mb-4">
                       {hospital.services.slice(0, 3).map((service, index) => (
-                        <Badge key={index} variant="info" size="sm">
+                        <span 
+                          key={index} 
+                          className="px-2 py-1 rounded-full text-xs font-medium"
+                          style={{ backgroundColor: '#F5F6FA', color: '#2ECC71' }}
+                        >
                           {service}
-                        </Badge>
+                        </span>
                       ))}
                       {hospital.services.length > 3 && (
-                        <Badge variant="default" size="sm">
+                        <span 
+                          className="px-2 py-1 rounded-full text-xs font-medium"
+                          style={{ backgroundColor: '#F5F6FA', color: '#7F8C8D' }}
+                        >
                           +{hospital.services.length - 3} more
-                        </Badge>
+                        </span>
                       )}
                     </div>
                     
                     {/* Action Buttons */}
                     <div className="flex flex-col space-y-2">
                       <div className="flex space-x-2">
-                        <Button 
-                          size="sm" 
-                          className="flex-1"
+                        <button 
+                          className="flex-1 px-4 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                          style={{ backgroundColor: '#27AE60', color: 'white', borderRadius: '10px' }}
                           onClick={() => handleCall(hospital.phone)}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#229954';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#27AE60';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                          }}
                         >
-                          <Phone className="h-4 w-4 mr-1" />
+                          <Phone className="h-4 w-4 mr-1 inline" />
                           Contact
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="flex-1"
+                        </button>
+                        <button 
+                          className="flex-1 px-4 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                          style={{ backgroundColor: '#F1C40F', color: '#2C3E50', borderRadius: '10px' }}
                           onClick={() => openAppointmentForm('hospital', hospital.id)}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#F39C12';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#F1C40F';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                          }}
                         >
-                          <Calendar className="h-4 w-4 mr-1" />
+                          <Calendar className="h-4 w-4 mr-1 inline" />
                           Book Appointment
-                        </Button>
+                        </button>
                       </div>
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="w-full"
+                      <button 
+                        className="w-full px-4 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                        style={{ backgroundColor: '#8E44AD', color: 'white', borderRadius: '10px' }}
                         onClick={() => openGoogleMaps(hospital.latitude, hospital.longitude, hospital.name)}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#7D3C98';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#8E44AD';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }}
                       >
-                        <MapPin className="h-4 w-4 mr-2" />
+                        <MapPin className="h-4 w-4 mr-2 inline" />
                         Location
-                      </Button>
+                      </button>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -859,12 +1053,13 @@ const PetDoctors: React.FC = () => {
         {/* Chat Interface */}
         {showChat && selectedDoctor && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg w-full max-w-md h-[600px] flex flex-col">
+            <div className="bg-white rounded-2xl w-full max-w-md h-[600px] flex flex-col shadow-2xl">
               {/* Chat Header */}
-              <div className="flex items-center p-4 border-b bg-emerald-50 rounded-t-lg">
+              <div className="flex items-center p-4 border-b rounded-t-2xl" style={{ backgroundColor: '#E0F2F1' }}>
                 <button
                   onClick={() => setShowChat(false)}
-                  className="mr-3 text-gray-600 hover:text-gray-800"
+                  className="mr-3 hover:bg-white rounded-full p-1 transition-colors"
+                  style={{ color: '#616161' }}
                 >
                   <ArrowLeft className="h-5 w-5" />
                 </button>
@@ -872,10 +1067,11 @@ const PetDoctors: React.FC = () => {
                   src={selectedDoctor.profilePicture}
                   alt={selectedDoctor.name}
                   className="w-10 h-10 rounded-full mr-3"
+                  style={{ border: '2px solid #00BFA6' }}
                 />
                 <div>
-                  <h3 className="font-semibold text-gray-900">{selectedDoctor.name}</h3>
-                  <p className="text-sm text-emerald-600">{selectedDoctor.specialization}</p>
+                  <h3 className="font-semibold" style={{ color: '#1A237E' }}>{selectedDoctor.name}</h3>
+                  <p className="text-sm" style={{ color: '#00695C' }}>{selectedDoctor.specialization}</p>
                 </div>
               </div>
 
@@ -889,20 +1085,23 @@ const PetDoctors: React.FC = () => {
                     <div
                       className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
                         message.isFromUser
-                          ? 'bg-emerald-500 text-white'
-                          : 'bg-gray-100 text-gray-900'
+                          ? 'text-white'
+                          : 'text-gray-900'
                       }`}
+                      style={{
+                        backgroundColor: message.isFromUser ? '#00BFA6' : '#F5F5F5'
+                      }}
                     >
                       {message.content}
                       <div className={`text-xs mt-1 ${
-                        message.isFromUser ? 'text-emerald-100' : 'text-gray-500'
+                        message.isFromUser ? 'text-white opacity-75' : 'text-gray-500'
                       }`}>
                         {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </div>
                   </div>
                 )) || (
-                  <div className="text-center text-gray-500 text-sm">
+                  <div className="text-center text-sm" style={{ color: '#616161' }}>
                     Start a conversation with {selectedDoctor.name}
                   </div>
                 )}
@@ -916,12 +1115,17 @@ const PetDoctors: React.FC = () => {
                     value={chatMessage}
                     onChange={(e) => setChatMessage(e.target.value)}
                     placeholder="Type a message..."
-                    className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="flex-1 px-3 py-2 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                     onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
                   />
-                  <Button onClick={sendMessage} size="sm">
+                  <button 
+                    onClick={sendMessage}
+                    className="px-4 py-2 rounded-xl font-medium transition-all duration-300 transform hover:scale-105"
+                    style={{ backgroundColor: '#00BFA6', color: 'white' }}
+                  >
                     <Send className="h-4 w-4" />
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>
@@ -931,8 +1135,8 @@ const PetDoctors: React.FC = () => {
         {/* Appointment Booking Form */}
         {showAppointmentForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg w-full max-w-md p-6">
-              <h3 className="text-xl font-bold mb-4">Book Appointment</h3>
+            <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl">
+              <h3 className="text-xl font-bold mb-4" style={{ color: '#1A237E' }}>Book Appointment</h3>
               <form onSubmit={handleAppointmentSubmit} className="space-y-4">
                 <input
                   type="text"
@@ -940,7 +1144,8 @@ const PetDoctors: React.FC = () => {
                   value={appointmentForm.patientName}
                   onChange={(e) => setAppointmentForm({ ...appointmentForm, patientName: e.target.value })}
                   required
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                  style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                 />
                 <input
                   type="text"
@@ -948,13 +1153,15 @@ const PetDoctors: React.FC = () => {
                   value={appointmentForm.petName}
                   onChange={(e) => setAppointmentForm({ ...appointmentForm, petName: e.target.value })}
                   required
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                  style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                 />
                 <select
                   value={appointmentForm.petType}
                   onChange={(e) => setAppointmentForm({ ...appointmentForm, petType: e.target.value })}
                   required
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                  style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                 >
                   <option value="">Select Pet Type</option>
                   <option value="Dog">Dog</option>
@@ -968,14 +1175,16 @@ const PetDoctors: React.FC = () => {
                   value={appointmentForm.date}
                   onChange={(e) => setAppointmentForm({ ...appointmentForm, date: e.target.value })}
                   required
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                  style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                 />
                 <input
                   type="time"
                   value={appointmentForm.time}
                   onChange={(e) => setAppointmentForm({ ...appointmentForm, time: e.target.value })}
                   required
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                  style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                 />
                 <input
                   type="tel"
@@ -983,27 +1192,35 @@ const PetDoctors: React.FC = () => {
                   value={appointmentForm.phone}
                   onChange={(e) => setAppointmentForm({ ...appointmentForm, phone: e.target.value })}
                   required
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                  style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                 />
                 <textarea
                   placeholder="Reason for visit"
                   value={appointmentForm.reason}
                   onChange={(e) => setAppointmentForm({ ...appointmentForm, reason: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl transition-all duration-300 focus:ring-2 focus:border-transparent"
+                  style={{ border: '2px solid #E0F2F1', focusRingColor: '#00BFA6' }}
                 />
                 <div className="flex space-x-3">
-                  <Button type="submit" className="flex-1">
+                  <button 
+                    type="submit"
+                    className="flex-1 px-4 py-3 rounded-xl font-bold text-white transition-all duration-300 transform hover:scale-105"
+                    style={{ 
+                      background: 'linear-gradient(135deg, #00BFA6 0%, #00695C 100%)'
+                    }}
+                  >
                     Book Appointment
-                  </Button>
-                  <Button 
+                  </button>
+                  <button 
                     type="button" 
-                    variant="outline" 
                     onClick={() => setShowAppointmentForm(false)}
-                    className="flex-1"
+                    className="flex-1 px-4 py-3 rounded-xl font-medium transition-all duration-300"
+                    style={{ border: '2px solid #E0F2F1', color: '#424242' }}
                   >
                     Cancel
-                  </Button>
+                  </button>
                 </div>
               </form>
             </div>
@@ -1016,7 +1233,7 @@ const PetDoctors: React.FC = () => {
             <div className="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center">
               <button
                 onClick={() => setShowImageViewer(false)}
-                className="absolute top-4 right-4 text-white hover:text-gray-300 text-3xl z-10 bg-black/50 rounded-full w-12 h-12 flex items-center justify-center"
+                className="absolute top-4 right-4 text-white hover:text-gray-300 text-3xl z-10 bg-black/50 rounded-full w-12 h-12 flex items-center justify-center transition-colors"
               >
                 <X className="h-6 w-6" />
               </button>

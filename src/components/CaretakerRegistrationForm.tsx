@@ -41,9 +41,9 @@ const CaretakerRegistrationForm: React.FC<CaretakerFormProps> = ({
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8 mb-12">
+    <div className="bg-white rounded-xl shadow-lg p-8 mb-12" style={{backgroundColor: '#ffffff', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.1)'}}>
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-2xl font-bold text-gray-900">Register as Pet Caretaker</h3>
+        <h3 className="text-2xl font-bold text-gray-900" style={{color: '#2e3a59'}}>Register as Pet Caretaker</h3>
         <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
           <X className="h-6 w-6" />
         </button>
@@ -194,7 +194,8 @@ const CaretakerRegistrationForm: React.FC<CaretakerFormProps> = ({
         <div className="flex space-x-4">
           <button 
             type="submit" 
-            className="bg-green-500 text-white px-8 py-3 rounded-lg hover:bg-green-600 transition-colors font-medium"
+            className="text-white px-8 py-3 rounded-lg transition-colors font-medium"
+            style={{background: 'linear-gradient(135deg, #8e24aa, #ba68c8)', fontWeight: 'bold', borderRadius: '10px'}}
           >
             Register as Caretaker
           </button>

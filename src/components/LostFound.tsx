@@ -383,16 +383,220 @@ const LostFound: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Lost & Found Pets 🐾
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Help reunite pets with their families through our community-powered network
-          </p>
-        </div>
+    <>
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600&display=swap');
+          
+          .lost-found-page {
+            background: linear-gradient(135deg, #ff9966 0%, #ff5e62 50%, #ffcc33 100%);
+            position: relative;
+            font-family: 'Poppins', sans-serif;
+          }
+          
+          .lost-found-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+              repeating-linear-gradient(
+                45deg,
+                rgba(255,255,255,0.1) 0px,
+                rgba(255,255,255,0.1) 1px,
+                transparent 1px,
+                transparent 30px
+              );
+            pointer-events: none;
+          }
+          
+          .lost-found-heading {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 3.5rem;
+            color: #2c003e;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+          }
+          
+          .lost-found-subheading {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 1.3rem;
+            color: #004d66;
+            font-style: italic;
+            margin-bottom: 1rem;
+          }
+          
+          .lost-tab {
+            background: #ff0080 !important;
+            color: white !important;
+            border: none;
+            box-shadow: 0 0 15px rgba(255, 0, 128, 0.5);
+            transition: all 0.3s;
+          }
+          
+          .lost-tab:hover {
+            background: #e6006b !important;
+            box-shadow: 0 0 25px rgba(255, 0, 128, 0.8);
+          }
+          
+          .found-tab {
+            background: #00ff80 !important;
+            color: black !important;
+            border: none;
+            box-shadow: 0 0 15px rgba(0, 255, 128, 0.5);
+            transition: all 0.3s;
+          }
+          
+          .found-tab:hover {
+            background: #00e673 !important;
+            box-shadow: 0 0 25px rgba(0, 255, 128, 0.8);
+          }
+          
+          .report-lost-button {
+            background: linear-gradient(45deg, #ff0080, #8000ff) !important;
+            color: white !important;
+            border-radius: 10px;
+            border: none;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(255, 0, 128, 0.4);
+            transition: all 0.3s;
+          }
+          
+          .report-lost-button:hover {
+            background: linear-gradient(45deg, #e6006b, #7300e6) !important;
+            box-shadow: 0 0 30px rgba(255, 0, 128, 0.7);
+          }
+          
+          .lost-chat-button {
+            background: #ff4d4d !important;
+            color: white !important;
+            font-weight: bold !important;
+            border: none;
+            transition: background-color 0.2s;
+          }
+          
+          .lost-chat-button:hover {
+            background: #cc0000 !important;
+          }
+          
+          .lost-call-button {
+            background: #ff6600 !important;
+            color: white !important;
+            border: none;
+            transition: background-color 0.2s;
+          }
+          
+          .lost-call-button:hover {
+            background: #cc5200 !important;
+          }
+          
+          .lost-location-button {
+            background: #ffcc00 !important;
+            color: black !important;
+            border: none;
+            transition: background-color 0.2s;
+          }
+          
+          .lost-location-button:hover {
+            background: #e6b800 !important;
+          }
+          
+          .lost-share-button {
+            background: #800000 !important;
+            color: white !important;
+            border: none;
+            transition: background-color 0.2s;
+          }
+          
+          .lost-share-button:hover {
+            background: #4d0000 !important;
+          }
+          
+          .found-chat-button {
+            background: #4CAF50 !important;
+            color: white !important;
+            font-weight: bold !important;
+            border: none;
+            transition: background-color 0.2s;
+          }
+          
+          .found-chat-button:hover {
+            background: #2e7d32 !important;
+          }
+          
+          .found-call-button {
+            background: #0099cc !important;
+            color: white !important;
+            border: none;
+            transition: background-color 0.2s;
+          }
+          
+          .found-call-button:hover {
+            background: #006080 !important;
+          }
+          
+          .found-location-button {
+            background: #33cc99 !important;
+            color: white !important;
+            border: none;
+            transition: background-color 0.2s;
+          }
+          
+          .found-location-button:hover {
+            background: #248f6a !important;
+          }
+          
+          .found-share-button {
+            background: #663399 !important;
+            color: white !important;
+            border: none;
+            transition: background-color 0.2s;
+          }
+          
+          .found-share-button:hover {
+            background: #4b2466 !important;
+          }
+          
+          .pet-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0px 3px 12px rgba(0,0,0,0.15);
+          }
+          
+          .status-missing {
+            background: #ff1a1a;
+            color: white;
+            font-weight: 700;
+          }
+          
+          .status-reward {
+            background: #33cc33;
+            color: white;
+          }
+          
+          .text-default {
+            color: #333333;
+          }
+          
+          .text-accent {
+            color: #555555;
+          }
+        `
+      }} />
+      
+      <div className="lost-found-page min-h-screen py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto" style={{position: 'relative', zIndex: 1}}>
+          <div className="text-center mb-12">
+            <h1 className="lost-found-heading">
+              Lost & Found Pets 🐾
+            </h1>
+            <p className="lost-found-subheading max-w-3xl mx-auto">
+              Help reunite pets with their families through our community-powered network
+            </p>
+          </div>
 
         {/* Search and Filters */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
@@ -807,10 +1011,8 @@ const LostFound: React.FC = () => {
                 <div className="space-y-2">
                   <button 
                     onClick={() => openChat(post)}
-                    className={`w-full py-2 px-4 rounded-lg transition-colors text-sm font-medium text-white ${
-                      post.type === 'lost' 
-                        ? 'bg-red-500 hover:bg-red-600' 
-                        : 'bg-blue-500 hover:bg-blue-600'
+                    className={`w-full py-2 px-4 rounded-lg transition-colors text-sm font-medium ${
+                      post.type === 'lost' ? 'lost-chat-button' : 'found-chat-button'
                     }`}
                   >
                     <MessageCircle className="h-4 w-4 mr-1 inline" />
@@ -819,27 +1021,33 @@ const LostFound: React.FC = () => {
                   <div className="flex space-x-2">
                     <a
                       href={`tel:${post.contactPhone}`}
-                      className="flex-1 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-center"
+                      className={`flex-1 p-2 rounded-lg transition-colors text-center ${
+                        post.type === 'lost' ? 'lost-call-button' : 'found-call-button'
+                      }`}
                       title="Call"
                     >
-                      <Phone className="h-4 w-4 text-gray-600 mx-auto" />
+                      <Phone className="h-4 w-4 mx-auto" />
                     </a>
                     <button
                       onClick={() => {
                         const query = encodeURIComponent(post.location);
                         window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
                       }}
-                      className="flex-1 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                      className={`flex-1 p-2 rounded-lg transition-colors ${
+                        post.type === 'lost' ? 'lost-location-button' : 'found-location-button'
+                      }`}
                       title="View Location"
                     >
-                      <Navigation className="h-4 w-4 text-gray-600 mx-auto" />
+                      <Navigation className="h-4 w-4 mx-auto" />
                     </button>
                     <button
                       onClick={() => sharePost(post)}
-                      className="flex-1 p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                      className={`flex-1 p-2 rounded-lg transition-colors ${
+                        post.type === 'lost' ? 'lost-share-button' : 'found-share-button'
+                      }`}
                       title="Share Pet Details"
                     >
-                      <Share2 className="h-4 w-4 text-gray-600 mx-auto" />
+                      <Share2 className="h-4 w-4 mx-auto" />
                     </button>
                   </div>
                 </div>
@@ -882,7 +1090,8 @@ const LostFound: React.FC = () => {
           />
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

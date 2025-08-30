@@ -50,6 +50,47 @@ const AdoptionEvents: React.FC = () => {
     const storedParticipations = JSON.parse(localStorage.getItem('event_participations') || '{}');
     setFavorites(storedFavorites);
     setParticipations(storedParticipations);
+    
+    // Generate animated galaxy stars
+    const createGalaxyStars = () => {
+      const container = document.querySelector('.galaxy-stars');
+      if (!container) return;
+      
+      for (let i = 0; i < 50; i++) {
+        const star = document.createElement('div');
+        star.className = 'galaxy-star';
+        
+        const starType = Math.random();
+        if (starType > 0.7) {
+          star.classList.add('star-violet');
+        } else if (starType > 0.4) {
+          star.classList.add('star-blue');
+        } else {
+          star.classList.add('star-white');
+        }
+        
+        const size = Math.random() * 8 + 4;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = '-20px';
+        star.style.animationDelay = Math.random() * 5 + 's';
+        star.style.animationDuration = (Math.random() * 6 + 8) + 's';
+        
+        container.appendChild(star);
+        
+        setTimeout(() => {
+          if (star.parentNode) {
+            star.parentNode.removeChild(star);
+          }
+        }, 15000);
+      }
+    };
+    
+    createGalaxyStars();
+    
+    const interval = setInterval(createGalaxyStars, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -62,8 +103,6 @@ const AdoptionEvents: React.FC = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showShareMenu]);
-
-
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -94,16 +133,13 @@ const AdoptionEvents: React.FC = () => {
       return;
     }
     
-    // Validate required fields
     if (!formData.title || !formData.date || !formData.location || !formData.description) {
       toast.error('Please fill in all required fields');
       return;
     }
     
-    // Parse time from HTML5 time input (HH:MM format)
     let timeString = formData.time || '10:00';
     
-    // Ensure time has seconds for ISO string
     if (timeString.match(/^\d{1,2}:\d{2}$/)) {
       timeString = timeString + ':00';
     } else if (!timeString.match(/^\d{1,2}:\d{2}:\d{2}$/)) {
@@ -243,17 +279,17 @@ const AdoptionEvents: React.FC = () => {
     const statuses = [];
     
     if (isFree) {
-      statuses.push({ status: 'Free', variant: 'success' as const });
+      statuses.push({ status: 'Free', color: '#5BCB5B' });
     }
     
     if (diffDays < 0) {
-      statuses.push({ status: 'Closed', variant: 'secondary' as const });
+      statuses.push({ status: 'Closed', color: '#E74C3C' });
     } else if (diffDays === 0) {
-      statuses.push({ status: 'Open', variant: 'success' as const });
+      statuses.push({ status: 'Open', color: '#3DBDA7' });
     } else if (diffDays <= 20) {
-      statuses.push({ status: 'Coming Soon', variant: 'info' as const });
+      statuses.push({ status: 'Coming Soon', color: '#FF914D' });
     } else {
-      statuses.push({ status: 'Scheduled', variant: 'default' as const });
+      statuses.push({ status: 'Scheduled', color: '#666666' });
     }
     
     return statuses;
@@ -314,7 +350,7 @@ const AdoptionEvents: React.FC = () => {
   const handleEditEvent = (event: Event) => {
     setEditingEvent(event);
     const eventDate = new Date(event.startDate);
-    const timeString = eventDate.toTimeString().slice(0, 5); // Get HH:MM format
+    const timeString = eventDate.toTimeString().slice(0, 5);
     
     setFormData({
       title: event.title,
@@ -334,7 +370,6 @@ const AdoptionEvents: React.FC = () => {
     e.preventDefault();
     if (!editingEvent) return;
     
-    // Handle time format - if it's a simple time like "10:00", assume it's 24-hour format
     let timeString = formData.time;
     if (timeString && !timeString.includes('T') && timeString.match(/^\d{1,2}:\d{2}$/)) {
       timeString = timeString + ':00';
@@ -386,29 +421,108 @@ const AdoptionEvents: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
+    <>
+      <style>{`
+        .galaxy-container {
+          background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%);
+          min-height: 100vh;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .galaxy-stars {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100vh;
+          pointer-events: none;
+          z-index: 0;
+        }
+        
+        .galaxy-star {
+          position: absolute;
+          border-radius: 50%;
+          animation: floatDown linear infinite;
+        }
+        
+        .star-white {
+          background: white;
+          box-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 255, 255, 0.6);
+        }
+        
+        .star-blue {
+          background: #87ceeb;
+          box-shadow: 0 0 18px rgba(135, 206, 235, 0.9), 0 0 35px rgba(135, 206, 235, 0.7);
+        }
+        
+        .star-violet {
+          background: #dda0dd;
+          box-shadow: 0 0 20px rgba(221, 160, 221, 0.9), 0 0 40px rgba(221, 160, 221, 0.6);
+        }
+        
+        @keyframes floatDown {
+          0% {
+            transform: translateY(-50px) scale(0.5);
+            opacity: 0;
+          }
+          5% {
+            opacity: 1;
+          }
+          95% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(calc(100vh + 100px)) scale(1.5);
+            opacity: 0;
+          }
+        }
+        
+        .galaxy-content {
+          position: relative;
+          z-index: 1;
+        }
+      `}</style>
+      
+      <div className="galaxy-container">
+        <div className="galaxy-stars"></div>
+        
+        <div className="galaxy-content min-h-screen py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Animal Adoption Events
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4" style={{ 
+              background: 'linear-gradient(135deg, #00cfff, #ff6ec7)', 
+              WebkitBackgroundClip: 'text', 
+              WebkitTextFillColor: 'transparent',
+              textShadow: '0 0 30px rgba(0, 207, 255, 0.5)'
+            }}>
+              🐾 Animal Adoption Events
             </h1>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl" style={{ 
+              color: '#b388ff',
+              textShadow: '0 0 15px rgba(179, 136, 255, 0.3)'
+            }}>
               Find and host adoption events to help animals find their forever homes
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
-            <Button
-              variant="outline"
+            <button
               onClick={() => setShowFilters(!showFilters)}
+              className="px-6 py-3 rounded-xl font-medium transition-all duration-300 ease-in-out transform hover:scale-105 flex items-center"
+              style={{ backgroundColor: '#FF914D', color: 'white' }}
             >
               <Filter className="mr-2 h-4 w-4" />
               Filters
-            </Button>
-            <Button onClick={() => setShowCreateForm(true)}>
+            </button>
+            <button
+              onClick={() => setShowCreateForm(true)}
+              className="px-6 py-3 rounded-xl font-medium transition-all duration-300 ease-in-out transform hover:scale-105 flex items-center"
+              style={{ backgroundColor: '#3DBDA7', color: 'white' }}
+            >
               <Plus className="mr-2 h-5 w-5" />
               Host Event
-            </Button>
+            </button>
           </div>
         </div>
 
@@ -421,19 +535,21 @@ const AdoptionEvents: React.FC = () => {
               placeholder="Search events..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-3 rounded-xl transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+              style={{ border: '2px solid #E0E0E0', focusRingColor: '#3DBDA7' }}
             />
           </div>
           
           {showFilters && (
-            <Card className="p-6">
+            <div className="bg-white rounded-2xl shadow-lg p-6" style={{ border: '1px solid #E0E0E0', backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
               <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Month</label>
+                  <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Month</label>
                   <select
                     value={filters.month}
                     onChange={(e) => setFilters({ ...filters, month: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    className="w-full px-3 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0E0E0' }}
                   >
                     <option value="">All Months</option>
                     <option value="01">January</option>
@@ -451,21 +567,23 @@ const AdoptionEvents: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
+                  <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>City</label>
                   <input
                     type="text"
                     placeholder="Enter city"
                     value={filters.city}
                     onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    className="w-full px-3 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0E0E0' }}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Animal Type</label>
+                  <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Animal Type</label>
                   <select
                     value={filters.species}
                     onChange={(e) => setFilters({ ...filters, species: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    className="w-full px-3 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0E0E0' }}
                   >
                     <option value="">All Animals</option>
                     <option value="dog">Dogs</option>
@@ -476,11 +594,12 @@ const AdoptionEvents: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Event Type</label>
+                  <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Event Type</label>
                   <select
                     value={filters.eventType}
                     onChange={(e) => setFilters({ ...filters, eventType: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    className="w-full px-3 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                    style={{ border: '2px solid #E0E0E0' }}
                   >
                     <option value="">All Events</option>
                     <option value="offline">Offline</option>
@@ -493,64 +612,69 @@ const AdoptionEvents: React.FC = () => {
                       type="checkbox"
                       checked={filters.freeOnly}
                       onChange={(e) => setFilters({ ...filters, freeOnly: e.target.checked })}
-                      className="mr-2 text-emerald-500 focus:ring-emerald-500"
+                      className="mr-2"
+                      style={{ accentColor: '#3DBDA7' }}
                     />
-                    <span className="text-sm text-gray-700">Free only</span>
+                    <span className="text-sm" style={{ color: '#333333' }}>Free only</span>
                   </label>
                   <label className="flex items-center">
                     <input
                       type="checkbox"
                       checked={filters.verifiedOnly}
                       onChange={(e) => setFilters({ ...filters, verifiedOnly: e.target.checked })}
-                      className="mr-2 text-emerald-500 focus:ring-emerald-500"
+                      className="mr-2"
+                      style={{ accentColor: '#3DBDA7' }}
                     />
-                    <span className="text-sm text-gray-700">Verified NGOs</span>
+                    <span className="text-sm" style={{ color: '#333333' }}>Verified NGOs</span>
                   </label>
                 </div>
               </div>
-            </Card>
+            </div>
           )}
         </div>
 
         {showCreateForm && (
-          <Card className="p-8 mb-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">Create New Adoption Event</h3>
+          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8" style={{ border: '1px solid #E0E0E0', backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
+            <h3 className="text-2xl font-bold mb-6" style={{ color: '#333333' }}>Create New Adoption Event</h3>
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Event Title</label>
+                <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Event Title</label>
                 <input 
                   type="text" 
                   name="title"
                   value={formData.title}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
+                  className="w-full px-4 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                  style={{ border: '2px solid #E0E0E0' }}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Date</label>
                 <input 
                   type="date" 
                   name="date"
                   value={formData.date}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
+                  className="w-full px-4 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                  style={{ border: '2px solid #E0E0E0' }}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Time</label>
+                <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Time</label>
                 <input 
                   type="time" 
                   name="time"
                   value={formData.time}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
+                  className="w-full px-4 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                  style={{ border: '2px solid #E0E0E0' }}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Location</label>
                 <input 
                   type="text" 
                   name="location"
@@ -558,27 +682,30 @@ const AdoptionEvents: React.FC = () => {
                   onChange={handleInputChange}
                   placeholder="Enter event location (e.g., Central Park, New York)"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
+                  className="w-full px-4 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                  style={{ border: '2px solid #E0E0E0' }}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Mobile Number</label>
+                <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Mobile Number</label>
                 <input 
                   type="tel" 
                   name="mobile"
                   value={formData.mobile}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
+                  className="w-full px-4 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                  style={{ border: '2px solid #E0E0E0' }}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Event Cost</label>
+                <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Event Cost</label>
                 <select 
                   name="isFree"
                   value={formData.isFree.toString()}
                   onChange={(e) => setFormData({...formData, isFree: e.target.value === 'true'})}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-4 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                  style={{ border: '2px solid #E0E0E0' }}
                 >
                   <option value="true">Free</option>
                   <option value="false">Paid</option>
@@ -586,18 +713,19 @@ const AdoptionEvents: React.FC = () => {
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Description</label>
                 <textarea 
                   rows={4} 
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-4 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                  style={{ border: '2px solid #E0E0E0' }}
                 ></textarea>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Event Images (Optional)</label>
+                <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Event Images (Optional)</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -608,17 +736,18 @@ const AdoptionEvents: React.FC = () => {
                 />
                 <label 
                   htmlFor="event-images"
-                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-emerald-400 transition-colors cursor-pointer block"
+                  className="border-2 border-dashed rounded-lg p-6 text-center hover:border-teal-400 transition-colors cursor-pointer block"
+                  style={{ borderColor: '#E0E0E0' }}
                 >
                   <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                   <p className="text-gray-600 text-sm">Click to upload event images</p>
                   {formData.images.length > 0 && (
-                    <p className="text-emerald-600 text-sm mt-2">{formData.images.length} image(s) uploaded</p>
+                    <p className="text-sm mt-2" style={{ color: '#3DBDA7' }}>{formData.images.length} image(s) uploaded</p>
                   )}
                 </label>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Event Poster (Optional)</label>
+                <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Event Poster (Optional)</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -628,40 +757,51 @@ const AdoptionEvents: React.FC = () => {
                 />
                 <label 
                   htmlFor="event-poster"
-                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-emerald-400 transition-colors cursor-pointer block"
+                  className="border-2 border-dashed rounded-lg p-6 text-center hover:border-teal-400 transition-colors cursor-pointer block"
+                  style={{ borderColor: '#E0E0E0' }}
                 >
                   <Image className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                   <p className="text-gray-600 text-sm">Click to upload event poster</p>
                   {formData.poster && (
-                    <p className="text-emerald-600 text-sm mt-2">Poster uploaded</p>
+                    <p className="text-sm mt-2" style={{ color: '#3DBDA7' }}>Poster uploaded</p>
                   )}
                 </label>
               </div>
               <div className="md:col-span-2 flex space-x-4">
-                <button type="submit" className="bg-emerald-500 text-white px-6 py-2 rounded-lg hover:bg-emerald-600 transition-colors">
+                <button 
+                  type="submit" 
+                  className="px-6 py-2 rounded-lg font-medium transition-all duration-300 ease-in-out transform hover:scale-105"
+                  style={{ backgroundColor: '#3DBDA7', color: 'white' }}
+                >
                   Create Event
                 </button>
                 <button 
                   type="button"
                   onClick={() => setShowCreateForm(false)}
-                  className="border border-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="px-6 py-2 rounded-lg font-medium transition-all duration-300 ease-in-out"
+                  style={{ border: '2px solid #E0E0E0', color: '#333333' }}
                 >
                   Cancel
                 </button>
               </div>
             </form>
-          </Card>
+          </div>
         )}
 
         {/* Favorite Events Section */}
         {isAuthenticated && favorites.length > 0 && (
           <div className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Favorite Events</h2>
+            <h2 className="text-2xl font-bold mb-6" style={{ color: '#333333' }}>Your Favorite Events</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {events.filter(event => favorites.includes(event.id)).map((event) => {
                 const eventStatuses = getEventStatus(event.startDate, event.isFree);
                 return (
-                  <Card key={event.id} className="overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105" onClick={() => openEventModal(event)}>
+                  <div 
+                    key={event.id} 
+                    className="bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-102 hover:shadow-2xl" 
+                    onClick={() => openEventModal(event)}
+                    style={{ borderRadius: '20px' }}
+                  >
                     <div className="relative h-48">
                       <img 
                         src={event.gallery?.[0] || event.poster || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=800'} 
@@ -678,46 +818,50 @@ const AdoptionEvents: React.FC = () => {
                         </div>
                       )}
                     </div>
-                    <CardContent>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{event.title}</h3>
-                      <p className="text-gray-600 text-sm mb-2">by {event.organizer}</p>
-                      <p className="text-gray-700 text-sm mb-4 line-clamp-2">{event.description}</p>
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold mb-2" style={{ color: '#333333' }}>{event.title}</h3>
+                      <p className="text-sm mb-2" style={{ color: '#666666' }}>by {event.organizer}</p>
+                      <p className="text-sm mb-4" style={{ color: '#666666' }}>{event.description}</p>
                       
                       <div className="space-y-2 mb-4">
-                        <div className="flex items-center text-gray-600">
+                        <div className="flex items-center" style={{ color: '#666666' }}>
                           <Calendar className="h-4 w-4 mr-2" />
                           <span className="text-sm">{formatDate(event.startDate)}</span>
                         </div>
-                        <div className="flex items-center text-gray-600">
+                        <div className="flex items-center" style={{ color: '#666666' }}>
                           <MapPin className="h-4 w-4 mr-2" />
                           <span className="text-sm">{event.location.address}</span>
                         </div>
-                        <div className="flex items-center text-gray-600">
+                        <div className="flex items-center" style={{ color: '#666666' }}>
                           <Users className="h-4 w-4 mr-2" />
                           <span className="text-sm">{event.attendees} attending</span>
                         </div>
                       </div>
-                    </CardContent>
-                    <CardFooter onClick={(e) => e.stopPropagation()} className="transition-all duration-300 ease-in-out">
-                      <div className="space-y-2 w-full">
-                        <div className="flex flex-wrap gap-2 mb-2">
-                          {eventStatuses.map((status, index) => (
-                            <Badge key={index} variant={status.variant}>{status.status}</Badge>
-                          ))}
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button 
-                            variant="outline"
-                            size="sm"
-                            onClick={() => toggleFavorite(event.id)}
-                            className="text-red-500"
+                      
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {eventStatuses.map((status, index) => (
+                          <span 
+                            key={index} 
+                            className="px-3 py-1 rounded-full text-sm font-medium text-white"
+                            style={{ backgroundColor: status.color }}
                           >
-                            <Heart className="h-4 w-4 fill-current" />
-                          </Button>
-                        </div>
+                            {status.status}
+                          </span>
+                        ))}
                       </div>
-                    </CardFooter>
-                  </Card>
+                      
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <button 
+                          onClick={() => toggleFavorite(event.id)}
+                          className="px-4 py-2 rounded-lg font-medium transition-all duration-200 ease-in-out"
+                          style={{ backgroundColor: '#FF5C8D', color: 'white' }}
+                        >
+                          <Heart className="h-4 w-4 fill-current inline mr-1" />
+                          Favorite
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
             </div>
@@ -727,12 +871,17 @@ const AdoptionEvents: React.FC = () => {
         {/* My Events Section */}
         {isAuthenticated && user && events.filter(event => event.organizerId === user.id).length > 0 && (
           <div className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">My Organized Events</h2>
+            <h2 className="text-2xl font-bold mb-6" style={{ color: '#333333' }}>My Organized Events</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {events.filter(event => event.organizerId === user.id).map((event) => {
                 const eventStatuses = getEventStatus(event.startDate, event.isFree);
                 return (
-                  <Card key={event.id} className="overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105" onClick={() => openEventModal(event)}>
+                  <div 
+                    key={event.id} 
+                    className="bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-102 hover:shadow-2xl" 
+                    onClick={() => openEventModal(event)}
+                    style={{ borderRadius: '20px' }}
+                  >
                     <div className="relative h-48">
                       <img 
                         src={event.gallery?.[0] || event.poster || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=800'} 
@@ -749,80 +898,77 @@ const AdoptionEvents: React.FC = () => {
                         </div>
                       )}
                     </div>
-                    <CardContent>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{event.title}</h3>
-                      <p className="text-gray-600 text-sm mb-2">by {event.organizer}</p>
-                      <p className="text-gray-700 text-sm mb-4 line-clamp-2">{event.description}</p>
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold mb-2" style={{ color: '#333333' }}>{event.title}</h3>
+                      <p className="text-sm mb-2" style={{ color: '#666666' }}>by {event.organizer}</p>
+                      <p className="text-sm mb-4" style={{ color: '#666666' }}>{event.description}</p>
                       
                       <div className="space-y-2 mb-4">
-                        <div className="flex items-center text-gray-600">
+                        <div className="flex items-center" style={{ color: '#666666' }}>
                           <Calendar className="h-4 w-4 mr-2" />
                           <span className="text-sm">{formatDate(event.startDate)}</span>
                         </div>
-                        <div className="flex items-center text-gray-600">
+                        <div className="flex items-center" style={{ color: '#666666' }}>
                           <MapPin className="h-4 w-4 mr-2" />
                           <span className="text-sm">{event.location.address}</span>
                         </div>
-                        <div className="flex items-center text-gray-600">
+                        <div className="flex items-center" style={{ color: '#666666' }}>
                           <Users className="h-4 w-4 mr-2" />
                           <span className="text-sm">{event.attendees} attending</span>
                         </div>
                       </div>
-                    </CardContent>
-                    <CardFooter onClick={(e) => e.stopPropagation()} className="transition-all duration-300 ease-in-out">
-                      <div className="space-y-2 w-full">
-                        <div className="flex flex-wrap gap-2 mb-2">
-                          {eventStatuses.map((status, index) => (
-                            <Badge key={index} variant={status.variant}>{status.status}</Badge>
-                          ))}
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEditEvent(event);
-                            }}
-                            className="flex-1 transition-all duration-300 ease-in-out"
-                            size="sm"
+                      
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {eventStatuses.map((status, index) => (
+                          <span 
+                            key={index} 
+                            className="px-3 py-1 rounded-full text-sm font-medium text-white"
+                            style={{ backgroundColor: status.color }}
                           >
-                            Edit
-                          </Button>
-                          <Button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteEvent(event.id);
-                            }}
-                            variant="outline"
-                            size="sm"
-                            className="text-red-600 hover:text-red-700 transition-all duration-300 ease-in-out"
-                          >
-                            Delete
-                          </Button>
-                          <Button 
-                            variant="outline"
-                            size="sm"
-                            className="transition-all duration-300 ease-in-out"
-                          >
-                            <UserCheck className="h-4 w-4 mr-1" />
-                            {(participations[event.id] || []).length}
-                          </Button>
-                        </div>
+                            {status.status}
+                          </span>
+                        ))}
                       </div>
-                    </CardFooter>
-                  </Card>
+                      
+                      <div onClick={(e) => e.stopPropagation()} className="flex space-x-2">
+                        <button 
+                          onClick={() => handleEditEvent(event)}
+                          className="flex-1 px-4 py-2 rounded-lg font-medium transition-all duration-200 ease-in-out"
+                          style={{ backgroundColor: '#3DBDA7', color: 'white' }}
+                        >
+                          Edit
+                        </button>
+                        <button 
+                          onClick={() => handleDeleteEvent(event.id)}
+                          className="flex-1 px-4 py-2 rounded-lg font-medium transition-all duration-200 ease-in-out"
+                          style={{ backgroundColor: '#E74C3C', color: 'white' }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
             </div>
           </div>
         )}
 
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">All Events</h2>
+        <h2 className="text-2xl font-bold mb-6" style={{ 
+          color: '#39ff14',
+          textShadow: '0 0 20px rgba(57, 255, 20, 0.4)'
+        }}>All Events</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
           {filteredEvents.map((event) => {
             const eventStatuses = getEventStatus(event.startDate, event.isFree);
             const hasComingSoon = eventStatuses.some(s => s.status === 'Coming Soon');
             return (
-              <Card key={event.id} className="overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105" onClick={() => openEventModal(event)}>
+              <div 
+                key={event.id} 
+                className="bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-102 hover:shadow-2xl" 
+                onClick={() => openEventModal(event)}
+                style={{ borderRadius: '20px' }}
+              >
                 <div className="relative h-48">
                   <img 
                     src={event.gallery?.[0] || event.poster || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=800'} 
@@ -844,134 +990,115 @@ const AdoptionEvents: React.FC = () => {
                     </div>
                   )}
                 </div>
-                <CardContent>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{event.title}</h3>
-                  <p className="text-gray-600 text-sm mb-2">by {event.organizer}</p>
-                  <p className="text-gray-700 text-sm mb-4 line-clamp-2">{event.description}</p>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-2" style={{ color: '#333333' }}>{event.title}</h3>
+                  <p className="text-sm mb-2" style={{ color: '#666666' }}>by {event.organizer}</p>
+                  <p className="text-sm mb-4" style={{ color: '#666666' }}>{event.description}</p>
                   
                   <div className="space-y-2 mb-4">
-                    <div className="flex items-center text-gray-600">
+                    <div className="flex items-center" style={{ color: '#666666' }}>
                       <Calendar className="h-4 w-4 mr-2" />
                       <span className="text-sm">{formatDate(event.startDate)}</span>
                     </div>
-                    <div className="flex items-center text-gray-600">
+                    <div className="flex items-center" style={{ color: '#666666' }}>
                       <MapPin className="h-4 w-4 mr-2" />
                       <span className="text-sm">{event.location.address}</span>
                     </div>
-                    <div className="flex items-center text-gray-600">
+                    <div className="flex items-center" style={{ color: '#666666' }}>
                       <Users className="h-4 w-4 mr-2" />
                       <span className="text-sm">{event.attendees} attending</span>
                     </div>
                   </div>
-                </CardContent>
-                <CardFooter onClick={(e) => e.stopPropagation()} className="transition-all duration-300 ease-in-out">
-                  <div className="space-y-2 w-full">
-                    <div className="flex flex-wrap gap-2 mb-2">
-                      {eventStatuses.map((status, index) => (
-                        <Badge key={index} variant={status.variant}>{status.status}</Badge>
-                      ))}
-                    </div>
+                  
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {eventStatuses.map((status, index) => (
+                      <span 
+                        key={index} 
+                        className="px-3 py-1 rounded-full text-sm font-medium text-white"
+                        style={{ backgroundColor: status.color }}
+                      >
+                        {status.status}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <div onClick={(e) => e.stopPropagation()} className="space-y-3">
                     <div className="flex space-x-2">
                       {isAuthenticated && user && (participations[event.id] || []).includes(user.id) ? (
                         <>
-                          <Button className="flex-1 bg-green-500 text-white" size="sm" disabled>
-                            You are participating
-                          </Button>
-                          <Button 
-                            variant="outline"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              cancelParticipation(event.id);
-                            }}
+                          <button 
+                            className="flex-1 px-4 py-2 rounded-lg font-medium text-white"
+                            style={{ backgroundColor: '#5BCB5B' }}
+                            disabled
+                          >
+                            Participating
+                          </button>
+                          <button 
+                            onClick={() => cancelParticipation(event.id)}
+                            className="flex-1 px-4 py-2 rounded-lg font-medium transition-all duration-200 ease-in-out"
+                            style={{ backgroundColor: '#E74C3C', color: 'white' }}
                             disabled={isLoading}
                           >
                             Cancel
-                          </Button>
+                          </button>
                         </>
                       ) : (
-                        <Button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleParticipate(event.id);
-                          }}
-                          className="flex-1 transition-all duration-300 ease-in-out"
-                          size="sm"
+                        <button 
+                          onClick={() => handleParticipate(event.id)}
+                          className="flex-1 px-4 py-2 rounded-lg font-medium transition-all duration-200 ease-in-out"
+                          style={{ backgroundColor: '#3DBDA7', color: 'white' }}
                           disabled={isLoading}
                         >
-                          {isLoading ? 'Processing...' : 'I want to participate'}
-                        </Button>
+                          {isLoading ? 'Processing...' : 'Participate'}
+                        </button>
                       )}
-                      <Button 
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleFavorite(event.id);
-                        }}
-                        className={favorites.includes(event.id) ? 'text-red-500' : ''}
+                      <button 
+                        onClick={() => toggleFavorite(event.id)}
+                        className="px-4 py-2 rounded-lg font-medium transition-all duration-200 ease-in-out"
+                        style={{ backgroundColor: favorites.includes(event.id) ? '#FF5C8D' : '#E0E0E0', color: favorites.includes(event.id) ? 'white' : '#333333' }}
                       >
                         <Heart className={`h-4 w-4 ${favorites.includes(event.id) ? 'fill-current' : ''}`} />
-                      </Button>
+                      </button>
                     </div>
                     <div className="flex space-x-2">
-                      <Button 
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setReminder(event.id);
-                        }}
-                        className="flex-1 transition-all duration-300 ease-in-out"
+                      <button 
+                        onClick={() => setReminder(event.id)}
+                        className="flex-1 px-4 py-2 rounded-lg font-medium transition-all duration-200 ease-in-out"
+                        style={{ backgroundColor: '#FF914D', color: 'white' }}
                       >
                         Set Reminder
-                      </Button>
+                      </button>
                       <div className="relative share-menu">
-                        <Button 
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setShowShareMenu(showShareMenu === event.id ? null : event.id);
-                          }}
+                        <button 
+                          onClick={() => setShowShareMenu(showShareMenu === event.id ? null : event.id)}
+                          className="px-4 py-2 rounded-lg font-medium transition-all duration-200 ease-in-out"
+                          style={{ backgroundColor: '#4D9CFF', color: 'white' }}
                         >
                           Share
-                        </Button>
+                        </button>
                         {showShareMenu === event.id && (
-                          <div className="absolute bottom-full mb-2 right-0 bg-white border rounded-lg shadow-lg p-2 z-20 min-w-[160px]">
+                          <div className="absolute bottom-full mb-2 right-0 bg-white border rounded-lg shadow-lg p-2 z-20 min-w-[160px]" style={{ border: '1px solid #E0E0E0' }}>
                             <div className="grid grid-cols-2 gap-1">
                               <button 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  shareEvent(event, 'whatsapp');
-                                }} 
+                                onClick={() => shareEvent(event, 'whatsapp')} 
                                 className="p-2 hover:bg-gray-100 rounded text-xs flex items-center gap-1"
                               >
                                 📱 WhatsApp
                               </button>
                               <button 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  shareEvent(event, 'facebook');
-                                }} 
+                                onClick={() => shareEvent(event, 'facebook')} 
                                 className="p-2 hover:bg-gray-100 rounded text-xs flex items-center gap-1"
                               >
                                 📘 Facebook
                               </button>
                               <button 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  shareEvent(event, 'twitter');
-                                }} 
+                                onClick={() => shareEvent(event, 'twitter')} 
                                 className="p-2 hover:bg-gray-100 rounded text-xs flex items-center gap-1"
                               >
                                 🐦 Twitter
                               </button>
                               <button 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  shareEvent(event, 'email');
-                                }} 
+                                onClick={() => shareEvent(event, 'email')} 
                                 className="p-2 hover:bg-gray-100 rounded text-xs flex items-center gap-1"
                               >
                                 📧 Email
@@ -982,8 +1109,8 @@ const AdoptionEvents: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                </CardFooter>
-              </Card>
+                </div>
+              </div>
             );
           })}
         </div>
@@ -991,21 +1118,22 @@ const AdoptionEvents: React.FC = () => {
         {filteredEvents.length === 0 && (
           <div className="text-center py-12">
             <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No events found</h3>
-            <p className="text-gray-600">Try adjusting your search or filters</p>
+            <h3 className="text-lg font-medium mb-2" style={{ color: '#333333' }}>No events found</h3>
+            <p style={{ color: '#666666' }}>Try adjusting your search or filters</p>
           </div>
         )}
 
         {/* Event Details Modal */}
         {showEventModal && selectedEvent && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 transition-opacity duration-300">
-            <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-500 ease-out scale-100">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 transition-opacity duration-350">
+            <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-350 ease-out scale-100">
               <div className="p-6">
                 <div className="flex justify-between items-start mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">{selectedEvent.title}</h2>
+                  <h2 className="text-2xl font-bold" style={{ color: '#333333' }}>{selectedEvent.title}</h2>
                   <button 
                     onClick={() => setShowEventModal(false)}
-                    className="text-gray-500 hover:text-gray-700 text-2xl transition-colors duration-200"
+                    className="w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-200"
+                    style={{ backgroundColor: '#E0E0E0', color: '#333333' }}
                   >
                     ×
                   </button>
@@ -1013,7 +1141,7 @@ const AdoptionEvents: React.FC = () => {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">Event Details</h3>
+                    <h3 className="text-lg font-semibold mb-4" style={{ color: '#333333' }}>Event Details</h3>
                     <div className="space-y-3">
                       <p><strong>Organizer:</strong> {selectedEvent.organizer}</p>
                       <p><strong>Date:</strong> {formatDate(selectedEvent.startDate)}</p>
@@ -1022,12 +1150,13 @@ const AdoptionEvents: React.FC = () => {
                       <p><strong>Attendees:</strong> {selectedEvent.attendees}</p>
                       <p><strong>Description:</strong> {selectedEvent.description}</p>
                       <div className="mt-4">
-                        <div className="bg-gray-100 rounded-lg p-4 text-center">
+                        <div className="rounded-lg p-4 text-center" style={{ backgroundColor: '#F5F5F5' }}>
                           <MapPin className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                           <p className="text-sm text-gray-600">Location: {selectedEvent.location.address}</p>
                           <button 
                             onClick={() => window.open(`https://maps.google.com/?q=${encodeURIComponent(selectedEvent.location.address)}`, '_blank')}
-                            className="mt-2 text-blue-600 hover:text-blue-800 text-sm underline"
+                            className="mt-2 text-sm underline transition-colors duration-200"
+                            style={{ color: '#3DBDA7' }}
                           >
                             View on Google Maps
                           </button>
@@ -1037,7 +1166,7 @@ const AdoptionEvents: React.FC = () => {
                   </div>
                   
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">Event Images</h3>
+                    <h3 className="text-lg font-semibold mb-4" style={{ color: '#333333' }}>Event Images</h3>
                     <div className="space-y-4">
                       {selectedEvent.poster && (
                         <div>
@@ -1083,17 +1212,18 @@ const AdoptionEvents: React.FC = () => {
 
         {/* Edit Event Modal */}
         {showEditModal && editingEvent && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 transition-opacity duration-300">
-            <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-500 ease-out scale-100">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 transition-opacity duration-350">
+            <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-350 ease-out scale-100">
               <div className="p-6">
                 <div className="flex justify-between items-start mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Edit Event</h2>
+                  <h2 className="text-2xl font-bold" style={{ color: '#333333' }}>Edit Event</h2>
                   <button 
                     onClick={() => {
                       setShowEditModal(false);
                       setEditingEvent(null);
                     }}
-                    className="text-gray-500 hover:text-gray-700 text-2xl transition-colors duration-200"
+                    className="w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-200"
+                    style={{ backgroundColor: '#E0E0E0', color: '#333333' }}
                   >
                     ×
                   </button>
@@ -1101,62 +1231,71 @@ const AdoptionEvents: React.FC = () => {
                 
                 <form onSubmit={handleUpdateEvent} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Event Title</label>
+                    <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Event Title</label>
                     <input 
                       type="text" 
                       name="title"
                       value={formData.title}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
+                      className="w-full px-4 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                      style={{ border: '2px solid #E0E0E0' }}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                    <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Date</label>
                     <input 
                       type="date" 
                       name="date"
                       value={formData.date}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
+                      className="w-full px-4 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                      style={{ border: '2px solid #E0E0E0' }}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Time</label>
+                    <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Time</label>
                     <input 
                       type="time" 
                       name="time"
                       value={formData.time}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
+                      className="w-full px-4 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                      style={{ border: '2px solid #E0E0E0' }}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                    <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Location</label>
                     <input 
                       type="text" 
                       name="location"
                       value={formData.location}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent" 
+                      className="w-full px-4 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                      style={{ border: '2px solid #E0E0E0' }}
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Description</label>
                     <textarea 
                       rows={4} 
                       name="description"
                       value={formData.description}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full px-4 py-2 rounded-lg transition-all duration-300 ease-in-out focus:ring-2 focus:border-transparent"
+                      style={{ border: '2px solid #E0E0E0' }}
                     ></textarea>
                   </div>
                   <div className="md:col-span-2 flex space-x-4">
-                    <button type="submit" className="bg-emerald-500 text-white px-6 py-2 rounded-lg hover:bg-emerald-600 transition-colors">
+                    <button 
+                      type="submit" 
+                      className="px-6 py-2 rounded-lg font-medium transition-all duration-300 ease-in-out transform hover:scale-105"
+                      style={{ backgroundColor: '#3DBDA7', color: 'white' }}
+                    >
                       Update Event
                     </button>
                     <button 
@@ -1165,7 +1304,8 @@ const AdoptionEvents: React.FC = () => {
                         setShowEditModal(false);
                         setEditingEvent(null);
                       }}
-                      className="border border-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="px-6 py-2 rounded-lg font-medium transition-all duration-300 ease-in-out"
+                      style={{ border: '2px solid #E0E0E0', color: '#333333' }}
                     >
                       Cancel
                     </button>
@@ -1195,8 +1335,10 @@ const AdoptionEvents: React.FC = () => {
             </div>
           </div>
         )}
+        </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

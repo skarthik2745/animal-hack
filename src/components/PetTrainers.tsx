@@ -69,6 +69,47 @@ const PetTrainers: React.FC = () => {
 
   useEffect(() => {
     loadTrainers();
+    
+    // Generate animated galaxy stars
+    const createGalaxyStars = () => {
+      const container = document.querySelector('.galaxy-stars');
+      if (!container) return;
+      
+      for (let i = 0; i < 50; i++) {
+        const star = document.createElement('div');
+        star.className = 'galaxy-star';
+        
+        const starType = Math.random();
+        if (starType > 0.7) {
+          star.classList.add('star-violet');
+        } else if (starType > 0.4) {
+          star.classList.add('star-blue');
+        } else {
+          star.classList.add('star-white');
+        }
+        
+        const size = Math.random() * 8 + 4;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = '-20px';
+        star.style.animationDelay = Math.random() * 5 + 's';
+        star.style.animationDuration = (Math.random() * 6 + 8) + 's';
+        
+        container.appendChild(star);
+        
+        setTimeout(() => {
+          if (star.parentNode) {
+            star.parentNode.removeChild(star);
+          }
+        }, 15000);
+      }
+    };
+    
+    createGalaxyStars();
+    
+    const interval = setInterval(createGalaxyStars, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   const loadTrainers = () => {
@@ -247,22 +288,97 @@ const PetTrainers: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <>
+      <style>{`
+        .galaxy-container {
+          background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%);
+          min-height: 100vh;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .galaxy-stars {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100vh;
+          pointer-events: none;
+          z-index: 0;
+        }
+        
+        .galaxy-star {
+          position: absolute;
+          border-radius: 50%;
+          animation: floatDown linear infinite;
+        }
+        
+        .star-white {
+          background: white;
+          box-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 255, 255, 0.6);
+        }
+        
+        .star-blue {
+          background: #87ceeb;
+          box-shadow: 0 0 18px rgba(135, 206, 235, 0.9), 0 0 35px rgba(135, 206, 235, 0.7);
+        }
+        
+        .star-violet {
+          background: #dda0dd;
+          box-shadow: 0 0 20px rgba(221, 160, 221, 0.9), 0 0 40px rgba(221, 160, 221, 0.6);
+        }
+        
+        @keyframes floatDown {
+          0% {
+            transform: translateY(-50px) scale(0.5);
+            opacity: 0;
+          }
+          5% {
+            opacity: 1;
+          }
+          95% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(calc(100vh + 100px)) scale(1.5);
+            opacity: 0;
+          }
+        }
+        
+        .galaxy-content {
+          position: relative;
+          z-index: 1;
+        }
+      `}</style>
+      
+      <div className="galaxy-container">
+        <div className="galaxy-stars"></div>
+        
+        <div className="galaxy-content min-h-screen py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Pet Trainers</h1>
-            <p className="text-gray-600 mt-2">Find certified pet trainers for your furry friends</p>
-          </div>
-          <Button onClick={() => setShowRegistration(true)}>
+        <div className="text-center mb-8">
+          <h1 className="text-5xl md:text-6xl font-black mb-4" style={{
+            background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 30px rgba(0, 229, 255, 0.5)'
+          }}>Pet Trainers</h1>
+          <p className="text-xl md:text-2xl font-medium mb-6" style={{
+            color: '#00cfff',
+            textShadow: '0 0 15px rgba(0, 207, 255, 0.3)'
+          }}>Find Certified Pet Trainers for your Furry Friends</p>
+          <button
+            onClick={() => setShowRegistration(true)}
+            className="px-6 py-3 bg-gradient-to-r from-teal-500 to-purple-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center mx-auto"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Register as Trainer
-          </Button>
+          </button>
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-lg p-6 mb-8 shadow-sm">
+        <div className="bg-white/95 backdrop-blur-sm rounded-lg p-6 mb-8 shadow-lg border border-white/20">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -271,14 +387,15 @@ const PetTrainers: React.FC = () => {
                 placeholder="Search trainers, location, specialization..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                className="pl-10 pr-4 py-2 w-full border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 bg-white shadow-sm"
               />
             </div>
             
             <select
               value={selectedSpecialization}
               onChange={(e) => setSelectedSpecialization(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+              className="px-4 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 shadow-sm"
+              style={{ background: 'linear-gradient(to right, #f0fdfa, #faf5ff)' }}
             >
               <option value="">All Specializations</option>
               {specializations.map(spec => (
@@ -289,7 +406,8 @@ const PetTrainers: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+              className="px-4 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 shadow-sm"
+              style={{ background: 'linear-gradient(to right, #f0fdfa, #faf5ff)' }}
             >
               <option value="name">Sort by Name</option>
               <option value="experience">Sort by Experience</option>
@@ -307,7 +425,10 @@ const PetTrainers: React.FC = () => {
         {/* Trainers Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sortedTrainers.map((trainer) => (
-            <Card key={trainer.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+            <Card key={trainer.id} className="overflow-hidden bg-white/95 backdrop-blur-sm shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 rounded-3xl border-2 border-transparent hover:border-gradient-to-r hover:from-teal-300 hover:to-purple-300" style={{
+              boxShadow: '0 10px 25px rgba(0,0,0,0.1), 0 0 0 1px rgba(20,184,166,0.1)',
+              background: 'linear-gradient(145deg, #ffffff 0%, #fefefe 100%)'
+            }}>
               <div className="relative">
                 <img
                   src={trainer.profilePicture}
@@ -315,18 +436,18 @@ const PetTrainers: React.FC = () => {
                   className="w-full h-48 object-cover"
                 />
                 {trainer.isVerified && (
-                  <Badge className="absolute top-2 right-2 bg-emerald-500">
+                  <div className="absolute top-2 right-2 px-3 py-1 bg-gradient-to-r from-emerald-400 to-green-500 text-white text-xs font-medium rounded-full shadow-lg flex items-center animate-pulse">
                     <Award className="h-3 w-3 mr-1" />
                     Verified
-                  </Badge>
+                  </div>
                 )}
               </div>
               
               <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-semibold text-gray-900">{trainer.name}</h3>
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-purple-800 to-indigo-700 bg-clip-text text-transparent">{trainer.name}</h3>
                   <div className="flex items-center">
-                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                    <Star className="h-4 w-4 fill-current" style={{ background: 'linear-gradient(45deg, #fbbf24, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }} />
                     <span className="text-sm text-gray-600 ml-1">
                       {trainer.rating} ({trainer.reviewCount})
                     </span>
@@ -355,14 +476,14 @@ const PetTrainers: React.FC = () => {
                 <div className="mb-4">
                   <div className="flex flex-wrap gap-1">
                     {trainer.specialization && trainer.specialization.slice(0, 2).map((spec, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
+                      <span key={index} className="px-2 py-1 bg-gradient-to-r from-teal-100 to-purple-100 text-teal-800 text-xs font-medium rounded-full border border-teal-200">
                         {spec}
-                      </Badge>
+                      </span>
                     ))}
                     {trainer.specialization && trainer.specialization.length > 2 && (
-                      <Badge variant="secondary" className="text-xs">
+                      <span className="px-2 py-1 bg-gradient-to-r from-teal-100 to-purple-100 text-teal-800 text-xs font-medium rounded-full border border-teal-200">
                         +{trainer.specialization.length - 2} more
-                      </Badge>
+                      </span>
                     )}
                   </div>
                 </div>
@@ -370,21 +491,19 @@ const PetTrainers: React.FC = () => {
                 <p className="text-gray-700 text-sm mb-4 line-clamp-2">{trainer.bio}</p>
 
                 <div className="flex space-x-2">
-                  <Button
+                  <button
                     onClick={() => openChat(trainer)}
-                    className="flex-1"
-                    size="sm"
+                    className="flex-1 px-4 py-2 bg-gradient-to-r from-sky-400 to-blue-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl hover:from-sky-300 hover:to-blue-500 transform hover:scale-105 transition-all duration-300 flex items-center justify-center"
                   >
                     <MessageCircle className="h-4 w-4 mr-2" />
                     Chat
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     onClick={() => window.open(`tel:${trainer.contactNumber}`, '_self')}
-                    variant="outline"
-                    size="sm"
+                    className="px-4 py-2 bg-gradient-to-r from-emerald-400 to-green-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl hover:from-emerald-300 hover:to-green-500 transform hover:scale-105 transition-all duration-300 flex items-center justify-center group"
                   >
-                    <Phone className="h-4 w-4" />
-                  </Button>
+                    <Phone className="h-4 w-4 group-hover:animate-bounce" />
+                  </button>
                 </div>
               </CardContent>
             </Card>
@@ -401,11 +520,11 @@ const PetTrainers: React.FC = () => {
 
         {/* Registration Modal */}
         {showRegistration && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl border border-white/20">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Register as Pet Trainer</h2>
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-800 to-indigo-800 bg-clip-text text-transparent">Register as Pet Trainer</h2>
                   <button
                     onClick={() => setShowRegistration(false)}
                     className="text-gray-500 hover:text-gray-700"
@@ -425,7 +544,7 @@ const PetTrainers: React.FC = () => {
                         required
                         value={registrationForm.name}
                         onChange={(e) => setRegistrationForm({ ...registrationForm, name: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-3 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 bg-white shadow-sm"
                       />
                     </div>
 
@@ -439,7 +558,7 @@ const PetTrainers: React.FC = () => {
                         min="0"
                         value={registrationForm.experience}
                         onChange={(e) => setRegistrationForm({ ...registrationForm, experience: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-3 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 bg-white shadow-sm"
                       />
                     </div>
 
@@ -452,7 +571,7 @@ const PetTrainers: React.FC = () => {
                         required
                         value={registrationForm.location}
                         onChange={(e) => setRegistrationForm({ ...registrationForm, location: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-3 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 bg-white shadow-sm"
                       />
                     </div>
 
@@ -465,7 +584,7 @@ const PetTrainers: React.FC = () => {
                         required
                         value={registrationForm.contactNumber}
                         onChange={(e) => setRegistrationForm({ ...registrationForm, contactNumber: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-3 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 bg-white shadow-sm"
                       />
                     </div>
 
@@ -479,7 +598,7 @@ const PetTrainers: React.FC = () => {
                         placeholder="e.g., $50-80/session"
                         value={registrationForm.fees}
                         onChange={(e) => setRegistrationForm({ ...registrationForm, fees: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-3 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 bg-white shadow-sm"
                       />
                     </div>
 
@@ -493,7 +612,7 @@ const PetTrainers: React.FC = () => {
                         placeholder="e.g., Mon-Fri 9AM-6PM"
                         value={registrationForm.availability}
                         onChange={(e) => setRegistrationForm({ ...registrationForm, availability: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-3 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 bg-white shadow-sm"
                       />
                     </div>
                   </div>
@@ -553,23 +672,25 @@ const PetTrainers: React.FC = () => {
                       rows={4}
                       value={registrationForm.bio}
                       onChange={(e) => setRegistrationForm({ ...registrationForm, bio: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-3 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 bg-white shadow-sm"
                       placeholder="Tell us about your training experience and approach..."
                     />
                   </div>
 
                   <div className="flex space-x-4">
-                    <Button type="submit" className="flex-1">
+                    <button
+                      type="submit"
+                      className="flex-1 px-6 py-3 bg-gradient-to-r from-teal-500 to-purple-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    >
                       Register as Trainer
-                    </Button>
-                    <Button
+                    </button>
+                    <button
                       type="button"
-                      variant="outline"
                       onClick={() => setShowRegistration(false)}
-                      className="flex-1"
+                      className="flex-1 px-6 py-3 bg-gradient-to-r from-gray-400 to-gray-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                     >
                       Cancel
-                    </Button>
+                    </button>
                   </div>
                 </form>
               </div>
@@ -595,8 +716,10 @@ const PetTrainers: React.FC = () => {
             }}
           />
         )}
+        </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

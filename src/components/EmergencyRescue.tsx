@@ -370,11 +370,99 @@ const EmergencyRescue: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">🚨 Emergency Rescue Numbers</h1>
-          <p className="text-lg text-gray-600 mb-4">Complete directory with {contacts.length} verified contacts {apiContacts.length > 0 && `(${apiContacts.length} from API)`}</p>
+    <>
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&display=swap');
+          
+          .emergency-page {
+            background: linear-gradient(135deg, #e6f7ff 0%, #ffffff 100%);
+            position: relative;
+            font-family: 'Roboto', sans-serif;
+          }
+          
+          .emergency-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+              repeating-linear-gradient(
+                45deg,
+                rgba(0,0,0,0.02) 0px,
+                rgba(0,0,0,0.02) 1px,
+                transparent 1px,
+                transparent 20px
+              );
+            pointer-events: none;
+          }
+          
+          .emergency-heading {
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 700;
+            font-size: 3.5rem;
+            color: #004d99;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+          }
+          
+          .emergency-subheading {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.2rem;
+            color: #009973;
+            font-style: italic;
+            margin-bottom: 1rem;
+          }
+          
+          .call-button {
+            background: #ff4d4d !important;
+            color: #ffffff !important;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+          }
+          
+          .call-button:hover {
+            background: #cc0000 !important;
+          }
+          
+          .whatsapp-button {
+            background: #25D366 !important;
+            color: #ffffff !important;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+          }
+          
+          .whatsapp-button:hover {
+            background: #128C7E !important;
+          }
+          
+          .filter-button {
+            background: #4da6ff !important;
+            color: #ffffff !important;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+          }
+          
+          .filter-button:hover {
+            background: #0059b3 !important;
+          }
+          
+          .contact-card {
+            background: #ffffff;
+            box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 16px;
+          }
+        `
+      }} />
+      
+      <div className="emergency-page min-h-screen pt-20">
+        <div className="max-w-7xl mx-auto px-4 py-6" style={{position: 'relative', zIndex: 1}}>
+          <div className="text-center mb-8">
+            <h1 className="emergency-heading">Emergency Rescue Numbers</h1>
+            <p className="emergency-subheading">Complete directory with {contacts.length} verified contacts {apiContacts.length > 0 && `(${apiContacts.length} from API)`}</p>
           <div className="bg-red-100 border border-red-300 rounded-lg p-4 mb-6">
             <div className="flex items-center justify-center space-x-2 text-red-800">
               <AlertTriangle className="h-5 w-5" />
@@ -391,19 +479,19 @@ const EmergencyRescue: React.FC = () => {
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border p-4 mb-6">
+        <div className="bg-white rounded-xl shadow-sm border-4 border-red-700 p-4 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <MapPin className="h-5 w-5 text-gray-600" />
               <span className="font-medium">Location: {location.city || 'Select your location'}</span>
             </div>
-            <Button
+            <button
               onClick={() => setShowLocationSelector(!showLocationSelector)}
-              variant="outline"
-              size="sm"
+              className="filter-button px-4 py-2 text-sm font-medium flex items-center space-x-2"
             >
-              Change Location
-            </Button>
+              <MapPin className="h-4 w-4" />
+              <span>Change Location</span>
+            </button>
           </div>
           {showLocationSelector && (
             <div className="mt-4">
@@ -461,7 +549,7 @@ const EmergencyRescue: React.FC = () => {
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border p-4 mb-6">
+        <div className="bg-white rounded-xl shadow-sm border-4 border-red-700 p-4 mb-6">
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -473,14 +561,13 @@ const EmergencyRescue: React.FC = () => {
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
               />
             </div>
-            <Button
+            <button
               onClick={() => setShowFilters(!showFilters)}
-              variant="outline"
-              className="flex items-center space-x-2"
+              className="filter-button px-4 py-2 flex items-center space-x-2"
             >
               <Filter className="h-4 w-4" />
               <span>Filters</span>
-            </Button>
+            </button>
           </div>
 
           <div className="flex flex-wrap gap-2 mb-4">
@@ -533,7 +620,7 @@ const EmergencyRescue: React.FC = () => {
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border p-4 mb-6">
+        <div className="bg-white rounded-xl shadow-sm border-4 border-red-700 p-4 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-gray-900 flex items-center space-x-2">
               <span>🌐</span>
@@ -547,7 +634,7 @@ const EmergencyRescue: React.FC = () => {
           {apiContacts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {apiContacts.map((contact) => (
-                <div key={contact.id} className="bg-gradient-to-br from-blue-50 to-green-50 border border-blue-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div key={contact.id} className="bg-gradient-to-br from-blue-50 to-green-50 border-4 border-red-700 rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       <h4 className="font-semibold text-gray-900 text-sm mb-1">{contact.name}</h4>
@@ -597,7 +684,7 @@ const EmergencyRescue: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
           {filteredContacts.map((contact) => (
-            <div key={contact.id} className="bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow">
+            <div key={contact.id} className="bg-white rounded-xl shadow-sm border-4 border-red-700 hover:shadow-md transition-shadow">
               <div className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
@@ -665,8 +752,9 @@ const EmergencyRescue: React.FC = () => {
             </div>
           ))}
         </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

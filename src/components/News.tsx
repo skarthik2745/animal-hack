@@ -180,17 +180,71 @@ const News: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen pt-20 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50'}`}>
-      {/* Page Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-sm border-b-2 border-green-200 dark:border-green-800 mb-6">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-green-800 dark:text-green-400 mb-2 font-serif">
-              🐾 Pet & Wildlife News
-            </h1>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Stay updated with the latest in animal welfare and conservation
-            </p>
+    <>
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Roboto+Condensed:wght@400;700&display=swap');
+          
+          .news-page {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #4a5568 100%);
+            position: relative;
+          }
+          
+          .news-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+              linear-gradient(45deg, rgba(255,255,255,0.02) 25%, transparent 25%),
+              linear-gradient(-45deg, rgba(255,255,255,0.02) 25%, transparent 25%);
+            background-size: 20px 20px;
+            pointer-events: none;
+          }
+          
+          .news-heading {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-weight: 700;
+            font-size: 4rem;
+            color: #ffffff;
+            text-shadow: 0px 0px 20px rgba(255, 255, 255, 0.3);
+            border-bottom: 4px solid #dc2626;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+          }
+          
+          .news-subheading {
+            font-family: 'Merriweather', serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #cbd5e0;
+            font-style: italic;
+            margin-top: 1rem;
+          }
+          
+          .news-divider {
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #dc2626, #2563eb);
+            margin: 1rem auto;
+          }
+        `
+      }} />
+      
+      <div className={`news-page min-h-screen pt-20`}>
+        {/* Page Header */}
+        <div className="relative z-10 shadow-2xl border-b-4 border-red-600 mb-6" style={{background: 'rgba(26, 32, 44, 0.95)'}}>
+          <div className="max-w-7xl mx-auto px-4 py-8">
+            <div className="text-center">
+              <h1 className="news-heading">
+                Pet & Wildlife News
+              </h1>
+              <div className="news-divider"></div>
+              <p className="news-subheading">
+                Stay updated with the latest in animal welfare and conservation
+              </p>
             
             {/* Search & Controls */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
@@ -575,44 +629,8 @@ const News: React.FC = () => {
           </div>
         </div>
       </footer>
-
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap');
-          
-          .font-serif { font-family: 'Merriweather', serif; }
-          .font-sans { font-family: 'Roboto', sans-serif; }
-          
-          @keyframes ticker {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-          }
-          
-          .animate-ticker {
-            animation: ticker 60s linear infinite;
-          }
-          
-          .ticker-container:hover .animate-ticker {
-            animation-play-state: paused;
-          }
-          
-          .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
-          
-          .group:hover .group-hover\\:scale-105 {
-            transform: scale(1.05);
-          }
-          
-          .group:hover .group-hover\\:scale-110 {
-            transform: scale(1.1);
-          }
-        `
-      }} />
     </div>
+    </>
   );
 };
 

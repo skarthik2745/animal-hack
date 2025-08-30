@@ -169,6 +169,46 @@ const PetShops: React.FC = () => {
     loadChatSessions();
     loadCart();
     
+    // Generate animated galaxy stars
+    const createGalaxyStars = () => {
+      const container = document.querySelector('.galaxy-stars');
+      if (!container) return;
+      
+      for (let i = 0; i < 50; i++) {
+        const star = document.createElement('div');
+        star.className = 'galaxy-star';
+        
+        const starType = Math.random();
+        if (starType > 0.7) {
+          star.classList.add('star-violet');
+        } else if (starType > 0.4) {
+          star.classList.add('star-blue');
+        } else {
+          star.classList.add('star-white');
+        }
+        
+        const size = Math.random() * 8 + 4;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = '-20px';
+        star.style.animationDelay = Math.random() * 5 + 's';
+        star.style.animationDuration = (Math.random() * 6 + 8) + 's';
+        
+        container.appendChild(star);
+        
+        setTimeout(() => {
+          if (star.parentNode) {
+            star.parentNode.removeChild(star);
+          }
+        }, 15000);
+      }
+    };
+    
+    createGalaxyStars();
+    
+    const interval = setInterval(createGalaxyStars, 1000);
+    
     // Check for openChat URL parameter
     const urlParams = new URLSearchParams(window.location.search);
     const openChatId = urlParams.get('openChat');
@@ -181,6 +221,8 @@ const PetShops: React.FC = () => {
         }
       }, 500);
     }
+    
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -872,16 +914,144 @@ const PetShops: React.FC = () => {
     toast.success('Shop registered successfully! Pending verification.');
   };
 
+  const handleProductImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const imageUrl = event.target?.result as string;
+        setProductForm({ ...productForm, image: imageUrl });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleProductSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      toast.error('Please log in to upload a product');
+      return;
+    }
+
+    const newProduct: Product = {
+      id: Date.now().toString(),
+      name: productForm.name,
+      price: parseFloat(productForm.price),
+      image: productForm.image || 'https://images.pexels.com/photos/1458925/pexels-photo-1458925.jpeg?auto=compress&cs=tinysrgb&w=400',
+      description: productForm.description,
+      category: productForm.category,
+      shopId: productForm.shopId || '1',
+      shopName: shops.find(s => s.id === productForm.shopId)?.name || 'Your Shop',
+      rating: 5.0,
+      inStock: true,
+      variants: productForm.variants.split(',').map(v => v.trim()).filter(v => v)
+    };
+
+    const updatedProducts = [...products, newProduct];
+    setProducts(updatedProducts);
+    
+    // Reset form
+    setProductForm({
+      name: '',
+      price: '',
+      image: '',
+      description: '',
+      category: 'Food',
+      shopId: '',
+      variants: ''
+    });
+    
+    setShowProductForm(false);
+    toast.success('Product uploaded successfully!');
+  };
+
   return (
-    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
+    <>
+      <style>{`
+        .galaxy-container {
+          background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%);
+          min-height: 100vh;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .galaxy-stars {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100vh;
+          pointer-events: none;
+          z-index: 0;
+        }
+        
+        .galaxy-star {
+          position: absolute;
+          border-radius: 50%;
+          animation: floatDown linear infinite;
+        }
+        
+        .star-white {
+          background: white;
+          box-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 255, 255, 0.6);
+        }
+        
+        .star-blue {
+          background: #87ceeb;
+          box-shadow: 0 0 18px rgba(135, 206, 235, 0.9), 0 0 35px rgba(135, 206, 235, 0.7);
+        }
+        
+        .star-violet {
+          background: #dda0dd;
+          box-shadow: 0 0 20px rgba(221, 160, 221, 0.9), 0 0 40px rgba(221, 160, 221, 0.6);
+        }
+        
+        @keyframes floatDown {
+          0% {
+            transform: translateY(-50px) scale(0.5);
+            opacity: 0;
+          }
+          5% {
+            opacity: 1;
+          }
+          95% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(calc(100vh + 100px)) scale(1.5);
+            opacity: 0;
+          }
+        }
+        
+        .galaxy-content {
+          position: relative;
+          z-index: 1;
+        }
+      `}</style>
+      
+      <div className="galaxy-container">
+        <div className="galaxy-stars"></div>
+        
+        <div className="galaxy-content min-h-screen py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl sm:text-5xl font-black mb-4" style={{
+            background: 'linear-gradient(135deg, #b388ff, #ff6ec7)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 30px rgba(179, 136, 255, 0.5)'
+          }}>
             Pet Shops & Products
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl font-medium italic mb-2" style={{
+            color: '#00cfff',
+            textShadow: '0 0 15px rgba(0, 207, 255, 0.3)'
+          }}>
             Discover amazing products and connect with local pet shops
           </p>
+          <div className="w-32 h-1 mx-auto rounded-full" style={{
+            background: 'linear-gradient(90deg, #14b8a6, #8b5cf6, #ec4899)'
+          }}></div>
         </div>
 
         {/* Tab Navigation */}
@@ -928,39 +1098,53 @@ const PetShops: React.FC = () => {
           <div className="mb-8">
             <div className="flex flex-col md:flex-row gap-4 mb-4">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-400 h-5 w-5" />
                 <input
                   type="text"
                   placeholder={`Search ${activeTab === 'browse' ? 'products' : 'shops'}...`}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 bg-white shadow-sm transition-all duration-300 focus:shadow-lg"
+                  style={{ boxShadow: 'inset 0 0 0 1px rgba(20, 184, 166, 0.1)' }}
                 />
               </div>
-              <Button
-                variant="outline"
+              <button
                 onClick={() => setShowFilters(!showFilters)}
+                className="px-6 py-3 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-medium rounded-lg border-2 border-purple-200 hover:from-purple-200 hover:to-pink-200 hover:border-purple-300 transition-all duration-300 flex items-center shadow-sm hover:shadow-md"
               >
                 <Filter className="h-4 w-4 mr-2" />
                 Filters
-              </Button>
+              </button>
+              {activeTab === 'browse' && (
+                <button
+                  onClick={() => setShowProductForm(true)}
+                  className="px-6 py-3 bg-gradient-to-r from-teal-500 to-purple-600 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Upload Product
+                </button>
+              )}
               {activeTab === 'shops' && (
-                <Button onClick={() => setShowShopForm(true)}>
+                <button
+                  onClick={() => setShowShopForm(true)}
+                  className="px-6 py-3 bg-gradient-to-r from-purple-500 to-teal-600 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center"
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   Register Shop
-                </Button>
+                </button>
               )}
             </div>
 
             {showFilters && (
-              <Card className="p-4 mb-4">
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 backdrop-blur-sm rounded-lg p-6 mb-4 shadow-lg border border-purple-100">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <label className="block text-sm font-medium text-purple-700 mb-2">Category</label>
                     <select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-3 py-2 border-2 border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-400 bg-white shadow-sm hover:border-purple-300 transition-all duration-300"
+                      style={{ background: 'linear-gradient(to right, #faf5ff, #fdf2f8)' }}
                     >
                       {categories.map(category => (
                         <option key={category} value={category}>{category}</option>
@@ -968,26 +1152,26 @@ const PetShops: React.FC = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
+                    <label className="block text-sm font-medium text-purple-700 mb-2">Price Range</label>
                     <div className="flex space-x-2">
                       <input
                         type="number"
                         placeholder="Min"
                         value={priceRange[0]}
                         onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-3 py-2 border-2 border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-400 bg-white shadow-sm hover:border-purple-300 transition-all duration-300"
                       />
                       <input
                         type="number"
                         placeholder="Max"
                         value={priceRange[1]}
                         onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-3 py-2 border-2 border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-400 bg-white shadow-sm hover:border-purple-300 transition-all duration-300"
                       />
                     </div>
                   </div>
                 </div>
-              </Card>
+              </div>
             )}
           </div>
         )}
@@ -996,7 +1180,10 @@ const PetShops: React.FC = () => {
         {activeTab === 'browse' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
-              <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+              <div key={product.id} className="overflow-hidden bg-white/95 backdrop-blur-sm shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 rounded-2xl border-2 border-transparent hover:border-gradient-to-r hover:from-teal-300 hover:to-purple-300" style={{
+                boxShadow: '0 10px 25px rgba(0,0,0,0.1), 0 0 0 1px rgba(20,184,166,0.1)',
+                background: 'linear-gradient(145deg, #ffffff 0%, #fefefe 100%)'
+              }}>
                 <div className="relative">
                   <img
                     src={product.image}
@@ -1005,12 +1192,12 @@ const PetShops: React.FC = () => {
                     onClick={() => openImageViewer(product.image)}
                   />
                   <div className="absolute top-2 right-2">
-                    <Badge variant={product.inStock ? 'success' : 'secondary'}>
+                    <span className={`px-3 py-1 text-xs font-medium rounded-full ${product.inStock ? 'bg-gradient-to-r from-emerald-400 to-green-500 text-white' : 'bg-gray-200 text-gray-700'}`}>
                       {product.inStock ? 'In Stock' : 'Out of Stock'}
-                    </Badge>
+                    </span>
                   </div>
                 </div>
-                <CardContent className="p-4">
+                <div className="p-4">
                   <h3 className="font-semibold text-gray-900 mb-2">{product.name}</h3>
                   <p className="text-2xl font-bold text-emerald-600 mb-2">${product.price}</p>
                   <p className="text-sm text-gray-600 mb-2">{product.description}</p>
@@ -1032,71 +1219,204 @@ const PetShops: React.FC = () => {
 
                   <div className="space-y-2">
                     <div className="flex space-x-2">
-                      <Button
-                        size="sm"
-                        className="flex-1"
+                      <button
                         onClick={() => addToCart(product)}
                         disabled={!product.inStock}
+                        className="flex-1 px-3 py-2 bg-gradient-to-r from-lime-400 to-emerald-500 text-white font-medium rounded-full shadow-lg hover:shadow-xl hover:from-lime-300 hover:to-emerald-400 transform hover:scale-105 transition-all duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <ShoppingCart className="h-4 w-4 mr-1" />
                         Add to Cart
-                      </Button>
-                      <Button size="sm" variant="outline" className="flex-1">
+                      </button>
+                      <button className="flex-1 px-3 py-2 bg-gradient-to-r from-pink-400 to-orange-500 text-white font-medium rounded-full shadow-lg hover:shadow-xl hover:from-pink-300 hover:to-orange-400 transform hover:scale-105 transition-all duration-300 flex items-center justify-center">
                         Buy Now
-                      </Button>
+                      </button>
                     </div>
                     <div className="flex space-x-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="flex-1"
+                      <button
                         onClick={() => {
                           const shop = shops.find(s => s.id === product.shopId);
                           if (shop) handleCall(shop.phone);
                         }}
+                        className="flex-1 px-3 py-2 bg-gradient-to-r from-sky-400 to-blue-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl hover:from-sky-300 hover:to-blue-500 transform hover:scale-105 transition-all duration-300 flex items-center justify-center"
                       >
                         <Phone className="h-4 w-4 mr-1" />
                         Call
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="flex-1"
+                      </button>
+                      <button
                         onClick={() => {
                           const shop = shops.find(s => s.id === product.shopId);
                           if (shop) openChat(shop);
                         }}
+                        className="flex-1 px-3 py-2 bg-gradient-to-r from-purple-400 to-purple-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl hover:from-purple-300 hover:to-purple-500 transform hover:scale-105 transition-all duration-300 flex items-center justify-center"
                       >
                         <MessageCircle className="h-4 w-4 mr-1" />
                         Chat
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="flex-1"
+                      </button>
+                      <button
                         onClick={() => {
                           const shop = shops.find(s => s.id === product.shopId);
                           if (shop) openGoogleMaps(shop.latitude, shop.longitude, shop.name);
                         }}
+                        className="flex-1 px-3 py-2 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl hover:from-yellow-300 hover:to-yellow-500 transform hover:scale-105 transition-all duration-300 flex items-center justify-center"
                       >
                         <MapPin className="h-4 w-4 mr-1" />
                         Location
-                      </Button>
+                      </button>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
+          </div>
+        )}
+
+        {/* Upload Product Form */}
+        {showProductForm && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl border border-white/20">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-purple-600 bg-clip-text text-transparent">Upload New Product</h3>
+                  <button
+                    onClick={() => setShowProductForm(false)}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+                
+                <form onSubmit={handleProductSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                      <input
+                        type="text"
+                        value={productForm.name}
+                        onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
+                        required
+                        className="w-full px-3 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 bg-white shadow-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Price ($)</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={productForm.price}
+                        onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
+                        required
+                        className="w-full px-3 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 bg-white shadow-sm"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <select
+                      value={productForm.category}
+                      onChange={(e) => setProductForm({ ...productForm, category: e.target.value })}
+                      className="w-full px-3 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 bg-white shadow-sm"
+                    >
+                      {categories.filter(c => c !== 'All').map(category => (
+                        <option key={category} value={category}>{category}</option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Shop</label>
+                    <select
+                      value={productForm.shopId}
+                      onChange={(e) => setProductForm({ ...productForm, shopId: e.target.value })}
+                      required
+                      className="w-full px-3 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 bg-white shadow-sm"
+                    >
+                      <option value="">Select a shop</option>
+                      {shops.map(shop => (
+                        <option key={shop.id} value={shop.id}>{shop.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleProductImageUpload}
+                      className="hidden"
+                      id="product-image-upload"
+                    />
+                    <label
+                      htmlFor="product-image-upload"
+                      className="flex items-center justify-center w-full px-4 py-2 border-2 border-dashed border-teal-300 rounded-lg cursor-pointer hover:border-teal-400 transition-colors"
+                    >
+                      <Upload className="h-5 w-5 mr-2 text-teal-400" />
+                      <span className="text-teal-600">
+                        {productForm.image ? 'Change Product Image' : 'Upload Product Image'}
+                      </span>
+                    </label>
+                    {productForm.image && (
+                      <div className="mt-2">
+                        <img
+                          src={productForm.image}
+                          alt="Product preview"
+                          className="w-32 h-24 object-cover rounded-lg border"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <textarea
+                      value={productForm.description}
+                      onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
+                      rows={3}
+                      required
+                      className="w-full px-3 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 bg-white shadow-sm"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Variants (comma-separated)</label>
+                    <input
+                      type="text"
+                      value={productForm.variants}
+                      onChange={(e) => setProductForm({ ...productForm, variants: e.target.value })}
+                      placeholder="e.g., Small, Medium, Large"
+                      className="w-full px-3 py-2 border-2 border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-teal-400 bg-white shadow-sm"
+                    />
+                  </div>
+                  
+                  <div className="flex space-x-3 pt-4">
+                    <button
+                      type="submit"
+                      className="flex-1 px-6 py-3 bg-gradient-to-r from-teal-500 to-purple-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    >
+                      Upload Product
+                    </button>
+                    <button 
+                      type="button" 
+                      onClick={() => setShowProductForm(false)}
+                      className="flex-1 px-6 py-3 bg-gradient-to-r from-gray-400 to-gray-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         )}
 
         {/* Shop Registration Form */}
         {showShopForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl border border-white/20">
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900">Register Your Pet Shop</h3>
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-teal-600 bg-clip-text text-transparent">Register Your Pet Shop</h3>
                   <button
                     onClick={() => setShowShopForm(false)}
                     className="text-gray-500 hover:text-gray-700"
@@ -1326,19 +1646,25 @@ const PetShops: React.FC = () => {
                 <ShoppingCart className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">Your cart is empty</h3>
                 <p className="text-gray-600 mb-4">Add some products to get started!</p>
-                <Button onClick={() => setActiveTab('browse')}>
+                <button
+                  onClick={() => setActiveTab('browse')}
+                  className="px-6 py-3 bg-gradient-to-r from-teal-500 to-purple-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                >
                   Browse Products
-                </Button>
+                </button>
               </div>
             ) : (
               <div className="space-y-6">
-                <div className="bg-white rounded-lg shadow-sm">
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl shadow-lg border border-purple-100">
                   {cart.map((item) => (
-                    <div key={`${item.productId}-${item.variant}`} className="flex items-center p-4 border-b last:border-b-0">
+                    <div key={`${item.productId}-${item.variant}`} className="flex items-center p-4 border-b border-purple-100 last:border-b-0 bg-white/80 backdrop-blur-sm rounded-2xl mx-2 my-2 shadow-sm" style={{
+                      background: 'linear-gradient(145deg, #ffffff 0%, #fefefe 100%)',
+                      border: '1px solid rgba(168, 85, 247, 0.1)'
+                    }}>
                       <img
                         src={item.product.image}
                         alt={item.product.name}
-                        className="w-16 h-16 object-cover rounded-lg mr-4"
+                        className="w-16 h-16 object-cover rounded-lg mr-4 border-2 border-purple-200"
                       />
                       <div className="flex-1">
                         <h4 className="font-semibold text-gray-900">{item.product.name}</h4>
@@ -1349,40 +1675,46 @@ const PetShops: React.FC = () => {
                       <div className="flex items-center space-x-3">
                         <button
                           onClick={() => updateCartQuantity(item.productId, item.variant, item.quantity - 1)}
-                          className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300"
+                          className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-200 to-pink-200 flex items-center justify-center hover:from-purple-300 hover:to-pink-300 transition-all duration-300 text-purple-700 font-bold"
                         >
                           -
                         </button>
-                        <span className="font-semibold">{item.quantity}</span>
+                        <span className="font-semibold text-purple-700 min-w-[2rem] text-center">{item.quantity}</span>
                         <button
                           onClick={() => updateCartQuantity(item.productId, item.variant, item.quantity + 1)}
-                          className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300"
+                          className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-200 to-pink-200 flex items-center justify-center hover:from-purple-300 hover:to-pink-300 transition-all duration-300 text-purple-700 font-bold"
                         >
                           +
                         </button>
                         <button
                           onClick={() => removeFromCart(item.productId, item.variant)}
-                          className="text-red-500 hover:text-red-700 ml-4"
+                          className="ml-4 p-2 bg-gradient-to-r from-red-400 to-pink-500 text-white rounded-full hover:from-red-300 hover:to-pink-400 transition-all duration-300 shadow-lg hover:shadow-xl"
                         >
-                          <X className="h-5 w-5" />
+                          <X className="h-4 w-4" />
                         </button>
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-xl font-semibold">Total: ${getCartTotal().toFixed(2)}</span>
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-purple-100">
+                  <div className="flex justify-between items-center mb-6 p-4 rounded-xl" style={{
+                    background: 'linear-gradient(135deg, #f0f9ff 0%, #faf5ff 100%)',
+                    boxShadow: '0 0 20px rgba(168, 85, 247, 0.2)'
+                  }}>
+                    <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Total: ${getCartTotal().toFixed(2)}</span>
                   </div>
                   <div className="space-y-3">
-                    <Button className="w-full" size="lg">
+                    <button className="w-full px-6 py-4 bg-gradient-to-r from-orange-400 to-red-500 text-white font-bold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center text-lg">
                       <CreditCard className="h-5 w-5 mr-2" />
                       Proceed to Checkout
-                    </Button>
-                    <Button variant="outline" className="w-full" onClick={() => setActiveTab('browse')}>
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('browse')}
+                      className="w-full px-6 py-3 bg-gradient-to-r from-gray-400 to-gray-600 text-white font-medium rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    >
                       Continue Shopping
-                    </Button>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1773,8 +2105,10 @@ const PetShops: React.FC = () => {
             }}
           />
         )}
+        </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

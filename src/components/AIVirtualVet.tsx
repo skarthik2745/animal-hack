@@ -145,12 +145,48 @@ const AIVirtualVet: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 pt-20">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">🩺 AI Virtual Vet Assistant</h1>
-          <p className="text-lg text-gray-600">24/7 AI-powered pet health guidance and symptom analysis</p>
-        </div>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;600;700;800&family=Poppins:wght@400;500;600&display=swap');
+        .vet-page {
+          position: relative;
+          min-height: 100vh;
+          padding-top: 80px;
+          background: linear-gradient(45deg, #1e3a8a, #06b6d4, #7c3aed, #ec4899);
+          background-size: 400% 400%;
+          animation: gradientShift 5s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        
+        .vet-heading {
+          font-family: 'Montserrat Alternates', sans-serif;
+          font-weight: 800;
+          font-size: 4.5rem;
+          color: #ffffff;
+          text-shadow: 0px 0px 30px rgba(255, 255, 255, 0.8), 0px 0px 60px rgba(255, 255, 255, 0.4);
+          margin-bottom: 1rem;
+        }
+        
+        .vet-subheading {
+          font-family: 'Poppins', sans-serif;
+          font-size: 1.4rem;
+          font-weight: 500;
+          color: #a7f3d0;
+          text-shadow: 0px 0px 15px rgba(167, 243, 208, 0.6);
+        }
+      `}</style>
+      
+      <div className="vet-page">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="text-center mb-8">
+            <h1 className="vet-heading">AI Virtual Vet Assistant</h1>
+            <p className="vet-subheading">24/7 AI-powered pet health guidance and symptom analysis</p>
+          </div>
 
         {/* Mode & Tab Selection */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
@@ -362,8 +398,9 @@ const AIVirtualVet: React.FC = () => {
             </Card>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

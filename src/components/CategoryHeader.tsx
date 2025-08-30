@@ -12,14 +12,14 @@ const CategoryHeader: React.FC = () => {
   const categories = {
     Pets: [
       { path: '/adoption-events', label: 'Adoption Events' },
-      { path: '/pet-surrender', label: 'Pet Surrender & Care' },
       { path: '/pet-doctors', label: 'Pet Doctors & Hospitals' },
       { path: '/pet-trainers', label: 'Pet Trainers' },
+      { path: '/pet-care-services', label: 'Pet Care & Caretaker Services' },
       { path: '/pet-shops', label: 'Pet Shops & Products' },
       { path: '/pet-restaurants', label: 'Pet-Friendly Restaurants' },
       { path: '/health-records', label: 'Health & Vaccinations' },
       { path: '/pet-stories', label: 'Pet Stories' },
-      { path: '/pet-gallery', label: 'Pet Gallery' }
+      { path: '/pet-gallery', label:'Pet Gallery' }
     ],
     Community: [
       { path: '/lost-found', label: 'Lost & Found Pets' },

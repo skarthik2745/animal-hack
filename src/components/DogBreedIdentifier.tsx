@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Upload, Camera, Loader2, Dog, Info } from 'lucide-react';
 import { Card } from './Card';
 
@@ -86,15 +86,163 @@ const DogBreedIdentifier: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    let isActive = true;
+    
+    const createMovingStars = () => {
+      const container = document.querySelector('.galaxy-page');
+      if (!container || !isActive) return;
+      
+      for (let i = 0; i < 500; i++) {
+        if (!isActive) break;
+        
+        const star = document.createElement('div');
+        star.className = 'moving-star';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.left = '-10px';
+        star.style.animationDelay = Math.random() * 15 + 's';
+        star.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        
+        container.appendChild(star);
+        
+        setTimeout(() => {
+          if (star.parentNode) {
+            star.parentNode.removeChild(star);
+          }
+        }, 25000);
+      }
+    };
+    
+    createMovingStars();
+    const interval = setInterval(createMovingStars, 5000);
+    
+    return () => {
+      isActive = false;
+      clearInterval(interval);
+    };
+  }, []);
+
+
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 pt-20">
-      <div className="max-w-4xl mx-auto px-4 py-8">
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+        .galaxy-page {
+          position: relative;
+          min-height: 100vh;
+          padding-top: 80px;
+          background: 
+            radial-gradient(ellipse at 20% 50%, #6A1B9A 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 20%, #AB47BC 0%, transparent 50%),
+            radial-gradient(ellipse at 40% 80%, #29B6F6 0%, transparent 50%),
+            radial-gradient(ellipse at 60% 30%, #FF4081 0%, transparent 50%),
+            linear-gradient(135deg, #0B0033 0%, #1A0B33 50%, #0B1A33 100%);
+          animation: galaxyPulse 8s ease-in-out infinite alternate;
+        }
+        
+        .moving-star {
+          position: absolute;
+          background: white;
+          border-radius: 50%;
+          width: 4px;
+          height: 4px;
+          box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+          animation: moveStar 15s linear infinite;
+        }
+        
+        @keyframes moveStar {
+          from {
+            transform: translateX(-100px);
+          }
+          to {
+            transform: translateX(calc(100vw + 100px));
+          }
+        }
+        
+        @keyframes galaxyPulse {
+          0% { opacity: 0.8; }
+          100% { opacity: 1; }
+        }
+        
+        .galaxy-star {
+          position: absolute;
+          background: #FFFFFF;
+          border-radius: 50%;
+          width: 1px;
+          height: 1px;
+          box-shadow: 0 0 4px rgba(255, 255, 255, 0.8), 0 0 8px rgba(255, 241, 118, 0.4);
+          animation: galaxyTwinkle 3s infinite ease-in-out;
+          will-change: opacity, transform;
+          transform: translateZ(0);
+        }
+        
+        .galaxy-star.medium {
+          width: 2px;
+          height: 2px;
+          box-shadow: 0 0 6px rgba(255, 255, 255, 0.9), 0 0 12px rgba(171, 71, 188, 0.5);
+          animation: galaxyTwinkle 4s infinite ease-in-out;
+        }
+        
+        .galaxy-star.large {
+          width: 3px;
+          height: 3px;
+          box-shadow: 0 0 8px rgba(255, 255, 255, 1), 0 0 16px rgba(41, 182, 246, 0.6);
+          animation: galaxyTwinkle 5s infinite ease-in-out;
+        }
+        
+        @keyframes galaxyTwinkle {
+          0%, 100% { 
+            opacity: 0.4;
+            transform: translateZ(0) scale(0.8);
+          }
+          50% { 
+            opacity: 1;
+            transform: translateZ(0) scale(1.2);
+          }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+          .galaxy-star { 
+            animation: none;
+            opacity: 0.6;
+          }
+        }
+        
+        .breed-heading {
+          font-family: 'Poppins', sans-serif;
+          font-weight: 800;
+          font-size: 3rem;
+          text-align: center;
+          background: linear-gradient(90deg, #FFD700, #00E5FF);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-shadow: 0px 0px 12px rgba(255, 255, 255, 0.6);
+          margin-bottom: 1rem;
+          letter-spacing: 1px;
+        }
+        
+        .breed-subtext {
+          font-family: 'Poppins', sans-serif;
+          font-size: 1.3rem;
+          color: #E0F7FA;
+          text-align: center;
+          font-weight: 600;
+          font-style: italic;
+          text-shadow: 0px 0px 6px #4DD0E1;
+        }
+      `}</style>
+      
+      <div className="galaxy-page">
+        <div className="px-4" style={{position: 'relative', zIndex: 1}}>
+      <div className="max-w-4xl mx-auto py-8">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <Dog className="h-12 w-12 text-blue-600 mr-3" />
-            <h1 className="text-4xl font-bold text-gray-900">Dog Breed Identifier</h1>
+            <Dog className="h-12 w-12 text-pink-400 mr-3" />
+            <h1 className="breed-heading">Dog Breed Identifier</h1>
           </div>
-          <p className="text-lg text-gray-600">Upload a photo and let AI identify your dog's breed with detailed information</p>
+          <p className="breed-subtext">Upload a photo and let AI identify your dog's breed with detailed information</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -211,7 +359,9 @@ const DogBreedIdentifier: React.FC = () => {
           </Card>
         </div>
       </div>
-    </div>
+        </div>
+      </div>
+    </>
   );
 };
 

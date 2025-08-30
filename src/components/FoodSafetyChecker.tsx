@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Upload, Search, AlertTriangle, CheckCircle, Camera, Loader2 } from 'lucide-react';
 import { Card } from './Card';
 
@@ -109,13 +109,129 @@ const FoodSafetyChecker: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    const createBouncingBalls = () => {
+      const container = document.querySelector('.food-safety-page');
+      if (!container) return;
+      
+      const colors = ['#FF4444', '#4444FF', '#44FF44', '#FFFF44', '#FF44FF', '#FF8844'];
+      
+      // Main area balls (lower 70%)
+      for (let i = 0; i < 200; i++) {
+        const ball = document.createElement('div');
+        ball.className = 'bouncing-ball';
+        ball.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        ball.style.left = Math.random() * 100 + '%';
+        ball.style.top = (Math.random() * 70 + 30) + '%';
+        ball.style.animationDelay = Math.random() * 5 + 's';
+        ball.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        container.appendChild(ball);
+      }
+      
+      // Top left corner balls
+      for (let i = 0; i < 24; i++) {
+        const ball = document.createElement('div');
+        ball.className = 'bouncing-ball';
+        ball.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        ball.style.left = Math.random() * 25 + '%';
+        ball.style.top = Math.random() * 25 + '%';
+        ball.style.animationDelay = Math.random() * 5 + 's';
+        ball.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        container.appendChild(ball);
+      }
+      
+      // Top right corner balls
+      for (let i = 0; i < 25; i++) {
+        const ball = document.createElement('div');
+        ball.className = 'bouncing-ball';
+        ball.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        ball.style.left = (Math.random() * 25 + 75) + '%';
+        ball.style.top = Math.random() * 25 + '%';
+        ball.style.animationDelay = Math.random() * 5 + 's';
+        ball.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        container.appendChild(ball);
+      }
+      
+      // Top center balls (above heading)
+      for (let i = 0; i < 20; i++) {
+        const ball = document.createElement('div');
+        ball.className = 'bouncing-ball';
+        ball.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        ball.style.left = (Math.random() * 50 + 25) + '%';
+        ball.style.top = Math.random() * 15 + '%';
+        ball.style.animationDelay = Math.random() * 5 + 's';
+        ball.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        container.appendChild(ball);
+      }
+    };
+    
+    createBouncingBalls();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 pt-20">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">🥗 Food Safety Checker</h1>
-          <p className="text-lg text-gray-600">Check if foods are safe for your pet before sharing</p>
-        </div>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+        .food-safety-page {
+          position: relative;
+          min-height: 100vh;
+          padding-top: 80px;
+          background: linear-gradient(135deg, #E8F5E8 0%, #FFF9C4 50%, #E1F5FE 100%);
+          overflow: hidden;
+        }
+        
+        .bouncing-ball {
+          position: absolute;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          animation: bounce 3s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+          0%, 100% {
+            transform: translateY(0) translateX(0);
+          }
+          25% {
+            transform: translateY(-50px) translateX(30px);
+          }
+          50% {
+            transform: translateY(0) translateX(60px);
+          }
+          75% {
+            transform: translateY(-30px) translateX(90px);
+          }
+        }
+        
+        .food-heading {
+          font-family: 'Nunito', sans-serif;
+          font-weight: 800;
+          font-size: 3.5rem;
+          background: linear-gradient(90deg, #00695C, #004D40, #00BCD4);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-shadow: 0px 4px 16px rgba(0, 105, 92, 0.5);
+          margin-bottom: 1rem;
+        }
+        
+        .food-subline {
+          font-family: 'Nunito', sans-serif;
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: #00695C;
+          border-bottom: 4px solid #00BCD4;
+          display: inline-block;
+          padding-bottom: 8px;
+        }
+      `}</style>
+      
+      <div className="food-safety-page">
+        <div className="max-w-4xl mx-auto px-4 py-8" style={{position: 'relative', zIndex: 1}}>
+          <div className="text-center mb-8">
+            <h1 className="food-heading">Food Safety Checker</h1>
+            <p className="food-subline">Check if foods are safe for your pet before sharing</p>
+          </div>
 
         {/* Pet Selection */}
         <Card className="p-6 mb-6">
@@ -255,8 +371,9 @@ const FoodSafetyChecker: React.FC = () => {
             )}
           </Card>
         </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -7,7 +7,7 @@ import Home from './Home';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import AdoptionEvents from './components/AdoptionEvents';
-import PetSurrender from './components/PetSurrender';
+
 import PetDoctors from './components/PetDoctors';
 import LostFound from './components/LostFound';
 import PetTrainers from './components/PetTrainers';
@@ -30,6 +30,7 @@ import FoodSafetyChecker from './components/FoodSafetyChecker';
 import PetLanguageTranslator from './components/PetLanguageTranslator';
 import AIVirtualVet from './components/AIVirtualVet';
 import PetGallery from './components/PetGallery';
+import PetCareServices from './components/PetCareServices';
 import { AuthProvider } from './AuthContext';
 import { initializeStorage } from './storage';
 
@@ -43,7 +44,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
             <Header />
             <main className="min-h-screen">
@@ -54,7 +55,7 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
 
                 <Route path="/adoption-events" element={<AdoptionEvents />} />
-                <Route path="/pet-surrender" element={<PetSurrender />} />
+
                 <Route path="/pet-doctors" element={<PetDoctors />} />
                 <Route path="/lost-found" element={<LostFound />} />
                 <Route path="/pet-trainers" element={<PetTrainers />} />
@@ -76,6 +77,7 @@ function App() {
                 <Route path="/ai-assistant/language-translator" element={<PetLanguageTranslator />} />
                 <Route path="/ai-assistant/virtual-vet" element={<AIVirtualVet />} />
                 <Route path="/pet-gallery" element={<PetGallery />} />
+                <Route path="/pet-care-services" element={<PetCareServices />} />
               </Routes>
             </main>
             <Footer />

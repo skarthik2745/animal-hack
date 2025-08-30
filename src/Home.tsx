@@ -35,6 +35,49 @@ const Home: React.FC = () => {
       records: healthRecordsStorage.getAll().length
     });
   }, []);
+
+  // Generate animated galaxy stars
+  useEffect(() => {
+    const createGalaxyStars = () => {
+      const container = document.querySelector('.galaxy-stars');
+      if (!container) return;
+      
+      for (let i = 0; i <50; i++) {
+        const star = document.createElement('div');
+        star.className = 'galaxy-star';
+        
+        const starType = Math.random();
+        if (starType > 0.7) {
+          star.classList.add('star-violet');
+        } else if (starType > 0.4) {
+          star.classList.add('star-blue');
+        } else {
+          star.classList.add('star-white');
+        }
+        
+        const size = Math.random() * 8 + 4;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = '-20px';
+        star.style.animationDelay = Math.random() * 5 + 's';
+        star.style.animationDuration = (Math.random() * 6 + 8) + 's';
+        
+        container.appendChild(star);
+        
+        setTimeout(() => {
+          if (star.parentNode) {
+            star.parentNode.removeChild(star);
+          }
+        }, 15000);
+      }
+    };
+    
+    createGalaxyStars();
+    
+    const interval = setInterval(createGalaxyStars, 1000);
+    return () => clearInterval(interval);
+  }, []);
   const getDataCount = (featureId: string) => {
     switch (featureId) {
       case 'adoption-events': return dataCounts.events;
@@ -242,36 +285,153 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 lg:py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Connecting Hearts for
-              <span className="block bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-                Animal Welfare
-              </span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              Join our community-driven platform dedicated to pet care, wildlife conservation, 
-              and creating a better world for all animals through adoption, rescue, and awareness.
-            </p>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Roboto:wght@400;500;600&display=swap');
+        
+        .galaxy-container {
+          background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%);
+          min-height: 100vh;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .galaxy-stars {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100vh;
+          pointer-events: none;
+          z-index: 0;
+        }
+        
+        .galaxy-star {
+          position: absolute;
+          border-radius: 50%;
+          animation: floatDown linear infinite;
+        }
+        
+        .star-white {
+          background: white;
+          box-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 255, 255, 0.6);
+        }
+        
+        .star-blue {
+          background: #87ceeb;
+          box-shadow: 0 0 18px rgba(135, 206, 235, 0.9), 0 0 35px rgba(135, 206, 235, 0.7);
+        }
+        
+        .star-violet {
+          background: #dda0dd;
+          box-shadow: 0 0 20px rgba(221, 160, 221, 0.9), 0 0 40px rgba(221, 160, 221, 0.6);
+        }
+        
+        @keyframes floatDown {
+          0% {
+            transform: translateY(-50px) scale(0.5);
+            opacity: 0;
+          }
+          5% {
+            opacity: 1;
+          }
+          95% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(calc(100vh + 100px)) scale(1.5);
+            opacity: 0;
+          }
+        }
+        
+        .galaxy-heading {
+          font-family: 'Poppins', sans-serif;
+          font-weight: 900;
+          background: linear-gradient(135deg, #00cfff 0%, #9b5de5 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-shadow: 0 0 20px rgba(0, 207, 255, 0.5);
+          filter: drop-shadow(0 0 10px rgba(155, 93, 229, 0.3));
+        }
+        
+        .galaxy-subheading {
+          font-family: 'Roboto', sans-serif;
+          font-weight: 500;
+          background: linear-gradient(135deg, #00f5d4 0%, #ff9e80 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        
+        .galaxy-nav {
+          background: rgba(13, 13, 38, 0.7);
+          backdrop-filter: blur(10px);
+        }
+        
+        .galaxy-card {
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(0, 229, 255, 0.3);
+          border-radius: 16px;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(155, 93, 229, 0.1);
+          transition: all 0.3s ease;
+          position: relative;
+          z-index: 1;
+        }
+        
+        .galaxy-card:hover {
+          border-color: rgba(155, 93, 229, 0.6);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(155, 93, 229, 0.3);
+          transform: translateY(-8px) scale(1.02);
+        }
+        
+        .galaxy-card-title {
+          background: linear-gradient(135deg, #00cfff 0%, #9b5de5 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          font-weight: 700;
+        }
+        
+        .galaxy-content {
+          position: relative;
+          z-index: 1;
+        }
+      `}</style>
+      
+      <div className="galaxy-container">
+        <div className="galaxy-stars"></div>
+        
+        {/* Hero Section */}
+        <section className="galaxy-content relative overflow-hidden py-20 lg:py-32">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h1 className="galaxy-heading text-4xl sm:text-5xl lg:text-6xl mb-6">
+                Connecting Hearts for
+                <span className="block">
+                  Animal Welfare
+                </span>
+              </h1>
+              <p className="galaxy-subheading text-xl max-w-3xl mx-auto mb-8">
+                Join our community-driven platform dedicated to pet care, wildlife conservation, 
+                and creating a better world for all animals through adoption, rescue, and awareness.
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Features Grid */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Comprehensive Animal Care Platform
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Everything you need to care for pets, protect wildlife, and build a stronger animal-loving community
-            </p>
-          </div>
+        {/* Features Grid */}
+        <section className="galaxy-content py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="galaxy-heading text-3xl sm:text-4xl mb-4">
+                Comprehensive Animal Care Platform
+              </h2>
+              <p className="galaxy-subheading text-xl max-w-3xl mx-auto">
+                Everything you need to care for pets, protect wildlife, and build a stronger animal-loving community
+              </p>
+            </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature) => {
@@ -280,19 +440,19 @@ const Home: React.FC = () => {
                 <Link
                   key={feature.id}
                   to={`/${feature.id}`}
-                  className={`${feature.bgColor} p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group hover:scale-105 hover:-translate-y-1 border border-white/50`}
+                  className="galaxy-card p-6 group"
                 >
                   <div className={`w-14 h-14 bg-gradient-to-r ${feature.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
                     <IconComponent className="h-7 w-7 text-white" />
                   </div>
-                  <h3 className={`text-lg font-bold ${feature.textColor} mb-3 group-hover:text-opacity-80 transition-colors`}>
+                  <h3 className="galaxy-card-title text-lg mb-3 transition-colors">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed mb-2">
+                  <p className="text-white text-sm leading-relaxed mb-2 opacity-90">
                     {feature.description}
                   </p>
                   {getDataCount(feature.id) > 0 && (
-                    <div className="text-xs text-gray-500 font-medium">
+                    <div className="text-xs text-gray-300 font-medium">
                       {getDataCount(feature.id)} items stored
                     </div>
                   )}
@@ -300,9 +460,10 @@ const Home: React.FC = () => {
               );
             })}
           </div>
-        </div>
-      </section>
-    </div>
+          </div>
+        </section>
+      </div>
+    </>
   );
 };
 
