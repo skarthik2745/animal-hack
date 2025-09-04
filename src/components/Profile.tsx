@@ -723,29 +723,98 @@ const Profile: React.FC = () => {
   const favoriteEvents = events.filter(event => favorites.includes(event.id));
 
   return (
-    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            My Profile
-          </h1>
-          <div className="bg-white rounded-lg p-6 shadow-sm">
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+        
+        .pawcare-container {
+          background: #F7FCF8;
+          min-height: 100vh;
+          font-family: 'Inter', sans-serif;
+        }
+        
+        .pawcare-heading {
+          font-family: 'Poppins', sans-serif;
+          font-weight: 600;
+          color: #2C3E50;
+        }
+        
+        .pawcare-subheading {
+          font-family: 'Poppins', sans-serif;
+          font-weight: 500;
+          color: #5D6D7E;
+        }
+        
+        .pawcare-card {
+          background: #FFFFFF;
+          border-radius: 12px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+          border: 1px solid rgba(26, 188, 156, 0.1);
+        }
+        
+        .pawcare-btn {
+          background: #2E86C1;
+          color: white;
+          font-weight: 500;
+          border-radius: 8px;
+          transition: all 0.2s ease;
+        }
+        
+        .pawcare-btn:hover {
+          background: #2874A6;
+          transform: translateY(-1px);
+        }
+        
+        .pawcare-section-title {
+          font-family: 'Poppins', sans-serif;
+          font-weight: 600;
+          color: #2C3E50;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        
+        .whatsapp-chat-btn {
+          background: #25D366;
+          color: white;
+          font-weight: 500;
+          border-radius: 8px;
+          transition: all 0.2s ease;
+        }
+        
+        .whatsapp-chat-btn:hover {
+          background: #128C7E;
+          transform: translateY(-1px);
+        }
+      `}</style>
+      
+      <div className="pawcare-container py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="pawcare-heading text-4xl sm:text-5xl mb-4">
+              My Profile
+            </h1>
+            <p className="pawcare-subheading text-xl">
+              Manage your details, events, and chats in one place
+            </p>
+          </div>
+          
+          <div className="pawcare-card p-6 mb-8">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">{user?.name}</h2>
+                <h2 className="pawcare-heading text-xl">{user?.name}</h2>
                 <p className="text-gray-600">{user?.email}</p>
                 <p className="text-sm text-gray-500 mt-2">Member since {new Date().toLocaleDateString()}</p>
               </div>
-              <Button onClick={logout} variant="outline">
+              <button onClick={logout} className="pawcare-btn px-6 py-2">
                 Sign Out
-              </Button>
+              </button>
             </div>
           </div>
-        </div>
 
         {/* My Events Section */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">My Events ({myEvents.length})</h2>
+          <h2 className="pawcare-section-title text-2xl mb-6">🐾 My Events ({myEvents.length})</h2>
           {myEvents.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {myEvents.map((event) => {
@@ -819,9 +888,9 @@ const Profile: React.FC = () => {
               })}
             </div>
           ) : (
-            <div className="text-center py-12 bg-white rounded-lg">
+            <div className="pawcare-card text-center py-12">
               <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No events created yet</h3>
+              <h3 className="pawcare-subheading text-lg mb-2">No events created yet</h3>
               <p className="text-gray-600">Start by creating your first adoption event!</p>
             </div>
           )}
@@ -829,7 +898,7 @@ const Profile: React.FC = () => {
 
         {/* Doctor Chat History Section */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Doctor Chats ({chatSessions.length})</h2>
+          <h2 className="pawcare-section-title text-2xl mb-6">🐾 Doctor Chats ({chatSessions.length})</h2>
           {chatSessions.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {chatSessions.map((session) => {
@@ -862,10 +931,8 @@ const Profile: React.FC = () => {
                         </div>
                       )}
                       
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="w-full"
+                      <button 
+                        className="whatsapp-chat-btn w-full py-2 px-4 text-sm flex items-center justify-center"
                         onClick={() => {
                           const unifiedSession: UnifiedChatSession = {
                             id: session.doctorId,
@@ -881,17 +948,17 @@ const Profile: React.FC = () => {
                         }}
                       >
                         <MessageCircle className="h-4 w-4 mr-2" />
-                        View Conversation
-                      </Button>
+                        Open WhatsApp Chat
+                      </button>
                     </CardContent>
                   </Card>
                 );
               })}
             </div>
           ) : (
-            <div className="text-center py-12 bg-white rounded-lg">
+            <div className="pawcare-card text-center py-12">
               <MessageCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No chat history yet</h3>
+              <h3 className="pawcare-subheading text-lg mb-2">No chat history yet</h3>
               <p className="text-gray-600">Start chatting with doctors to see your conversation history here!</p>
             </div>
           )}
@@ -899,7 +966,7 @@ const Profile: React.FC = () => {
 
         {/* Pet Stories Chat History Section */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Pet Stories Chats</h2>
+          <h2 className="pawcare-section-title text-2xl mb-6">🐾 Pet Stories Chats</h2>
           {(() => {
             const petStoriesChats = JSON.parse(localStorage.getItem('petStoriesChats') || '[]');
             return petStoriesChats.length > 0 ? (
@@ -936,10 +1003,8 @@ const Profile: React.FC = () => {
                           </div>
                         )}
                         
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="w-full"
+                        <button 
+                          className="whatsapp-chat-btn w-full py-2 px-4 text-sm flex items-center justify-center"
                           onClick={() => {
                             const unifiedSession: UnifiedChatSession = {
                               id: session.petId,
@@ -955,17 +1020,17 @@ const Profile: React.FC = () => {
                           }}
                         >
                           <MessageCircle className="h-4 w-4 mr-2" />
-                          View Conversation
-                        </Button>
+                          Open WhatsApp Chat
+                        </button>
                       </CardContent>
                     </Card>
                   );
                 })}
               </div>
             ) : (
-              <div className="text-center py-12 bg-white rounded-lg">
+              <div className="pawcare-card text-center py-12">
                 <MessageCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No pet conversations yet</h3>
+                <h3 className="pawcare-subheading text-lg mb-2">No pet conversations yet</h3>
                 <p className="text-gray-600">Start chatting with pet owners in Pet Stories to see your conversation history here!</p>
               </div>
             );
@@ -974,7 +1039,7 @@ const Profile: React.FC = () => {
 
         {/* Pet Trainers Chat History Section */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Pet Trainers Chats</h2>
+          <h2 className="pawcare-section-title text-2xl mb-6">🐾 Pet Trainers Chats</h2>
           {(() => {
             const trainerChats = JSON.parse(localStorage.getItem('trainerChats') || '[]');
             return trainerChats.length > 0 ? (
@@ -1011,10 +1076,8 @@ const Profile: React.FC = () => {
                           </div>
                         )}
                         
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="w-full"
+                        <button 
+                          className="whatsapp-chat-btn w-full py-2 px-4 text-sm flex items-center justify-center"
                           onClick={() => {
                             const unifiedSession: UnifiedChatSession = {
                               id: session.trainerId,
@@ -1030,17 +1093,17 @@ const Profile: React.FC = () => {
                           }}
                         >
                           <MessageCircle className="h-4 w-4 mr-2" />
-                          View Conversation
-                        </Button>
+                          Open WhatsApp Chat
+                        </button>
                       </CardContent>
                     </Card>
                   );
                 })}
               </div>
             ) : (
-              <div className="text-center py-12 bg-white rounded-lg">
+              <div className="pawcare-card text-center py-12">
                 <MessageCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No trainer conversations yet</h3>
+                <h3 className="pawcare-subheading text-lg mb-2">No trainer conversations yet</h3>
                 <p className="text-gray-600">Start chatting with pet trainers to see your conversation history here!</p>
               </div>
             );
@@ -1049,7 +1112,7 @@ const Profile: React.FC = () => {
 
         {/* Lost & Found Chat History Section */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Lost & Found Chats</h2>
+          <h2 className="pawcare-section-title text-2xl mb-6">🐾 Lost & Found Chats</h2>
           {(() => {
             const lostFoundChats = JSON.parse(localStorage.getItem('lostFoundChats') || '[]');
             return lostFoundChats.length > 0 ? (
@@ -1086,10 +1149,8 @@ const Profile: React.FC = () => {
                           </div>
                         )}
                         
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="w-full"
+                        <button 
+                          className="whatsapp-chat-btn w-full py-2 px-4 text-sm flex items-center justify-center"
                           onClick={() => {
                             const unifiedSession: UnifiedChatSession = {
                               id: session.postId,
@@ -1105,17 +1166,17 @@ const Profile: React.FC = () => {
                           }}
                         >
                           <MessageCircle className="h-4 w-4 mr-2" />
-                          View Conversation
-                        </Button>
+                          Open WhatsApp Chat
+                        </button>
                       </CardContent>
                     </Card>
                   );
                 })}
               </div>
             ) : (
-              <div className="text-center py-12 bg-white rounded-lg">
+              <div className="pawcare-card text-center py-12">
                 <MessageCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No lost & found conversations yet</h3>
+                <h3 className="pawcare-subheading text-lg mb-2">No lost & found conversations yet</h3>
                 <p className="text-gray-600">Start chatting with pet owners/finders to see your conversation history here!</p>
               </div>
             );
@@ -2625,6 +2686,7 @@ const Profile: React.FC = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

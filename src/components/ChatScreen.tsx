@@ -493,80 +493,225 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ session, onClose, showBackToPro
 
   const getMessageStatusIcon = (status: string) => {
     switch (status) {
-      case 'sent': return <Check className="h-3 w-3 text-gray-400" />;
-      case 'delivered': return <CheckCheck className="h-3 w-3 text-gray-400" />;
-      case 'read': return <CheckCheck className="h-3 w-3 text-blue-500" />;
+      case 'sent': return <Check className="h-3 w-3 text-white/60" />;
+      case 'delivered': return <CheckCheck className="h-3 w-3 text-white/60" />;
+      case 'read': return <CheckCheck className="h-3 w-3 text-cyan-300" />;
       default: return null;
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-white z-50 flex flex-col">
-      {/* Header */}
-      <div className="bg-emerald-600 text-white p-4 flex items-center shadow-lg">
-        <button
-          onClick={onClose}
-          className="mr-4 hover:bg-emerald-700 p-2 rounded-full transition-colors"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-        <img
-          src={session.image}
-          alt={session.name}
-          className="w-10 h-10 rounded-full mr-3 border-2 border-white object-cover"
-        />
-        <div className="flex-1">
-          <h3 className="font-semibold">{session.name}</h3>
-          <p className="text-sm text-emerald-100">
-            {session.isOnline ? (
-              <span className="flex items-center">
-                <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                Online
-              </span>
-            ) : (
-              `Last seen ${session.lastSeen ? formatTime(session.lastSeen) : 'recently'}`
-            )}
-          </p>
-        </div>
-        {showBackToProfile && (
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        .whatsapp-chat {
+          font-family: 'Poppins', sans-serif;
+          background: #ECE5DD;
+          position: relative;
+        }
+        
+        .whatsapp-chat::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M50 30c-11 0-20 9-20 20s9 20 20 20 20-9 20-20-9-20-20-20zm0 35c-8.3 0-15-6.7-15-15s6.7-15 15-15 15 6.7 15 15-6.7 15-15 15z'/%3E%3Cpath d='M20 20h10v10h-10z'/%3E%3Cpath d='M70 70h10v10h-10z'/%3E%3C/g%3E%3C/svg%3E");
+          opacity: 0.1;
+          pointer-events: none;
+        }
+        
+        .whatsapp-header {
+          background: #075E54;
+          color: white;
+          border-bottom: none;
+        }
+        
+        .user-message {
+          background: #DCF8C6;
+          color: #000;
+          border-radius: 7.5px 7.5px 7.5px 0;
+          box-shadow: 0 1px 0.5px rgba(0,0,0,.13);
+          position: relative;
+        }
+        
+        .user-message::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          right: -8px;
+          width: 0;
+          height: 0;
+          border: 8px solid transparent;
+          border-left-color: #DCF8C6;
+          border-bottom: 0;
+          border-right: 0;
+        }
+        
+        .other-message {
+          background: #FFFFFF;
+          color: #000;
+          border-radius: 7.5px 7.5px 0 7.5px;
+          box-shadow: 0 1px 0.5px rgba(0,0,0,.13);
+          position: relative;
+        }
+        
+        .other-message::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: -8px;
+          width: 0;
+          height: 0;
+          border: 8px solid transparent;
+          border-right-color: #FFFFFF;
+          border-bottom: 0;
+          border-left: 0;
+        }
+        
+        .whatsapp-input {
+          background: #F0F0F0;
+          border: none;
+          border-radius: 21px;
+          padding: 9px 12px;
+          font-size: 15px;
+          outline: none;
+          font-family: 'Poppins', sans-serif;
+        }
+        
+        .whatsapp-input:focus {
+          background: #FFFFFF;
+        }
+        
+        .whatsapp-send-btn {
+          background: #25D366;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          width: 45px;
+          height: 45px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+        }
+        
+        .whatsapp-send-btn:hover {
+          background: #128C7E;
+          transform: scale(1.05);
+        }
+        
+        .whatsapp-typing {
+          background: #FFFFFF;
+          border-radius: 7.5px 7.5px 0 7.5px;
+          box-shadow: 0 1px 0.5px rgba(0,0,0,.13);
+          position: relative;
+        }
+        
+        .whatsapp-typing::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: -8px;
+          width: 0;
+          height: 0;
+          border: 8px solid transparent;
+          border-right-color: #FFFFFF;
+          border-bottom: 0;
+          border-left: 0;
+        }
+        
+        .message-time {
+          font-size: 11px;
+          color: #667781;
+          margin-top: 2px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 2px;
+        }
+        
+        .tick-mark {
+          font-size: 12px;
+          color: #667781;
+        }
+        
+        .tick-mark.read {
+          color: #4FC3F7;
+        }
+        
+        .online-status {
+          font-size: 13px;
+          color: rgba(255,255,255,0.8);
+        }
+      `}</style>
+      
+      <div className="fixed inset-0 whatsapp-chat z-50 flex flex-col">
+        {/* Header */}
+        <div className="whatsapp-header text-white p-4 flex items-center shadow-lg relative z-10">
           <button
-            onClick={() => {
-              if (window.history.length > 1) {
-                window.history.back();
-              } else {
-                window.location.href = '/profile';
-              }
-            }}
-            className="ml-2 px-3 py-1 bg-emerald-700 hover:bg-emerald-800 rounded-lg text-sm transition-colors"
+            onClick={onClose}
+            className="mr-4 hover:bg-white/20 p-2 rounded-full transition-colors"
           >
-            Back to Profile
+            <ArrowLeft className="h-5 w-5" />
           </button>
-        )}
-      </div>
+          <div className="relative">
+            <img
+              src={session.image}
+              alt={session.name}
+              className="w-10 h-10 rounded-full mr-3 object-cover"
+            />
+            {session.isOnline && (
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
+            )}
+          </div>
+          <div className="flex-1">
+            <h3 className="font-semibold text-lg">{session.name}</h3>
+            <p className="online-status">
+              {session.isOnline ? 'online' : `last seen ${session.lastSeen ? formatTime(session.lastSeen) : 'recently'}`}
+            </p>
+          </div>
+          {showBackToProfile && (
+            <button
+              onClick={() => {
+                if (window.history.length > 1) {
+                  window.history.back();
+                } else {
+                  window.location.href = '/profile';
+                }
+              }}
+              className="ml-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-sm transition-colors backdrop-blur-sm"
+            >
+              Back to Profile
+            </button>
+          )}
+        </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto bg-gray-50 p-4 space-y-2">
-        {messages.map((message) => (
-          <div key={message.id} className={`flex ${message.isFromUser ? 'justify-end' : 'justify-start'}`}>
-            <div className="relative group max-w-xs lg:max-w-md">
-              {message.deleted ? (
-                <div className={`px-3 py-2 rounded-lg text-sm italic text-gray-500 ${
-                  message.isFromUser ? 'bg-gray-200' : 'bg-white'
-                }`}>
-                  {message.deletedForEveryone ? 'This message was deleted' : 'You deleted this message'}
-                </div>
-              ) : (
-                <div
-                  className={`px-3 py-2 rounded-lg text-sm relative ${
-                    message.isFromUser
-                      ? 'bg-emerald-500 text-white'
-                      : 'bg-white text-gray-900 shadow-sm'
-                  }`}
-                  onContextMenu={(e) => {
-                    e.preventDefault();
-                    setShowMessageOptions(message.id);
-                  }}
-                >
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 relative z-10">
+          {messages.map((message) => (
+            <div key={message.id} className={`flex ${message.isFromUser ? 'justify-end' : 'justify-start'}`}>
+              <div className="relative group max-w-xs lg:max-w-md">
+                {message.deleted ? (
+                  <div className={`px-4 py-3 rounded-2xl text-sm italic text-gray-500 ${
+                    message.isFromUser ? 'bg-gray-200' : 'bg-white/80 backdrop-blur-sm'
+                  }`}>
+                    {message.deletedForEveryone ? 'This message was deleted' : 'You deleted this message'}
+                  </div>
+                ) : (
+                  <div
+                    className={`px-3 py-2 text-sm relative max-w-xs ${
+                      message.isFromUser
+                        ? 'user-message ml-auto'
+                        : 'other-message mr-auto'
+                    }`}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                      setShowMessageOptions(message.id);
+                    }}
+                  >
                   {message.type === 'image' ? (
                     <div>
                       <img
@@ -642,11 +787,13 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ session, onClose, showBackToPro
                     <p>{message.content}</p>
                   )}
                   
-                  <div className={`flex items-center justify-end mt-1 space-x-1 text-xs ${
-                    message.isFromUser ? 'text-emerald-100' : 'text-gray-500'
-                  }`}>
+                  <div className="message-time">
                     <span>{formatTime(message.timestamp)}</span>
-                    {message.isFromUser && getMessageStatusIcon(message.status)}
+                    {message.isFromUser && (
+                      <span className={`tick-mark ${message.status === 'read' ? 'read' : ''}`}>
+                        {message.status === 'sent' ? '✓' : message.status === 'delivered' ? '✓✓' : '✓✓'}
+                      </span>
+                    )}
                   </div>
                 </div>
               )}
@@ -682,18 +829,18 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ session, onClose, showBackToPro
           </div>
         ))}
         
-        {typing && (
-          <div className="flex justify-start">
-            <div className="bg-white px-3 py-2 rounded-lg shadow-sm">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+          {typing && (
+            <div className="flex justify-start">
+              <div className="whatsapp-typing px-3 py-2 max-w-xs mr-auto">
+                <div className="flex space-x-1 mb-1">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                </div>
+                <p className="text-xs text-gray-500 font-medium">{session.name} is typing...</p>
               </div>
-              <p className="text-xs text-gray-500 mt-1">{session.name} is typing...</p>
             </div>
-          </div>
-        )}
+          )}
         
         <div ref={messagesEndRef} />
       </div>
@@ -759,84 +906,84 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ session, onClose, showBackToPro
         </div>
       )}
 
-      {/* Input Area */}
-      <div className="bg-white border-t p-4">
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => imageInputRef.current?.click()}
-            className="p-2 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-full transition-colors"
-          >
-            <Image className="h-5 w-5" />
-          </button>
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="p-2 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-full transition-colors"
-          >
-            <Paperclip className="h-5 w-5" />
-          </button>
-          <div className="flex-1 relative">
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Type a message..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 pr-12"
-            />
-            <button 
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 text-gray-500 hover:text-emerald-600 transition-colors"
+        {/* Input Area */}
+        <div className="bg-white p-3 border-t border-gray-200 relative z-10">
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => imageInputRef.current?.click()}
+              className="p-2 text-gray-500 hover:text-gray-700 rounded-full transition-colors"
             >
-              <Smile className="h-5 w-5" />
+              <Image className="h-5 w-5" />
             </button>
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="p-2 text-gray-500 hover:text-gray-700 rounded-full transition-colors"
+            >
+              <Paperclip className="h-5 w-5" />
+            </button>
+            <div className="flex-1 relative">
+              <input
+                type="text"
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                placeholder="Type a message"
+                className="whatsapp-input w-full pr-12"
+              />
+              <button 
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <Smile className="h-5 w-5" />
+              </button>
             
-            {showEmojiPicker && (
-              <div className="absolute bottom-full right-0 mb-2 bg-white border rounded-lg shadow-lg p-4 w-96 max-h-80 overflow-y-auto z-20">
-                <div className="mb-2">
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Choose an emoji</h3>
+              {showEmojiPicker && (
+                <div className="absolute bottom-full right-0 mb-2 bg-white border rounded-lg shadow-lg p-4 w-96 max-h-80 overflow-y-auto z-20">
+                  <div className="mb-2">
+                    <h3 className="text-sm font-medium text-gray-700 mb-2">Choose an emoji</h3>
+                  </div>
+                  <div className="grid grid-cols-8 gap-1">
+                    {emojis.map((emoji, index) => (
+                      <button
+                        key={index}
+                        onClick={() => insertEmoji(emoji)}
+                        className="text-2xl hover:bg-gray-100 p-2 rounded transition-colors flex items-center justify-center h-10 w-10"
+                        title={emoji}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-8 gap-1">
-                  {emojis.map((emoji, index) => (
-                    <button
-                      key={index}
-                      onClick={() => insertEmoji(emoji)}
-                      className="text-2xl hover:bg-gray-100 p-2 rounded transition-colors flex items-center justify-center h-10 w-10"
-                      title={emoji}
-                    >
-                      {emoji}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+              )}
+            </div>
+            
+            {newMessage.trim() ? (
+              <button
+                onClick={sendMessage}
+                className="whatsapp-send-btn"
+              >
+                <Send className="h-5 w-5" />
+              </button>
+            ) : !showAudioPreview ? (
+              <button
+                onMouseDown={startRecording}
+                onMouseUp={stopRecording}
+                onMouseLeave={stopRecording}
+                onTouchStart={startRecording}
+                onTouchEnd={stopRecording}
+                className={`whatsapp-send-btn select-none ${
+                  isRecording 
+                    ? 'bg-red-500 scale-110' 
+                    : ''
+                }`}
+                title={isRecording ? 'Release to stop recording' : 'Hold to record voice message'}
+              >
+                <Mic className="h-5 w-5" />
+              </button>
+            ) : null}
           </div>
-          
-          {newMessage.trim() ? (
-            <button
-              onClick={sendMessage}
-              className="p-2 bg-emerald-500 text-white rounded-full hover:bg-emerald-600 transition-colors"
-            >
-              <Send className="h-5 w-5" />
-            </button>
-          ) : !showAudioPreview ? (
-            <button
-              onMouseDown={startRecording}
-              onMouseUp={stopRecording}
-              onMouseLeave={stopRecording}
-              onTouchStart={startRecording}
-              onTouchEnd={stopRecording}
-              className={`p-3 rounded-full transition-colors select-none ${
-                isRecording 
-                  ? 'bg-red-500 text-white scale-110' 
-                  : 'bg-emerald-500 text-white hover:bg-emerald-600'
-              }`}
-              title={isRecording ? 'Release to stop recording' : 'Hold to record voice message'}
-            >
-              <Mic className="h-5 w-5" />
-            </button>
-          ) : null}
         </div>
-      </div>
 
       {/* Hidden File Inputs */}
       <input
@@ -863,7 +1010,8 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ session, onClose, showBackToPro
           }}
         />
       )}
-    </div>
+      </div>
+    </>
   );
 };
 
