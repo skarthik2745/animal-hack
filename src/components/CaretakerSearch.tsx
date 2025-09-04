@@ -24,45 +24,7 @@ const CaretakerSearch: React.FC<SearchProps> = ({ onBack, onSelectCaretaker }) =
   const [locationFilter, setLocationFilter] = useState('');
 
   useEffect(() => {
-    // Generate animated galaxy stars
-    const createGalaxyStars = () => {
-      const container = document.querySelector('.galaxy-stars');
-      if (!container) return;
-      
-      for (let i = 0; i < 50; i++) {
-        const star = document.createElement('div');
-        star.className = 'galaxy-star';
-        
-        const starType = Math.random();
-        if (starType > 0.7) {
-          star.classList.add('star-violet');
-        } else if (starType > 0.4) {
-          star.classList.add('star-blue');
-        } else {
-          star.classList.add('star-white');
-        }
-        
-        const size = Math.random() * 8 + 4;
-        star.style.width = size + 'px';
-        star.style.height = size + 'px';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = '-20px';
-        star.style.animationDelay = Math.random() * 5 + 's';
-        star.style.animationDuration = (Math.random() * 6 + 8) + 's';
-        
-        container.appendChild(star);
-        
-        setTimeout(() => {
-          if (star.parentNode) {
-            star.parentNode.removeChild(star);
-          }
-        }, 15000);
-      }
-    };
-    
-    createGalaxyStars();
-    
-    const interval = setInterval(createGalaxyStars, 1000);
+
     
     // Load sample caretakers
     const sampleCaretakers: Caretaker[] = [
@@ -103,8 +65,7 @@ const CaretakerSearch: React.FC<SearchProps> = ({ onBack, onSelectCaretaker }) =
 
     const stored = JSON.parse(localStorage.getItem('caretakers') || '[]');
     setCaretakers([...sampleCaretakers, ...stored]);
-    
-    return () => clearInterval(interval);
+
   }, []);
 
   const filteredCaretakers = caretakers.filter(caretaker => {
@@ -124,53 +85,7 @@ const CaretakerSearch: React.FC<SearchProps> = ({ onBack, onSelectCaretaker }) =
           overflow: hidden;
         }
         
-        .galaxy-stars {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100vh;
-          pointer-events: none;
-          z-index: 0;
-        }
-        
-        .galaxy-star {
-          position: absolute;
-          border-radius: 50%;
-          animation: floatDown linear infinite;
-        }
-        
-        .star-white {
-          background: white;
-          box-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 255, 255, 0.6);
-        }
-        
-        .star-blue {
-          background: #87ceeb;
-          box-shadow: 0 0 18px rgba(135, 206, 235, 0.9), 0 0 35px rgba(135, 206, 235, 0.7);
-        }
-        
-        .star-violet {
-          background: #dda0dd;
-          box-shadow: 0 0 20px rgba(221, 160, 221, 0.9), 0 0 40px rgba(221, 160, 221, 0.6);
-        }
-        
-        @keyframes floatDown {
-          0% {
-            transform: translateY(-50px) scale(0.5);
-            opacity: 0;
-          }
-          5% {
-            opacity: 1;
-          }
-          95% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(calc(100vh + 100px)) scale(1.5);
-            opacity: 0;
-          }
-        }
+
         
         .galaxy-content {
           position: relative;
@@ -179,7 +94,6 @@ const CaretakerSearch: React.FC<SearchProps> = ({ onBack, onSelectCaretaker }) =
       `}</style>
       
       <div className="galaxy-container">
-        <div className="galaxy-stars"></div>
         <div className="galaxy-content max-w-6xl mx-auto py-20 px-4 sm:px-6 lg:px-8">
       <button
         onClick={onBack}

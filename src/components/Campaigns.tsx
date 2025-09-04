@@ -619,17 +619,19 @@ export default function Campaigns() {
 
   if (selectedCampaign) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 p-4">
+      <div className="min-h-screen p-4" style={{
+        background: 'linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%)'
+      }}>
         <div className="max-w-4xl mx-auto">
           <button
             onClick={() => setSelectedCampaign(null)}
-            className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 mb-6"
+            className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-6"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to Campaigns
           </button>
 
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden">
             <img 
               src={selectedCampaign.banner} 
               alt={selectedCampaign.title}
@@ -795,17 +797,19 @@ export default function Campaigns() {
 
   if (showCreateForm) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 p-4">
+      <div className="min-h-screen p-4" style={{
+        background: 'linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%)'
+      }}>
         <div className="max-w-2xl mx-auto">
           <button
             onClick={() => setShowCreateForm(false)}
-            className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 mb-6"
+            className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-6"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to Campaigns
           </button>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-6">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Create New Campaign</h2>
             
             <form onSubmit={handleCreateCampaign} className="space-y-4">
@@ -990,16 +994,26 @@ export default function Campaigns() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 p-4">
+    <div className="min-h-screen p-4" style={{
+      background: 'linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%)'
+    }}>
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800">Animal Awareness Campaigns</h1>
-            <p className="text-gray-600 mt-2">Discover, create, and participate in campaigns for animal welfare</p>
-          </div>
+        <div className="text-center mb-12">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6" style={{
+            background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 30px rgba(179, 136, 255, 0.8)'
+          }}>Animal Awareness Campaigns</h1>
+          <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed mb-8" style={{
+            background: 'linear-gradient(135deg, #a0e7ff, #d4b3ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 15px rgba(160, 231, 255, 0.4)'
+          }}>Discover, create, and participate in campaigns for animal welfare</p>
           <button
             onClick={() => setShowCreateForm(true)}
-            className="flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-xl hover:bg-emerald-700"
+            className="flex items-center gap-2 bg-emerald-600 text-white px-8 py-4 rounded-xl hover:bg-emerald-700 mx-auto"
           >
             <Plus className="w-5 h-5" />
             Create Campaign
@@ -1007,7 +1021,7 @@ export default function Campaigns() {
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-6 mb-8">
           <div className="grid md:grid-cols-4 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
@@ -1048,7 +1062,7 @@ export default function Campaigns() {
         {/* Campaign Cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCampaigns.map(campaign => (
-            <div key={campaign.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div key={campaign.id} className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
               <img 
                 src={campaign.banner} 
                 alt={campaign.title}

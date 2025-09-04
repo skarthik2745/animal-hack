@@ -169,45 +169,7 @@ const PetShops: React.FC = () => {
     loadChatSessions();
     loadCart();
     
-    // Generate animated galaxy stars
-    const createGalaxyStars = () => {
-      const container = document.querySelector('.galaxy-stars');
-      if (!container) return;
-      
-      for (let i = 0; i < 50; i++) {
-        const star = document.createElement('div');
-        star.className = 'galaxy-star';
-        
-        const starType = Math.random();
-        if (starType > 0.7) {
-          star.classList.add('star-violet');
-        } else if (starType > 0.4) {
-          star.classList.add('star-blue');
-        } else {
-          star.classList.add('star-white');
-        }
-        
-        const size = Math.random() * 8 + 4;
-        star.style.width = size + 'px';
-        star.style.height = size + 'px';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = '-20px';
-        star.style.animationDelay = Math.random() * 5 + 's';
-        star.style.animationDuration = (Math.random() * 6 + 8) + 's';
-        
-        container.appendChild(star);
-        
-        setTimeout(() => {
-          if (star.parentNode) {
-            star.parentNode.removeChild(star);
-          }
-        }, 15000);
-      }
-    };
-    
-    createGalaxyStars();
-    
-    const interval = setInterval(createGalaxyStars, 1000);
+
     
     // Check for openChat URL parameter
     const urlParams = new URLSearchParams(window.location.search);
@@ -221,8 +183,7 @@ const PetShops: React.FC = () => {
         }
       }, 500);
     }
-    
-    return () => clearInterval(interval);
+
   }, []);
 
   useEffect(() => {
@@ -975,53 +936,7 @@ const PetShops: React.FC = () => {
           overflow: hidden;
         }
         
-        .galaxy-stars {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100vh;
-          pointer-events: none;
-          z-index: 0;
-        }
-        
-        .galaxy-star {
-          position: absolute;
-          border-radius: 50%;
-          animation: floatDown linear infinite;
-        }
-        
-        .star-white {
-          background: white;
-          box-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 255, 255, 0.6);
-        }
-        
-        .star-blue {
-          background: #87ceeb;
-          box-shadow: 0 0 18px rgba(135, 206, 235, 0.9), 0 0 35px rgba(135, 206, 235, 0.7);
-        }
-        
-        .star-violet {
-          background: #dda0dd;
-          box-shadow: 0 0 20px rgba(221, 160, 221, 0.9), 0 0 40px rgba(221, 160, 221, 0.6);
-        }
-        
-        @keyframes floatDown {
-          0% {
-            transform: translateY(-50px) scale(0.5);
-            opacity: 0;
-          }
-          5% {
-            opacity: 1;
-          }
-          95% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(calc(100vh + 100px)) scale(1.5);
-            opacity: 0;
-          }
-        }
+
         
         .galaxy-content {
           position: relative;
@@ -1030,23 +945,21 @@ const PetShops: React.FC = () => {
       `}</style>
       
       <div className="galaxy-container">
-        <div className="galaxy-stars"></div>
-        
         <div className="galaxy-content min-h-screen py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl sm:text-5xl font-black mb-4" style={{
-            background: 'linear-gradient(135deg, #b388ff, #ff6ec7)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            textShadow: '0 0 30px rgba(179, 136, 255, 0.5)'
-          }}>
-            Pet Shops & Products
-          </h1>
-          <p className="text-xl font-medium italic mb-2" style={{
-            color: '#00cfff',
-            textShadow: '0 0 15px rgba(0, 207, 255, 0.3)'
-          }}>
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl sm:text-5xl font-black mb-4" style={{
+                background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                textShadow: '0 0 30px rgba(0, 229, 255, 0.5)'
+              }}>
+                Pet Shops & Products
+              </h1>
+              <p className="text-xl font-medium italic mb-2" style={{
+                color: '#00cfff',
+                textShadow: '0 0 15px rgba(0, 207, 255, 0.3)'
+              }}>
             Discover amazing products and connect with local pet shops
           </p>
           <div className="w-32 h-1 mx-auto rounded-full" style={{

@@ -109,132 +109,31 @@ const FoodSafetyChecker: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const createBouncingBalls = () => {
-      const container = document.querySelector('.food-safety-page');
-      if (!container) return;
-      
-      const colors = ['#FF4444', '#4444FF', '#44FF44', '#FFFF44', '#FF44FF', '#FF8844'];
-      
-      // Main area balls (lower 70%)
-      for (let i = 0; i < 200; i++) {
-        const ball = document.createElement('div');
-        ball.className = 'bouncing-ball';
-        ball.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        ball.style.left = Math.random() * 100 + '%';
-        ball.style.top = (Math.random() * 70 + 30) + '%';
-        ball.style.animationDelay = Math.random() * 5 + 's';
-        ball.style.animationDuration = (Math.random() * 3 + 2) + 's';
-        container.appendChild(ball);
-      }
-      
-      // Top left corner balls
-      for (let i = 0; i < 24; i++) {
-        const ball = document.createElement('div');
-        ball.className = 'bouncing-ball';
-        ball.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        ball.style.left = Math.random() * 25 + '%';
-        ball.style.top = Math.random() * 25 + '%';
-        ball.style.animationDelay = Math.random() * 5 + 's';
-        ball.style.animationDuration = (Math.random() * 3 + 2) + 's';
-        container.appendChild(ball);
-      }
-      
-      // Top right corner balls
-      for (let i = 0; i < 25; i++) {
-        const ball = document.createElement('div');
-        ball.className = 'bouncing-ball';
-        ball.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        ball.style.left = (Math.random() * 25 + 75) + '%';
-        ball.style.top = Math.random() * 25 + '%';
-        ball.style.animationDelay = Math.random() * 5 + 's';
-        ball.style.animationDuration = (Math.random() * 3 + 2) + 's';
-        container.appendChild(ball);
-      }
-      
-      // Top center balls (above heading)
-      for (let i = 0; i < 20; i++) {
-        const ball = document.createElement('div');
-        ball.className = 'bouncing-ball';
-        ball.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        ball.style.left = (Math.random() * 50 + 25) + '%';
-        ball.style.top = Math.random() * 15 + '%';
-        ball.style.animationDelay = Math.random() * 5 + 's';
-        ball.style.animationDuration = (Math.random() * 3 + 2) + 's';
-        container.appendChild(ball);
-      }
-    };
-    
-    createBouncingBalls();
-  }, []);
+
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
-        .food-safety-page {
-          position: relative;
-          min-height: 100vh;
-          padding-top: 80px;
-          background: linear-gradient(135deg, #E8F5E8 0%, #FFF9C4 50%, #E1F5FE 100%);
-          overflow: hidden;
-        }
-        
-        .bouncing-ball {
-          position: absolute;
-          width: 12px;
-          height: 12px;
-          border-radius: 50%;
-          animation: bounce 3s ease-in-out infinite;
-        }
-        
-        @keyframes bounce {
-          0%, 100% {
-            transform: translateY(0) translateX(0);
-          }
-          25% {
-            transform: translateY(-50px) translateX(30px);
-          }
-          50% {
-            transform: translateY(0) translateX(60px);
-          }
-          75% {
-            transform: translateY(-30px) translateX(90px);
-          }
-        }
-        
-        .food-heading {
-          font-family: 'Nunito', sans-serif;
-          font-weight: 800;
-          font-size: 3.5rem;
-          background: linear-gradient(90deg, #00695C, #004D40, #00BCD4);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          text-shadow: 0px 4px 16px rgba(0, 105, 92, 0.5);
-          margin-bottom: 1rem;
-        }
-        
-        .food-subline {
-          font-family: 'Nunito', sans-serif;
-          font-size: 1.25rem;
-          font-weight: 700;
-          color: #00695C;
-          border-bottom: 4px solid #00BCD4;
-          display: inline-block;
-          padding-bottom: 8px;
-        }
-      `}</style>
-      
-      <div className="food-safety-page">
-        <div className="max-w-4xl mx-auto px-4 py-8" style={{position: 'relative', zIndex: 1}}>
-          <div className="text-center mb-8">
-            <h1 className="food-heading">Food Safety Checker</h1>
-            <p className="food-subline">Check if foods are safe for your pet before sharing</p>
-          </div>
+    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8" style={{
+      background: 'linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%)',
+      backgroundAttachment: 'fixed'
+    }}>
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{
+            background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 20px rgba(179, 136, 255, 0.5)'
+          }}>Food Safety Checker</h1>
+          <p className="text-xl" style={{
+            background: 'linear-gradient(135deg, #a0e7ff, #d4b3ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 15px rgba(160, 231, 255, 0.4)'
+          }}>Check if foods are safe for your pet before sharing</p>
+        </div>
 
         {/* Pet Selection */}
-        <Card className="p-6 mb-6">
+        <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">Select Your Pet Type</h2>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {petTypes.map((pet) => (
@@ -252,11 +151,11 @@ const FoodSafetyChecker: React.FC = () => {
               </button>
             ))}
           </div>
-        </Card>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Input Methods */}
-          <Card className="p-6">
+          <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold mb-4">Check Food Safety</h2>
             
             {/* Text Input */}
@@ -323,10 +222,10 @@ const FoodSafetyChecker: React.FC = () => {
                 )}
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* Results */}
-          <Card className="p-6">
+          <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold mb-4">Safety Result</h2>
 
             {isAnalyzing ? (
@@ -369,11 +268,10 @@ const FoodSafetyChecker: React.FC = () => {
                 <p>Enter a food name or upload a photo to check safety for your {selectedPet}</p>
               </div>
             )}
-          </Card>
-        </div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

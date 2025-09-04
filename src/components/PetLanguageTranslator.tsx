@@ -21,10 +21,42 @@ const PetLanguageTranslator: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const funTranslations = [
-    { sound: 'bark', translations: ['I want treats NOW! 🍖', 'Play with me, human! 🎾', 'Someone\'s at the door! 🚪', 'I love you so much! ❤️', 'Where did you go? I missed you! 😢'] },
-    { sound: 'meow', translations: ['Feed me immediately! 🍽️', 'Pet me... but only 3 times 😼', 'I knocked something off the table 😈', 'I own this house, you just live here 👑', 'The red dot... where is it?! 🔴'] },
-    { sound: 'chirp', translations: ['Good morning, world! 🌅', 'I see everything from up here! 👁️', 'Time for my favorite song! 🎵', 'Fresh seeds please! 🌱', 'I\'m the prettiest bird here! 💅'] },
-    { sound: 'squeak', translations: ['My wheel needs oil! 🎡', 'More sunflower seeds! 🌻', 'I\'m building the perfect nest! 🏠', 'Exercise time! 🏃‍♂️', 'Hide the treats better, human! 🕵️'] }
+    { sound: 'bark', translations: [
+      'Hey human! I heard something outside and we should definitely check it out together right now!',
+      'I want those delicious treats from the kitchen counter, the ones you think I don\'t know about!',
+      'Take me for a walk please! I see my leash and I\'m ready for an adventure!',
+      'Someone is at the door and I must protect our home from this potential intruder!',
+      'I love you so much and I want to show you by following you everywhere today!',
+      'Where did you go? I missed you terribly for those five whole minutes you were gone!',
+      'Play fetch with me right now! That tennis ball isn\'t going to throw itself, you know!'
+    ] },
+    { sound: 'meow', translations: [
+      'Feed me immediately because my food bowl is practically empty with only ninety percent remaining!',
+      'Pet me gently but only exactly three times, then I might bite because I\'m moody today!',
+      'I deliberately knocked that thing off the table because it was in my way, obviously!',
+      'Remember that I own this house and you just live here to serve my every need!',
+      'Where is that mysterious red dot? I must catch it and solve this puzzle once and for all!',
+      'Open this door right now because I changed my mind about wanting to go outside again!',
+      'Your keyboard looks perfectly comfortable so I\'ll just sit here while you try to work!'
+    ] },
+    { sound: 'chirp', translations: [
+      'Good morning everyone! It\'s time for my daily beautiful concert to wake up the whole neighborhood!',
+      'I can see everything from up here and I\'m keeping watch over our territory today!',
+      'It\'s time for my favorite song so listen carefully to my amazing vocal performance right now!',
+      'I would like some fresh seeds please, the fancy ones, not those cheap ones from yesterday!',
+      'Look at me! I\'m the most beautiful and talented bird in this entire house today!',
+      'Let me out of this cage because I want to explore and fly around the room!',
+      'That mirror bird keeps copying everything I do and it\'s getting really annoying now!'
+    ] },
+    { sound: 'squeak', translations: [
+      'My exercise wheel is making that annoying squeaky noise again and it really needs some oil!',
+      'I need more sunflower seeds because I\'ve hidden them all around my cage for later!',
+      'I\'m busy building the most perfect and cozy nest, so please don\'t disturb my work!',
+      'It\'s exercise time and I want to run really fast on my wheel to show off!',
+      'You need to hide the treats better because I already found your secret stash, human!',
+      'I\'m feeling sleepy but also want to play, so I\'m a bit confused right now!',
+      'Clean my cage please because I\'ve redecorated it myself and made quite a mess!'
+    ] }
   ];
 
   const startRecording = async () => {
@@ -40,8 +72,8 @@ const PetLanguageTranslator: React.FC = () => {
         const blob = new Blob(chunks, { type: 'audio/wav' });
         setAudioBlob(blob);
         setAudioUrl(URL.createObjectURL(blob));
-        setIsRecording(false);
         stream.getTracks().forEach(track => track.stop());
+        setIsRecording(false); // Ensure recording state is false
       };
 
       mediaRecorder.start();
@@ -52,6 +84,7 @@ const PetLanguageTranslator: React.FC = () => {
   };
 
   const stopRecording = () => {
+    setIsRecording(false); // Update UI immediately
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
       mediaRecorderRef.current.stop();
     }
@@ -67,17 +100,19 @@ const PetLanguageTranslator: React.FC = () => {
       const randomCategory = funTranslations[Math.floor(Math.random() * funTranslations.length)];
       const randomTranslation = randomCategory.translations[Math.floor(Math.random() * randomCategory.translations.length)];
       
+      const emotions = ['Happy & Excited', 'Demanding & Urgent', 'Playful & Energetic', 'Curious & Alert', 'Sleepy & Content', 'Confident & Proud', 'Anxious & Needy', 'Mischievous & Sneaky'];
+      
       const newTranslation: Translation = {
-        original: `*${randomCategory.sound} sound detected*`,
+        original: randomCategory.sound.charAt(0).toUpperCase() + randomCategory.sound.slice(1),
         translation: randomTranslation,
-        emotion: ['Happy', 'Excited', 'Demanding', 'Playful', 'Curious'][Math.floor(Math.random() * 5)],
-        confidence: Math.floor(Math.random() * 20) + 80 // 80-99%
+        emotion: emotions[Math.floor(Math.random() * emotions.length)],
+        confidence: Math.floor(Math.random() * 15) + 85 // 85-99%
       };
       
       setTranslation(newTranslation);
       setRecentTranslations(prev => [newTranslation, ...prev.slice(0, 4)]);
       setIsAnalyzing(false);
-    }, 2000);
+    }, 1800);
   };
 
   const playAudio = () => {
@@ -99,99 +134,33 @@ const PetLanguageTranslator: React.FC = () => {
     "🐹 Hamsters make soft squeaks when they're content"
   ];
 
-  useEffect(() => {
-    const createRollingBones = () => {
-      const container = document.querySelector('.translator-page');
-      if (!container) return;
-      
-      const colors = ['#F5DEB3', '#DEB887', '#D2B48C', '#F4A460', '#CD853F'];
-      
-      for (let i = 0; i < 35; i++) {
-        const bone = document.createElement('div');
-        bone.className = 'rolling-bone';
-        bone.innerHTML = '🦴';
-        bone.style.color = colors[Math.floor(Math.random() * colors.length)];
-        bone.style.top = Math.random() * 90 + 5 + '%';
-        bone.style.right = '-60px';
-        bone.style.animationDelay = i * 1 + 's';
-        bone.style.animationDuration = '15s';
-        bone.style.fontSize = (Math.random() * 20 + 30) + 'px';
-        container.appendChild(bone);
-      }
-    };
-    
-    createRollingBones();
-    const interval = setInterval(createRollingBones, 15000);
-    
-    return () => clearInterval(interval);
-  }, []);
+
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Poppins:wght@400;500;600&display=swap');
-        .translator-page {
-          position: relative;
-          min-height: 100vh;
-          padding-top: 80px;
-          background: linear-gradient(135deg, #FFF8DC 0%, #E6F3FF 100%);
-          overflow: hidden;
-        }
-        
-        .rolling-bone {
-          position: absolute;
-          animation: rollBone linear infinite;
-          z-index: 0;
-        }
-        
-        @keyframes rollBone {
-          0% {
-            transform: translateX(0) rotate(0deg);
-            right: -60px;
-          }
-          100% {
-            transform: translateX(-100vw) rotate(-360deg);
-            right: 100vw;
-          }
-        }
-        
-        .translator-heading {
-          font-family: 'Fredoka One', cursive;
-          font-size: 4rem;
-          background: linear-gradient(90deg, #FF6B35, #F7931E, #FFD23F);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          text-shadow: 0px 4px 12px rgba(255, 107, 53, 0.3);
-          margin-bottom: 1rem;
-        }
-        
-        .translator-subtext {
-          font-family: 'Poppins', sans-serif;
-          font-size: 1.3rem;
-          font-weight: 500;
-          color: #4A5568;
-        }
-        
-        .translator-disclaimer {
-          font-family: 'Poppins', sans-serif;
-          font-size: 1rem;
-          color: #718096;
-          margin-top: 0.5rem;
-        }
-      `}</style>
-      
-      <div className="translator-page">
-        <div className="max-w-4xl mx-auto px-4 py-8" style={{position: 'relative', zIndex: 1}}>
-          <div className="text-center mb-8">
-            <h1 className="translator-heading">Pet Language Translator</h1>
-            <p className="translator-subtext">Record your pet's sounds and get fun AI translations!</p>
-            <p className="translator-disclaimer">*For entertainment purposes - not scientifically accurate</p>
-          </div>
+    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8" style={{
+      background: 'linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%)',
+      backgroundAttachment: 'fixed'
+    }}>
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{
+            background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 20px rgba(179, 136, 255, 0.5)'
+          }}>Pet Language Translator</h1>
+          <p className="text-xl mb-2" style={{
+            background: 'linear-gradient(135deg, #a0e7ff, #d4b3ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 15px rgba(160, 231, 255, 0.4)'
+          }}>Record your pet's sounds and get fun AI translations!</p>
+          <p className="text-gray-400">*For entertainment purposes - not scientifically accurate</p>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recording Section */}
-          <Card className="p-6">
+          <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold mb-6 text-center">🎤 Record Your Pet</h2>
             
             <div className="text-center space-y-6">
@@ -213,10 +182,11 @@ const PetLanguageTranslator: React.FC = () => {
                 {isRecording && (
                   <button
                     onClick={stopRecording}
-                    className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors font-medium"
+                    className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors font-medium cursor-pointer"
+                    style={{ pointerEvents: 'auto', zIndex: 10 }}
                   >
-                    <Square className="h-5 w-5 inline mr-2" />
-                    Stop Recording
+                    <Square className="h-5 w-5 inline mr-2 pointer-events-none" />
+                    <span className="pointer-events-none">Stop Recording</span>
                   </button>
                 )}
 
@@ -256,10 +226,10 @@ const PetLanguageTranslator: React.FC = () => {
                 </div>
               )}
             </div>
-          </Card>
+          </div>
 
           {/* Translation Results */}
-          <Card className="p-6">
+          <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold mb-6 text-center">💬 Translation</h2>
 
             {isAnalyzing ? (
@@ -273,26 +243,29 @@ const PetLanguageTranslator: React.FC = () => {
             ) : translation ? (
               <div className="space-y-4">
                 <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-6 rounded-lg border-2 border-purple-200">
-                  <div className="text-center mb-4">
-                    <div className="text-3xl mb-2">🗣️</div>
-                    <h3 className="text-xl font-bold text-purple-800">{translation.translation}</h3>
+                  <div className="text-center mb-6">
+                    <div className="text-3xl mb-3">🗣️</div>
+                    <h3 className="text-lg font-bold text-purple-800 mb-4">Translation Message</h3>
+                    <p className="text-gray-800 italic text-base leading-relaxed">"{translation.translation}"</p>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div className="text-center">
-                      <p className="text-gray-600">Detected Sound</p>
-                      <p className="font-medium">{translation.original}</p>
+                  <div className="space-y-4">
+                    <div className="bg-white/50 p-3 rounded-lg">
+                      <p className="text-sm font-semibold text-gray-700 mb-1">Detected Sound</p>
+                      <p className="font-medium text-purple-800">{translation.original}</p>
                     </div>
-                    <div className="text-center">
-                      <p className="text-gray-600">Emotion</p>
-                      <p className="font-medium">{translation.emotion}</p>
+                    
+                    <div className="bg-white/50 p-3 rounded-lg">
+                      <p className="text-sm font-semibold text-gray-700 mb-1">Emotion</p>
+                      <p className="font-medium text-purple-800">{translation.emotion}</p>
                     </div>
-                  </div>
-                  
-                  <div className="text-center mt-4">
-                    <span className="bg-purple-200 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
-                      {translation.confidence}% AI Confidence
-                    </span>
+                    
+                    <div className="bg-white/50 p-3 rounded-lg text-center">
+                      <p className="text-sm font-semibold text-gray-700 mb-2">AI Confidence</p>
+                      <span className="bg-purple-200 text-purple-800 px-4 py-2 rounded-full text-sm font-bold">
+                        {translation.confidence}%
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -303,12 +276,12 @@ const PetLanguageTranslator: React.FC = () => {
                 <p className="text-sm mt-2">Works with barks, meows, chirps, and squeaks</p>
               </div>
             )}
-          </Card>
+          </div>
         </div>
 
         {/* Recent Translations */}
         {recentTranslations.length > 0 && (
-          <Card className="p-6 mt-6">
+          <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-6 mt-6">
             <h2 className="text-xl font-semibold mb-4">📚 Recent Translations</h2>
             <div className="space-y-3">
               {recentTranslations.map((trans, index) => (
@@ -321,11 +294,11 @@ const PetLanguageTranslator: React.FC = () => {
                 </div>
               ))}
             </div>
-          </Card>
+          </div>
         )}
 
         {/* Daily Tips */}
-        <Card className="p-6 mt-6 bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200">
+        <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-6 mt-6">
           <h2 className="text-xl font-semibold mb-4 text-center">💡 Daily Pet Communication Tips</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {dailyTips.map((tip, index) => (
@@ -334,10 +307,9 @@ const PetLanguageTranslator: React.FC = () => {
               </div>
             ))}
           </div>
-        </Card>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

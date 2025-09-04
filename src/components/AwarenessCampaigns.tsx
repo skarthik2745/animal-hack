@@ -66,248 +66,64 @@ const AwarenessCampaigns: React.FC = () => {
   const completedCampaigns = campaigns.filter(c => c.status === 'completed');
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8" style={{
+      background: 'linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%)',
+      backgroundAttachment: 'fixed',
+      scrollBehavior: 'smooth'
+    }}>
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold mb-4" style={{
+            background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 20px rgba(179, 136, 255, 0.5)'
+          }}>
+            Animal Awareness Campaigns
+          </h1>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            Join powerful community-driven campaigns to raise awareness and create positive change for animals
+          </p>
+        </div>
 
-        .campaigns-container {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          min-height: 100vh;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .campaigns-heading {
-          font-family: 'Poppins', sans-serif;
-          font-weight: 900;
-          font-size: 3.5rem;
-          text-align: center;
-          background: linear-gradient(135deg, #00cfff 0%, #9b5de5 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          text-shadow: 0 0 20px rgba(0, 207, 255, 0.5);
-          filter: drop-shadow(0 0 10px rgba(155, 93, 229, 0.3));
-          margin-bottom: 1rem;
-          position: relative;
-          z-index: 2;
-          letter-spacing: 1px;
-        }
-
-        .campaigns-subtext {
-          font-family: 'Montserrat', sans-serif;
-          font-size: 1.25rem;
-          background: linear-gradient(135deg, #00f5d4 0%, #ff9e80 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          text-align: center;
-          max-width: 48rem;
-          margin: 0 auto 2rem;
-          line-height: 1.6;
-          position: relative;
-          z-index: 2;
-          font-weight: 600;
-        }
-
-        .modern-filter {
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(10px);
-          border-radius: 16px;
-          border: 2px solid rgba(139, 92, 246, 0.2);
-          transition: all 0.3s ease;
-          font-family: 'Montserrat', sans-serif;
-        }
-
-        .create-campaign-btn {
-          background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-          border: none;
-          border-radius: 16px;
-          color: white;
-          font-weight: 700;
-          font-family: 'Poppins', sans-serif;
-          transition: all 0.3s ease;
-          cursor: pointer;
-          position: relative;
-          z-index: 2;
-          box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
-        }
-
-        .create-campaign-btn:hover {
-          transform: translateY(-3px) scale(1.05);
-          box-shadow: 0 12px 35px rgba(139, 92, 246, 0.5);
-          background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
-        }
-
-        .join-btn {
-          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-          border: none;
-          border-radius: 12px;
-          color: white;
-          font-weight: 600;
-          font-family: 'Montserrat', sans-serif;
-          transition: all 0.3s ease;
-          cursor: pointer;
-          box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-
-        .join-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-          background: linear-gradient(135deg, #059669 0%, #047857 100%);
-        }
-
-        .view-details-btn {
-          background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-          border: none;
-          border-radius: 12px;
-          color: white;
-          font-weight: 600;
-          font-family: 'Montserrat', sans-serif;
-          transition: all 0.3s ease;
-          cursor: pointer;
-          box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-        }
-
-        .view-details-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
-          background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-        }
-
-        .heart-btn {
-          background: rgba(255, 255, 255, 0.9);
-          border: 2px solid #ec4899;
-          border-radius: 12px;
-          color: #ec4899;
-          transition: all 0.3s ease;
-          cursor: pointer;
-          backdrop-filter: blur(10px);
-        }
-
-        .heart-btn:hover {
-          background: #ec4899;
-          color: white;
-          transform: scale(1.1);
-          box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
-        }
-
-        .share-btn {
-          background: rgba(255, 255, 255, 0.9);
-          border: 2px solid #8b5cf6;
-          border-radius: 12px;
-          color: #8b5cf6;
-          transition: all 0.3s ease;
-          cursor: pointer;
-          backdrop-filter: blur(10px);
-        }
-
-        .share-btn:hover {
-          background: #8b5cf6;
-          color: white;
-          transform: scale(1.1);
-          box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-        }
-
-        .campaign-card {
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(10px);
-          border-radius: 20px;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          position: relative;
-          z-index: 2;
-          transition: all 0.3s ease;
-          overflow: hidden;
-        }
-
-        .campaign-card:hover {
-          transform: translateY(-8px) scale(1.02);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-          background: rgba(255, 255, 255, 1);
-        }
-
-        .form-container {
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(10px);
-          border-radius: 20px;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          position: relative;
-          z-index: 2;
-        }
-
-        .form-input {
-          border-radius: 12px;
-          border: 2px solid rgba(139, 92, 246, 0.2);
-          background: rgba(255, 255, 255, 0.9);
-          transition: all 0.3s ease;
-          font-family: 'Montserrat', sans-serif;
-        }
-
-        .form-input:focus {
-          border-color: #8b5cf6;
-          box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-          background: white;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .floating-circle { animation: none; }
-        }
-      `}</style>
-      
-      <div className="campaigns-container py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="campaigns-heading">
-              Animal Awareness Campaigns
-            </h1>
-            <p className="campaigns-subtext">
-              Join powerful community-driven campaigns to raise awareness and create positive change for animals
-            </p>
-          </div>
-
-          {/* Tab Navigation */}
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
-            <div className="flex modern-filter rounded-lg p-1 mb-4 sm:mb-0">
-              <button
-                onClick={() => setActiveTab('active')}
-                className={`px-6 py-3 rounded-md font-semibold transition-all duration-300 ${
-                  activeTab === 'active' 
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg transform scale-105' 
-                    : 'text-purple-600 hover:text-purple-800 hover:bg-purple-50'
-                }`}
-                style={{ fontFamily: 'Montserrat, sans-serif' }}
-              >
-                Active Campaigns ({activeCampaigns.length})
-              </button>
-              <button
-                onClick={() => setActiveTab('completed')}
-                className={`px-6 py-3 rounded-md font-semibold transition-all duration-300 ${
-                  activeTab === 'completed' 
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg transform scale-105' 
-                    : 'text-purple-600 hover:text-purple-800 hover:bg-purple-50'
-                }`}
-                style={{ fontFamily: 'Montserrat, sans-serif' }}
-              >
-                Completed ({completedCampaigns.length})
-              </button>
-            </div>
-            
+        {/* Tab Navigation */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+          <div className="flex bg-white rounded-lg p-1 mb-4 sm:mb-0 shadow-sm border">
             <button
-              onClick={() => setShowCreateForm(true)}
-              className="create-campaign-btn px-8 py-4 flex items-center"
+              onClick={() => setActiveTab('active')}
+              className={`px-6 py-3 rounded-md font-semibold transition-all duration-300 ${
+                activeTab === 'active' 
+                  ? 'bg-purple-600 text-white' 
+                  : 'text-purple-600 hover:text-purple-800 hover:bg-purple-50'
+              }`}
             >
-              <Plus className="mr-2 h-5 w-5" />
-              Create Campaign
+              Active Campaigns ({activeCampaigns.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('completed')}
+              className={`px-6 py-3 rounded-md font-semibold transition-all duration-300 ${
+                activeTab === 'completed' 
+                  ? 'bg-purple-600 text-white' 
+                  : 'text-purple-600 hover:text-purple-800 hover:bg-purple-50'
+              }`}
+            >
+              Completed ({completedCampaigns.length})
             </button>
           </div>
+          
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-lg flex items-center transition-colors"
+          >
+            <Plus className="mr-2 h-5 w-5" />
+            Create Campaign
+          </button>
+        </div>
 
-          {/* Create Campaign Form */}
-          {showCreateForm && (
-            <div className="form-container p-8 mb-8">
-              <h3 className="text-2xl font-bold text-purple-800 mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>Create New Campaign</h3>
+        {/* Create Campaign Form */}
+        {showCreateForm && (
+          <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-8 mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">Create New Campaign</h3>
               <form className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -354,21 +170,21 @@ const AwarenessCampaigns: React.FC = () => {
             </div>
           )}
 
-          {/* Campaigns Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {(activeTab === 'active' ? activeCampaigns : completedCampaigns).map((campaign) => (
-              <div key={campaign.id} className="campaign-card">
+        {/* Campaigns Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {(activeTab === 'active' ? activeCampaigns : completedCampaigns).map((campaign) => (
+            <div key={campaign.id} className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                 <div className="relative h-48">
                   <img 
                     src={campaign.image} 
                     alt={campaign.title}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute top-4 left-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-bold" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                  <div className="absolute top-4 left-4 bg-purple-600 text-white px-4 py-2 rounded-full text-sm font-bold">
                     {campaign.category}
                   </div>
                   {campaign.status === 'completed' && (
-                    <div className="absolute top-4 right-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-full text-sm font-bold" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                    <div className="absolute top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">
                       Completed
                     </div>
                   )}
@@ -411,19 +227,19 @@ const AwarenessCampaigns: React.FC = () => {
                     </div>
                     <div className="flex space-x-2">
                       {campaign.status === 'active' ? (
-                        <button className="join-btn py-2 px-4 text-sm">
+                        <button className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 text-sm rounded transition-colors">
                           Join Campaign
                         </button>
                       ) : (
-                        <button className="view-details-btn py-2 px-4 text-sm flex items-center">
+                        <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 text-sm rounded flex items-center transition-colors">
                           <Eye className="h-4 w-4 mr-1" />
                           View Details
                         </button>
                       )}
-                      <button className="heart-btn p-2">
+                      <button className="border border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white p-2 rounded transition-colors">
                         <Heart className="h-4 w-4" />
                       </button>
-                      <button className="share-btn p-2">
+                      <button className="border border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white p-2 rounded transition-colors">
                         <Share2 className="h-4 w-4" />
                       </button>
                     </div>
@@ -432,9 +248,8 @@ const AwarenessCampaigns: React.FC = () => {
               </div>
             ))}
           </div>
-        </div>
       </div>
-    </>
+    </div>
   );
 };
 

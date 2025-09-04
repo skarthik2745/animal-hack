@@ -50,47 +50,6 @@ const AdoptionEvents: React.FC = () => {
     const storedParticipations = JSON.parse(localStorage.getItem('event_participations') || '{}');
     setFavorites(storedFavorites);
     setParticipations(storedParticipations);
-    
-    // Generate animated galaxy stars
-    const createGalaxyStars = () => {
-      const container = document.querySelector('.galaxy-stars');
-      if (!container) return;
-      
-      for (let i = 0; i < 50; i++) {
-        const star = document.createElement('div');
-        star.className = 'galaxy-star';
-        
-        const starType = Math.random();
-        if (starType > 0.7) {
-          star.classList.add('star-violet');
-        } else if (starType > 0.4) {
-          star.classList.add('star-blue');
-        } else {
-          star.classList.add('star-white');
-        }
-        
-        const size = Math.random() * 8 + 4;
-        star.style.width = size + 'px';
-        star.style.height = size + 'px';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = '-20px';
-        star.style.animationDelay = Math.random() * 5 + 's';
-        star.style.animationDuration = (Math.random() * 6 + 8) + 's';
-        
-        container.appendChild(star);
-        
-        setTimeout(() => {
-          if (star.parentNode) {
-            star.parentNode.removeChild(star);
-          }
-        }, 15000);
-      }
-    };
-    
-    createGalaxyStars();
-    
-    const interval = setInterval(createGalaxyStars, 1000);
-    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -125,7 +84,7 @@ const AdoptionEvents: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!isAuthenticated || !user) {
@@ -138,6 +97,8 @@ const AdoptionEvents: React.FC = () => {
       return;
     }
     
+    setIsLoading(true);
+    
     let timeString = formData.time || '10:00';
     
     if (timeString.match(/^\d{1,2}:\d{2}$/)) {
@@ -148,33 +109,29 @@ const AdoptionEvents: React.FC = () => {
     
     const eventDateTime = formData.date + 'T' + timeString;
     
-    const newEvent: Event = {
-      id: Date.now().toString(),
+    const newEvent = {
       title: formData.title,
       description: formData.description,
-      organizerId: user.id,
       organizer: user.name,
-      startDate: new Date(eventDateTime).toISOString(),
-      endDate: new Date(eventDateTime).toISOString(),
-      location: { address: formData.location, lat: 40.7829, lng: -73.9654 },
-      capacity: 50,
-      attendees: 0,
-      poster: formData.poster,
+      start_date: new Date(eventDateTime).toISOString(),
+      end_date: new Date(eventDateTime).toISOString(),
+      location_address: formData.location,
+      poster_url: formData.poster,
       gallery: formData.images,
-      tags: [],
-      isFree: formData.isFree,
-      status: 'active' as 'active' | 'completed' | 'cancelled',
-      createdAt: new Date().toISOString()
+      is_free: formData.isFree,
+      attendees: 0
     };
     
     try {
-      addEvent(newEvent);
+      await addEvent(newEvent);
       setFormData({ title: '', date: '', time: '', location: '', description: '', mobile: '', isFree: true, images: [], poster: '' });
       setShowCreateForm(false);
       toast.success('Event created successfully!');
     } catch (error) {
       console.error('Error creating event:', error);
       toast.error('Failed to create event. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -430,54 +387,6 @@ const AdoptionEvents: React.FC = () => {
           overflow: hidden;
         }
         
-        .galaxy-stars {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100vh;
-          pointer-events: none;
-          z-index: 0;
-        }
-        
-        .galaxy-star {
-          position: absolute;
-          border-radius: 50%;
-          animation: floatDown linear infinite;
-        }
-        
-        .star-white {
-          background: white;
-          box-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 255, 255, 0.6);
-        }
-        
-        .star-blue {
-          background: #87ceeb;
-          box-shadow: 0 0 18px rgba(135, 206, 235, 0.9), 0 0 35px rgba(135, 206, 235, 0.7);
-        }
-        
-        .star-violet {
-          background: #dda0dd;
-          box-shadow: 0 0 20px rgba(221, 160, 221, 0.9), 0 0 40px rgba(221, 160, 221, 0.6);
-        }
-        
-        @keyframes floatDown {
-          0% {
-            transform: translateY(-50px) scale(0.5);
-            opacity: 0;
-          }
-          5% {
-            opacity: 1;
-          }
-          95% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(calc(100vh + 100px)) scale(1.5);
-            opacity: 0;
-          }
-        }
-        
         .galaxy-content {
           position: relative;
           z-index: 1;
@@ -485,23 +394,21 @@ const AdoptionEvents: React.FC = () => {
       `}</style>
       
       <div className="galaxy-container">
-        <div className="galaxy-stars"></div>
-        
         <div className="galaxy-content min-h-screen py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4" style={{ 
-              background: 'linear-gradient(135deg, #00cfff, #ff6ec7)', 
-              WebkitBackgroundClip: 'text', 
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4" style={{
+              background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+              WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              textShadow: '0 0 30px rgba(0, 207, 255, 0.5)'
+              textShadow: '0 0 30px rgba(0, 229, 255, 0.5)'
             }}>
               🐾 Animal Adoption Events
             </h1>
-            <p className="text-xl" style={{ 
-              color: '#b388ff',
-              textShadow: '0 0 15px rgba(179, 136, 255, 0.3)'
+            <p className="text-xl" style={{
+              color: '#00cfff',
+              textShadow: '0 0 15px rgba(0, 207, 255, 0.3)'
             }}>
               Find and host adoption events to help animals find their forever homes
             </p>
@@ -541,7 +448,7 @@ const AdoptionEvents: React.FC = () => {
           </div>
           
           {showFilters && (
-            <div className="bg-white rounded-2xl shadow-lg p-6" style={{ border: '1px solid #E0E0E0', backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
               <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-2" style={{ color: '#333333' }}>Month</label>
@@ -954,9 +861,11 @@ const AdoptionEvents: React.FC = () => {
           </div>
         )}
 
-        <h2 className="text-2xl font-bold mb-6" style={{ 
-          color: '#39ff14',
-          textShadow: '0 0 20px rgba(57, 255, 20, 0.4)'
+        <h2 className="text-2xl font-bold mb-6" style={{
+          background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          textShadow: '0 0 20px rgba(0, 229, 255, 0.3)'
         }}>All Events</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
           {filteredEvents.map((event) => {

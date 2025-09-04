@@ -188,16 +188,29 @@ const EmergencyNumbers: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8" style={{
+      background: 'linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%)',
+      backgroundAttachment: 'fixed'
+    }}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
-            <Phone className="h-8 w-8 text-red-600" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-red-600 rounded-full mb-4">
+            <Phone className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-4" style={{
+            background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 20px rgba(179, 136, 255, 0.5)'
+          }}>
             Emergency Rescue Numbers
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+          <p className="text-xl max-w-3xl mx-auto mb-6" style={{
+            background: 'linear-gradient(135deg, #a0e7ff, #d4b3ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 15px rgba(160, 231, 255, 0.4)'
+          }}>
             Quick access to emergency services for animal attacks, rescue situations, and urgent veterinary care
           </p>
           <button
@@ -210,7 +223,7 @@ const EmergencyNumbers: React.FC = () => {
         </div>
 
         {showAddForm && (
-          <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+          <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg p-8 mb-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-6">Add Emergency Contact</h3>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -284,7 +297,7 @@ const EmergencyNumbers: React.FC = () => {
 
         {/* User Added Contacts */}
         {contacts.length > 0 && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-8">
+          <div className="bg-white/95 backdrop-blur-sm border border-green-200 rounded-xl p-6 mb-8">
             <h3 className="text-lg font-semibold text-green-800 mb-4">Your Emergency Contacts</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {contacts.map((contact) => (
@@ -300,7 +313,7 @@ const EmergencyNumbers: React.FC = () => {
         )}
 
         {/* Quick Action Alert */}
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-8">
+        <div className="bg-white/95 backdrop-blur-sm border border-red-200 rounded-xl p-6 mb-8">
           <div className="flex items-center space-x-3 mb-4">
             <AlertTriangle className="h-6 w-6 text-red-600" />
             <h3 className="text-lg font-semibold text-red-800">Life-Threatening Emergency?</h3>
@@ -322,7 +335,7 @@ const EmergencyNumbers: React.FC = () => {
           {emergencyServices.map((category, index) => {
             const IconComponent = category.icon;
             return (
-              <div key={index} className={`${category.bgColor} border ${category.borderColor} rounded-xl p-6`}>
+              <div key={index} className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl p-6">
                 <div className="flex items-center space-x-3 mb-6">
                   <IconComponent className={`h-6 w-6 ${category.color}`} />
                   <h2 className="text-2xl font-bold text-gray-900">{category.category}</h2>
@@ -374,7 +387,7 @@ const EmergencyNumbers: React.FC = () => {
         </div>
 
         {/* Emergency Preparedness Tips */}
-        <div className="bg-blue-50 rounded-xl p-8">
+        <div className="bg-white/95 backdrop-blur-sm rounded-xl p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Emergency Preparedness Tips</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {quickTips.map((tipSection, index) => (
@@ -394,7 +407,7 @@ const EmergencyNumbers: React.FC = () => {
         </div>
 
         {/* Quick Save Section */}
-        <div className="mt-8 text-center bg-gray-50 rounded-xl p-8">
+        <div className="mt-8 text-center bg-white/95 backdrop-blur-sm rounded-xl p-8">
           <h3 className="text-xl font-semibold text-gray-900 mb-4">Save These Numbers</h3>
           <p className="text-gray-600 mb-4">
             Save these emergency numbers to your phone for quick access during emergencies.

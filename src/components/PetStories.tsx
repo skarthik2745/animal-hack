@@ -4,6 +4,7 @@ import { Card, CardContent } from './Card';
 import { Button } from './Button';
 import { Badge } from './Badge';
 import { useAuth } from '../AuthContext';
+import { useDatabase } from '../hooks/useDatabase';
 import ChatScreen from './ChatScreen';
 import toast from 'react-hot-toast';
 
@@ -66,29 +67,29 @@ interface Message {
 
 const PetStories: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'feed' | 'community' | 'profile'>('feed');
-  const [profiles, setProfiles] = useState<PetProfile[]>([]);
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [stories, setStories] = useState<Story[]>([]);
-  const [selectedProfile, setSelectedProfile] = useState<PetProfile | null>(null);
+  const [selectedProfile, setSelectedProfile] = useState<any>(null);
   const [showCreateProfile, setShowCreateProfile] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showCreateStory, setShowCreateStory] = useState(false);
   const [showStoryViewer, setShowStoryViewer] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [showChat, setShowChat] = useState(false);
-  const [chatPartner, setChatPartner] = useState<PetProfile | null>(null);
+  const [chatPartner, setChatPartner] = useState<any>(null);
   const [newComment, setNewComment] = useState('');
   const [commentingOn, setCommentingOn] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [notifications, setNotifications] = useState<any[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showPostViewer, setShowPostViewer] = useState(false);
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [selectedPost, setSelectedPost] = useState<any>(null);
   const [showFollowersList, setShowFollowersList] = useState(false);
   const [showFollowingList, setShowFollowingList] = useState(false);
-  const [listProfile, setListProfile] = useState<PetProfile | null>(null);
+  const [listProfile, setListProfile] = useState<any>(null);
   
   const { user, isAuthenticated } = useAuth();
+  const [profiles, setProfiles] = useState<PetProfile[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [stories, setStories] = useState<Story[]>([]);
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement }>({});
 
   const [profileForm, setProfileForm] = useState({
@@ -343,9 +344,14 @@ const PetStories: React.FC = () => {
 
     const newProfile: PetProfile = {
       id: Date.now().toString(),
-      ...profileForm,
+      petName: profileForm.petName,
+      breed: profileForm.breed,
+      age: profileForm.age,
+      ownerName: profileForm.ownerName,
+      profilePhoto: profileForm.profilePhoto || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=400',
       followers: [],
-      following: []
+      following: [],
+      bio: profileForm.bio
     };
 
     const updatedProfiles = [...profiles, newProfile];
@@ -606,31 +612,56 @@ const PetStories: React.FC = () => {
   const currentStory = stories[currentStoryIndex];
 
   return (
-    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Pet Stories</h1>
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <input
-                type="text"
-                placeholder="Search pets..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-              />
-            </div>
-            <div className="relative">
-              <Button onClick={() => setShowNotifications(!showNotifications)} variant="outline" size="sm">
-                <Bell className="h-4 w-4" />
-                {notifications.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {notifications.length}
-                  </span>
-                )}
-              </Button>
+    <>
+      <style>{`
+        .galaxy-container {
+          background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%);
+          min-height: 100vh;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .galaxy-content {
+          position: relative;
+          z-index: 1;
+        }
+      `}</style>
+      
+      <div className="galaxy-container">
+        <div className="galaxy-content min-h-screen py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <h1 className="text-5xl md:text-6xl font-black mb-4" style={{
+                background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                textShadow: '0 0 30px rgba(0, 229, 255, 0.5)'
+              }}>Pet Stories</h1>
+              <p className="text-xl md:text-2xl font-medium mb-6" style={{
+                color: '#00cfff',
+                textShadow: '0 0 15px rgba(0, 207, 255, 0.3)'
+              }}>Share your pet's adventures and connect with fellow pet lovers</p>
+              <div className="flex items-center justify-center space-x-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <input
+                    type="text"
+                    placeholder="Search pets..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  />
+                </div>
+                <div className="relative">
+                  <Button onClick={() => setShowNotifications(!showNotifications)} variant="outline" size="sm">
+                    <Bell className="h-4 w-4" />
+                    {notifications.length > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {notifications.length}
+                      </span>
+                    )}
+                  </Button>
               
               {showNotifications && (
                 <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-lg border z-50 max-h-96 overflow-y-auto">
@@ -663,18 +694,18 @@ const PetStories: React.FC = () => {
                 </div>
               )}
             </div>
-            <div className="flex space-x-2">
-              <Button onClick={() => setShowCreateStory(true)} variant="outline" size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                Story
-              </Button>
-              <Button onClick={() => setShowCreateProfile(true)} size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                Profile
-              </Button>
+                <div className="flex space-x-2">
+                  <Button onClick={() => setShowCreateStory(true)} variant="outline" size="sm">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Story
+                  </Button>
+                  <Button onClick={() => setShowCreateProfile(true)} size="sm">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Profile
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
         {/* Tab Navigation */}
         <div className="flex justify-center mb-8">
@@ -735,7 +766,7 @@ const PetStories: React.FC = () => {
           <div className="space-y-6">
             {/* My Pet Profiles Section */}
             {!selectedProfile && (
-              <Card className="p-4">
+              <Card className="p-4 bg-white/95 backdrop-blur-sm border border-white/20">
                 <h3 className="text-lg font-semibold mb-4">My Pet Profiles</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {profiles.filter(p => JSON.parse(localStorage.getItem('petProfiles') || '[]').some((up: any) => up.id === p.id)).map(profile => (
@@ -1786,8 +1817,10 @@ const PetStories: React.FC = () => {
             onClick={() => setShowNotifications(false)}
           />
         )}
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

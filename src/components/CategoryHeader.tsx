@@ -53,41 +53,111 @@ const CategoryHeader: React.FC = () => {
   };
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
+    <header className="sticky top-0 z-50" style={{
+      background: 'linear-gradient(90deg, #1e3a8a, #3b82f6, #06b6d4)',
+      fontFamily: 'Poppins, sans-serif',
+      fontWeight: '500',
+      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+    }}>
+      <div className="max-w-7xl mx-auto px-8">
+        <div className="flex justify-between items-center py-3">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="bg-gradient-to-r from-emerald-500 to-blue-500 p-2 rounded-lg">
+            <div className="p-2 rounded-lg bg-teal-600">
               <Heart className="h-6 w-6 text-white" />
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold text-white">
               PawCare
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
+            <Link
+              to="/"
+              className="text-sm font-medium text-white px-4 py-2 rounded-lg transition-all duration-300"
+              style={{
+                color: location.pathname === '/' ? '#14b8a6' : '#ffffff',
+                fontWeight: location.pathname === '/' ? '600' : '500'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#38bdf8';
+                e.currentTarget.style.background = '#1e293b';
+                e.currentTarget.style.fontWeight = '700';
+                e.currentTarget.style.boxShadow = '0 0 12px #38bdf8, 0 0 20px #14b8a6';
+                e.currentTarget.style.transition = 'all 0.3s ease';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = location.pathname === '/' ? '#14b8a6' : '#ffffff';
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.fontWeight = location.pathname === '/' ? '600' : '500';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.transition = 'all 0.3s ease';
+              }}
+            >
+              Home
+            </Link>
             {Object.entries(categories).map(([categoryName, items]) => (
               <div key={categoryName} className="relative">
                 <button
                   onClick={() => handleDropdownClick(categoryName)}
-                  className="flex items-center space-x-1 text-sm font-medium text-gray-700 hover:text-emerald-600 transition-colors"
+                  className="flex items-center space-x-1 text-sm font-medium text-white px-4 py-2 rounded-lg transition-all duration-300"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#38bdf8';
+                    e.currentTarget.style.background = '#1e293b';
+                    e.currentTarget.style.fontWeight = '700';
+                    e.currentTarget.style.boxShadow = '0 0 12px #38bdf8, 0 0 20px #14b8a6';
+                    e.currentTarget.style.transition = 'all 0.3s ease';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = location.pathname.includes(categoryName.toLowerCase()) ? '#14b8a6' : '#ffffff';
+                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.fontWeight = location.pathname.includes(categoryName.toLowerCase()) ? '600' : '500';
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.transition = 'all 0.3s ease';
+                  }}
+                  style={{
+                    color: location.pathname.includes(categoryName.toLowerCase()) ? '#14b8a6' : '#ffffff',
+                    fontWeight: location.pathname.includes(categoryName.toLowerCase()) ? '600' : '500'
+                  }}
                 >
                   <span>{categoryName}</span>
                   <ChevronDown className={`h-4 w-4 transition-transform ${activeDropdown === categoryName ? 'rotate-180' : ''}`} />
                 </button>
                 
                 {activeDropdown === categoryName && (
-                  <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border z-50">
+                  <div className="absolute top-full left-0 mt-2 w-64 rounded-xl z-50" style={{
+                    background: 'rgba(15, 23, 42, 0.9)',
+                    backdropFilter: 'blur(8px)',
+                    boxShadow: '0px 12px 32px rgba(0,0,0,0.5)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                  }}>
                     {items.map((item) => (
                       <Link
                         key={item.path}
                         to={item.path}
                         onClick={closeDropdown}
-                        className={`block px-4 py-3 text-sm transition-colors hover:bg-gray-50 hover:text-emerald-600 first:rounded-t-lg last:rounded-b-lg ${
-                          location.pathname === item.path ? 'text-emerald-600 bg-emerald-50' : 'text-gray-700'
+                        className={`block px-4 py-3 text-sm transition-all duration-300 first:rounded-t-xl last:rounded-b-xl ${
+                          location.pathname === item.path ? 'font-semibold' : ''
                         }`}
+                        style={{
+                          color: location.pathname === item.path ? '#14b8a6' : '#ffffff',
+                          fontWeight: location.pathname === item.path ? '600' : '500'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = '#1e293b';
+                          e.currentTarget.style.color = '#38bdf8';
+                          e.currentTarget.style.fontWeight = '600';
+                          e.currentTarget.style.boxShadow = '0 0 8px #38bdf8';
+                          e.currentTarget.style.transition = 'all 0.3s ease';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'transparent';
+                          e.currentTarget.style.color = location.pathname === item.path ? '#14b8a6' : '#ffffff';
+                          e.currentTarget.style.fontWeight = location.pathname === item.path ? '600' : '500';
+                          e.currentTarget.style.boxShadow = 'none';
+                          e.currentTarget.style.transition = 'all 0.3s ease';
+                        }}
                       >
                         {item.label}
                       </Link>
@@ -104,16 +174,48 @@ const CategoryHeader: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <Link
                   to="/profile"
-                  className="flex items-center space-x-2 text-gray-700 hover:text-emerald-600 transition-colors"
+                  className="flex items-center space-x-2 text-white px-4 py-2 rounded-lg transition-all duration-300"
+                  style={{
+                    color: location.pathname === '/profile' ? '#14b8a6' : '#ffffff',
+                    fontWeight: location.pathname === '/profile' ? '600' : '500'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#38bdf8';
+                    e.currentTarget.style.background = '#1e293b';
+                    e.currentTarget.style.fontWeight = '700';
+                    e.currentTarget.style.boxShadow = '0 0 12px #38bdf8, 0 0 20px #14b8a6';
+                    e.currentTarget.style.transition = 'all 0.4s ease';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = location.pathname === '/profile' ? '#14b8a6' : '#ffffff';
+                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.fontWeight = location.pathname === '/profile' ? '600' : '500';
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.transition = 'all 0.4s ease';
+                  }}
                 >
-                  <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center bg-teal-600">
                     <User className="h-4 w-4 text-white" />
                   </div>
-                  <span className="text-sm font-medium">{user?.name}</span>
+                  <span className="text-sm font-bold text-white">{user?.name}</span>
                 </Link>
                 <button
                   onClick={logout}
-                  className="flex items-center space-x-1 text-gray-700 hover:text-red-600 transition-colors"
+                  className="flex items-center space-x-1 text-white px-4 py-2 rounded-lg transition-all duration-300"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#ff6b6b';
+                    e.currentTarget.style.background = '#1e293b';
+                    e.currentTarget.style.fontWeight = '700';
+                    e.currentTarget.style.boxShadow = '0 0 12px #ff6b6b';
+                    e.currentTarget.style.transition = 'all 0.3s ease';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = '#ffffff';
+                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.fontWeight = '500';
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.transition = 'all 0.3s ease';
+                  }}
                 >
                   <LogOut className="h-4 w-4" />
                   <span className="text-sm">Logout</span>
@@ -123,13 +225,28 @@ const CategoryHeader: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <Link
                   to="/login"
-                  className="text-sm font-medium text-gray-700 hover:text-emerald-600 transition-colors"
+                  className="text-sm font-medium px-4 py-2 rounded-lg transition-all duration-300"
+                  style={{ color: '#00ff88' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#38bdf8';
+                    e.currentTarget.style.background = '#1e293b';
+                    e.currentTarget.style.fontWeight = '700';
+                    e.currentTarget.style.boxShadow = '0 0 12px #38bdf8, 0 0 20px #14b8a6';
+                    e.currentTarget.style.transition = 'all 0.3s ease';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = '#00ff88';
+                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.fontWeight = '500';
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.transition = 'all 0.3s ease';
+                  }}
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-200"
+                  className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
                 >
                   Sign Up
                 </Link>
@@ -141,7 +258,21 @@ const CategoryHeader: React.FC = () => {
           <div className="lg:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-gray-700 hover:text-emerald-600 transition-colors"
+              className="p-3 text-white rounded-lg transition-all duration-300"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#38bdf8';
+                e.currentTarget.style.background = '#1e293b';
+                e.currentTarget.style.fontWeight = '700';
+                e.currentTarget.style.boxShadow = '0 0 12px #38bdf8, 0 0 20px #14b8a6';
+                e.currentTarget.style.transition = 'all 0.3s ease';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.fontWeight = '500';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.transition = 'all 0.3s ease';
+              }}
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -150,13 +281,55 @@ const CategoryHeader: React.FC = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="lg:hidden py-4 border-t">
+          <div className="lg:hidden py-4 border-t border-slate-600" style={{
+            background: 'rgba(15, 23, 42, 0.95)',
+            backdropFilter: 'blur(8px)'
+          }}>
             <nav className="space-y-4">
+              <Link
+                to="/"
+                onClick={() => setIsMenuOpen(false)}
+                className="block px-4 py-3 text-sm font-medium text-white rounded-lg transition-all duration-300"
+                style={{
+                  color: location.pathname === '/' ? '#14b8a6' : '#ffffff',
+                  fontWeight: location.pathname === '/' ? '600' : '500'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#38bdf8';
+                  e.currentTarget.style.background = '#1e293b';
+                  e.currentTarget.style.fontWeight = '700';
+                  e.currentTarget.style.boxShadow = '0 0 12px #38bdf8, 0 0 20px #14b8a6';
+                  e.currentTarget.style.transition = 'all 0.3s ease';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = location.pathname === '/' ? '#14b8a6' : '#ffffff';
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.fontWeight = location.pathname === '/' ? '600' : '500';
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.transition = 'all 0.3s ease';
+                }}
+              >
+                Home
+              </Link>
               {Object.entries(categories).map(([categoryName, items]) => (
                 <div key={categoryName}>
                   <button
                     onClick={() => handleDropdownClick(categoryName)}
-                    className="flex items-center justify-between w-full px-4 py-2 text-sm font-medium text-gray-700 hover:text-emerald-600 hover:bg-gray-50 rounded transition-colors"
+                    className="flex items-center justify-between w-full px-4 py-3 text-sm font-medium text-white rounded-lg transition-all duration-300"
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = '#38bdf8';
+                      e.currentTarget.style.background = '#1e293b';
+                      e.currentTarget.style.fontWeight = '700';
+                      e.currentTarget.style.boxShadow = '0 0 12px #38bdf8, 0 0 20px #14b8a6';
+                      e.currentTarget.style.transition = 'all 0.3s ease';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = '#ffffff';
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.fontWeight = '500';
+                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.transition = 'all 0.3s ease';
+                    }}
                   >
                     <span>{categoryName}</span>
                     <ChevronDown className={`h-4 w-4 transition-transform ${activeDropdown === categoryName ? 'rotate-180' : ''}`} />
@@ -172,11 +345,29 @@ const CategoryHeader: React.FC = () => {
                             setIsMenuOpen(false);
                             setActiveDropdown(null);
                           }}
-                          className={`block px-4 py-2 text-sm rounded transition-colors ${
+                          className={`block px-4 py-2 text-sm rounded-lg transition-all duration-300 ${
                             location.pathname === item.path 
-                              ? 'text-emerald-600 bg-emerald-50' 
-                              : 'text-gray-600 hover:text-emerald-600 hover:bg-gray-50'
+                              ? 'font-semibold' 
+                              : ''
                           }`}
+                          style={{
+                            color: location.pathname === item.path ? '#14b8a6' : '#ffffff',
+                            fontWeight: location.pathname === item.path ? '600' : '500'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = '#1e293b';
+                            e.currentTarget.style.color = '#38bdf8';
+                            e.currentTarget.style.fontWeight = '600';
+                            e.currentTarget.style.boxShadow = '0 0 8px #38bdf8';
+                            e.currentTarget.style.transition = 'all 0.3s ease';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'transparent';
+                            e.currentTarget.style.color = location.pathname === item.path ? '#14b8a6' : '#ffffff';
+                            e.currentTarget.style.fontWeight = location.pathname === item.path ? '600' : '500';
+                            e.currentTarget.style.boxShadow = 'none';
+                            e.currentTarget.style.transition = 'all 0.3s ease';
+                          }}
                         >
                           {item.label}
                         </Link>
@@ -192,17 +383,49 @@ const CategoryHeader: React.FC = () => {
                     <Link
                       to="/profile"
                       onClick={() => setIsMenuOpen(false)}
-                      className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:text-emerald-600 hover:bg-gray-50 rounded"
+                      className="flex items-center space-x-2 px-4 py-3 text-sm text-white rounded-lg transition-all duration-300"
+                      style={{
+                        color: location.pathname === '/profile' ? '#14b8a6' : '#ffffff',
+                        fontWeight: location.pathname === '/profile' ? '600' : '500'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = '#38bdf8';
+                        e.currentTarget.style.background = '#1e293b';
+                        e.currentTarget.style.fontWeight = '700';
+                        e.currentTarget.style.boxShadow = '0 0 12px #38bdf8, 0 0 20px #14b8a6';
+                        e.currentTarget.style.transition = 'all 0.4s ease';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = location.pathname === '/profile' ? '#14b8a6' : '#ffffff';
+                        e.currentTarget.style.background = 'transparent';
+                        e.currentTarget.style.fontWeight = location.pathname === '/profile' ? '600' : '500';
+                        e.currentTarget.style.boxShadow = 'none';
+                        e.currentTarget.style.transition = 'all 0.4s ease';
+                      }}
                     >
                       <User className="h-4 w-4" />
-                      <span>Profile ({user?.name})</span>
+                      <span className="font-bold text-white">Profile ({user?.name})</span>
                     </Link>
                     <button
                       onClick={() => {
                         logout();
                         setIsMenuOpen(false);
                       }}
-                      className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-50 rounded w-full text-left"
+                      className="flex items-center space-x-2 px-4 py-3 text-sm text-white rounded-lg w-full text-left transition-all duration-300"
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = '#ff6b6b';
+                        e.currentTarget.style.background = '#1e293b';
+                        e.currentTarget.style.fontWeight = '700';
+                        e.currentTarget.style.boxShadow = '0 0 12px #ff6b6b';
+                        e.currentTarget.style.transition = 'all 0.3s ease';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = '#ffffff';
+                        e.currentTarget.style.background = 'transparent';
+                        e.currentTarget.style.fontWeight = '500';
+                        e.currentTarget.style.boxShadow = 'none';
+                        e.currentTarget.style.transition = 'all 0.3s ease';
+                      }}
                     >
                       <LogOut className="h-4 w-4" />
                       <span>Logout</span>
@@ -213,14 +436,29 @@ const CategoryHeader: React.FC = () => {
                     <Link
                       to="/login"
                       onClick={() => setIsMenuOpen(false)}
-                      className="block px-4 py-2 text-sm font-medium text-gray-700 hover:text-emerald-600 hover:bg-gray-50 rounded"
+                      className="block px-4 py-3 text-sm font-medium rounded-lg transition-all duration-300"
+                      style={{ color: '#00ff88' }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = '#38bdf8';
+                        e.currentTarget.style.background = '#1e293b';
+                        e.currentTarget.style.fontWeight = '700';
+                        e.currentTarget.style.boxShadow = '0 0 12px #38bdf8, 0 0 20px #14b8a6';
+                        e.currentTarget.style.transition = 'all 0.3s ease';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = '#00ff88';
+                        e.currentTarget.style.background = 'transparent';
+                        e.currentTarget.style.fontWeight = '500';
+                        e.currentTarget.style.boxShadow = 'none';
+                        e.currentTarget.style.transition = 'all 0.3s ease';
+                      }}
                     >
                       Login
                     </Link>
                     <Link
                       to="/signup"
                       onClick={() => setIsMenuOpen(false)}
-                      className="block bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium text-center"
+                      className="block bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium text-center transition-all duration-200"
                     >
                       Sign Up
                     </Link>

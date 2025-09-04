@@ -788,18 +788,31 @@ const Profile: React.FC = () => {
         }
       `}</style>
       
-      <div className="pawcare-container py-20 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8" style={{
+        background: 'linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%)',
+        backgroundAttachment: 'fixed'
+      }}>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="pawcare-heading text-4xl sm:text-5xl mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{
+              background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              textShadow: '0 0 20px rgba(179, 136, 255, 0.5)'
+            }}>
               My Profile
             </h1>
-            <p className="pawcare-subheading text-xl">
+            <p className="text-xl" style={{
+              background: 'linear-gradient(135deg, #a0e7ff, #d4b3ff)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              textShadow: '0 0 15px rgba(160, 231, 255, 0.4)'
+            }}>
               Manage your details, events, and chats in one place
             </p>
           </div>
           
-          <div className="pawcare-card p-6 mb-8">
+          <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-6 mb-8">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="pawcare-heading text-xl">{user?.name}</h2>
@@ -814,7 +827,12 @@ const Profile: React.FC = () => {
 
         {/* My Events Section */}
         <div className="mb-12">
-          <h2 className="pawcare-section-title text-2xl mb-6">🐾 My Events ({myEvents.length})</h2>
+          <h2 className="text-2xl font-bold mb-6" style={{
+            background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 15px rgba(179, 136, 255, 0.4)'
+          }}>🐾 My Events ({myEvents.length})</h2>
           {myEvents.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {myEvents.map((event) => {
@@ -898,7 +916,12 @@ const Profile: React.FC = () => {
 
         {/* Doctor Chat History Section */}
         <div className="mb-12">
-          <h2 className="pawcare-section-title text-2xl mb-6">🐾 Doctor Chats ({chatSessions.length})</h2>
+          <h2 className="text-2xl font-bold mb-6" style={{
+            background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 15px rgba(179, 136, 255, 0.4)'
+          }}>🐾 Doctor Chats ({chatSessions.length})</h2>
           {chatSessions.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {chatSessions.map((session) => {
@@ -966,7 +989,12 @@ const Profile: React.FC = () => {
 
         {/* Pet Stories Chat History Section */}
         <div className="mb-12">
-          <h2 className="pawcare-section-title text-2xl mb-6">🐾 Pet Stories Chats</h2>
+          <h2 className="text-2xl font-bold mb-6" style={{
+            background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 15px rgba(179, 136, 255, 0.4)'
+          }}>🐾 Pet Stories Chats</h2>
           {(() => {
             const petStoriesChats = JSON.parse(localStorage.getItem('petStoriesChats') || '[]');
             return petStoriesChats.length > 0 ? (

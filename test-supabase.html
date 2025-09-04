@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Supabase Connection</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <h1>Supabase Connection Test</h1>
+    <button onclick="testConnection()">Test Connection</button>
+    <button onclick="testInsert()">Test Insert</button>
+    <div id="result"></div>
+
+    <script>
+        const supabaseUrl = 'https://tosgxxtnjbfaeyojpqsy.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvc2d4eHRuamJmYWV5b2pwcXN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5NTk0NTMsImV4cCI6MjA3MjUzNTQ1M30.ru4k-xQp5mrgPxtX6d4VKO5HTei_SSZJP4kS8PZcwXk'
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+
+        async function testConnection() {
+            try {
+                const { data, error } = await supabase.from('events').select('count')
+                document.getElementById('result').innerHTML = `Connection: ${error ? 'Failed - ' + error.message : 'Success - ' + JSON.stringify(data)}`
+            } catch (e) {
+                document.getElementById('result').innerHTML = `Error: ${e.message}`
+            }
+        }
+
+        async function testInsert() {
+            try {
+                const { data, error } = await supabase
+                    .from('events')
+                    .insert([{
+                        title: 'Test Event',
+                        description: 'Test Description',
+                        start_date: new Date().toISOString(),
+                        location_address: 'Test Location',
+                        is_free: true,
+                        attendees: 0
+                    }])
+                    .select()
+                
+                document.getElementById('result').innerHTML = `Insert: ${error ? 'Failed - ' + error.message : 'Success - ' + JSON.stringify(data)}`
+            } catch (e) {
+                document.getElementById('result').innerHTML = `Insert Error: ${e.message}`
+            }
+        }
+    </script>
+</body>
+</html>

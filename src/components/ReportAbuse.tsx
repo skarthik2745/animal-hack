@@ -6,338 +6,7 @@ import { Badge } from './Badge';
 import { useAuth } from '../AuthContext';
 import toast from 'react-hot-toast';
 
-// Report Abuse Page Styles
-const reportAbuseStyles = `
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-.report-abuse-container {
-  background: linear-gradient(135deg, #e6f3ff 0%, #e0f7fa 100%);
-  min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-}
-
-.report-abuse-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 10px,
-    rgba(0, 0, 0, 0.05) 10px,
-    rgba(0, 0, 0, 0.05) 20px
-  );
-  z-index: 1;
-}
-
-.floating-circles {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.floating-circle {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.2;
-  animation: floatCircles 20s ease-in-out infinite;
-}
-
-.floating-circle:nth-child(1) {
-  width: 80px;
-  height: 80px;
-  background: rgba(255, 255, 255, 0.3);
-  animation-delay: 0s;
-}
-
-.floating-circle:nth-child(2) {
-  width: 120px;
-  height: 120px;
-  background: rgba(135, 206, 235, 0.25);
-  animation-delay: -5s;
-}
-
-.floating-circle:nth-child(3) {
-  width: 60px;
-  height: 60px;
-  background: rgba(152, 251, 152, 0.3);
-  animation-delay: -10s;
-}
-
-.floating-circle:nth-child(4) {
-  width: 100px;
-  height: 100px;
-  background: rgba(255, 255, 255, 0.25);
-  animation-delay: -15s;
-}
-
-.floating-circle:nth-child(5) {
-  width: 140px;
-  height: 140px;
-  background: rgba(135, 206, 235, 0.2);
-  animation-delay: -7s;
-}
-
-.floating-circle:nth-child(6) {
-  width: 90px;
-  height: 90px;
-  background: rgba(152, 251, 152, 0.25);
-  animation-delay: -12s;
-}
-
-@keyframes floatCircles {
-  0% {
-    transform: translateX(0px) translateY(0px) rotate(0deg);
-  }
-  33% {
-    transform: translateX(30px) translateY(-30px) rotate(120deg);
-  }
-  66% {
-    transform: translateX(-20px) translateY(-60px) rotate(240deg);
-  }
-  100% {
-    transform: translateX(0px) translateY(0px) rotate(360deg);
-  }
-}
-
-.report-heading {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 800;
-  font-size: 3.5rem;
-  text-align: center;
-  background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
-  margin-bottom: 1rem;
-  position: relative;
-  z-index: 2;
-  filter: drop-shadow(0 2px 4px rgba(220, 38, 38, 0.2));
-}
-
-.report-subtext {
-  font-family: 'Inter', sans-serif;
-  font-size: 1.25rem;
-  color: #4a5568;
-  text-align: center;
-  max-width: 48rem;
-  margin: 0 auto 2rem;
-  line-height: 1.6;
-  position: relative;
-  z-index: 2;
-}
-
-.gradient-underline {
-  width: 120px;
-  height: 4px;
-  background: linear-gradient(90deg, #ff6b35 0%, #f7931e 50%, #ff69b4 100%);
-  margin: 0 auto 2rem;
-  border-radius: 2px;
-  position: relative;
-  z-index: 2;
-}
-
-.gradient-btn-teal {
-  background: linear-gradient(135deg, #4fd1c7 0%, #06b6d4 100%);
-  border: none;
-  border-radius: 12px;
-  color: white;
-  font-weight: 600;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-  z-index: 2;
-}
-
-.gradient-btn-teal:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(79, 209, 199, 0.4), 0 0 20px rgba(79, 209, 199, 0.3);
-}
-
-.gradient-btn-orange {
-  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
-  border: none;
-  border-radius: 12px;
-  color: white;
-  font-weight: 600;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-  z-index: 2;
-}
-
-.gradient-btn-orange:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(251, 146, 60, 0.4), 0 0 20px rgba(251, 146, 60, 0.3);
-}
-
-.gradient-btn-red {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  border: none;
-  border-radius: 12px;
-  color: white;
-  font-weight: 600;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-  z-index: 2;
-}
-
-.gradient-btn-red:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4), 0 0 20px rgba(239, 68, 68, 0.3);
-}
-
-.gradient-btn-report {
-  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-  border: none;
-  border-radius: 12px;
-  color: white;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-  z-index: 2;
-}
-
-.gradient-btn-report:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4), 0 0 20px rgba(255, 107, 53, 0.3);
-}
-
-.sos-btn {
-  animation: sosePulse 2s ease-in-out infinite;
-}
-
-@keyframes sosePulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
-  }
-}
-
-.content-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(200, 200, 200, 0.3);
-  position: relative;
-  z-index: 2;
-  transition: all 0.3s ease;
-}
-
-.content-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-}
-
-.report-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(200, 200, 200, 0.2);
-  overflow: hidden;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 2;
-}
-
-.report-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.report-image-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(0, 109, 119, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.report-card:hover .report-image-overlay {
-  opacity: 1;
-}
-
-.action-btn {
-  border-radius: 8px;
-  font-weight: 600;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-  z-index: 2;
-  border: none;
-}
-
-.action-btn:hover {
-  transform: translateY(-1px) scale(1.02);
-}
-
-.btn-location {
-  background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
-  color: white;
-}
-
-.btn-location:hover {
-  box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
-}
-
-.btn-share {
-  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-  color: white;
-}
-
-.btn-share:hover {
-  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
-}
-
-.urgent-tag {
-  background: #e63946;
-  color: white;
-  font-weight: bold;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .floating-circle { animation: none; }
-  .sos-btn { animation: none; }
-}
-`;
-
-// Inject styles
-if (typeof document !== 'undefined') {
-  const styleElement = document.createElement('style');
-  styleElement.textContent = reportAbuseStyles;
-  document.head.appendChild(styleElement);
-}
 
 interface AbuseReport {
   id: string;
@@ -604,38 +273,29 @@ const ReportAbuse: React.FC = () => {
     }
   ];
 
-  // Generate floating circles
-  useEffect(() => {
-    const createFloatingCircles = () => {
-      const container = document.querySelector('.floating-circles');
-      if (!container) return;
-      
-      container.innerHTML = '';
-      
-      for (let i = 0; i < 6; i++) {
-        const circle = document.createElement('div');
-        circle.className = 'floating-circle';
-        circle.style.left = Math.random() * 100 + '%';
-        circle.style.top = Math.random() * 100 + '%';
-        circle.style.animationDelay = Math.random() * -20 + 's';
-        circle.style.animationDuration = (Math.random() * 10 + 15) + 's';
-        container.appendChild(circle);
-      }
-    };
-    
-    createFloatingCircles();
-  }, []);
+
 
   return (
-    <div className="report-abuse-container py-20 px-4 sm:px-6 lg:px-8">
-      <div className="floating-circles"></div>
+    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8" style={{
+      background: 'linear-gradient(135deg, #000000 0%, #1a0033 50%, #001a33 100%)',
+      backgroundAttachment: 'fixed'
+    }}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="report-heading">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{
+            background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 20px rgba(179, 136, 255, 0.5)'
+          }}>
             Report Animal Abuse
           </h1>
-          <div className="gradient-underline"></div>
-          <p className="report-subtext">
+          <p className="text-xl" style={{
+            background: 'linear-gradient(135deg, #a0e7ff, #d4b3ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 15px rgba(160, 231, 255, 0.4)'
+          }}>
             Help protect animals by reporting abuse incidents and accessing emergency helplines
           </p>
         </div>
@@ -644,7 +304,10 @@ const ReportAbuse: React.FC = () => {
         <div className="text-center mb-8">
           <button 
             onClick={() => window.open('tel:1800-123-4567', '_self')}
-            className="gradient-btn-red sos-btn px-8 py-4 text-xl font-bold"
+            className="text-white px-8 py-4 text-xl font-bold rounded-lg transition-colors animate-pulse" style={{
+              background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+              textShadow: '0 0 15px rgba(179, 136, 255, 0.4)'
+            }}
           >
             🚨 URGENT SOS - Call Now
           </button>
@@ -652,10 +315,15 @@ const ReportAbuse: React.FC = () => {
 
         {/* Emergency Helplines */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">📞 Emergency Helplines</h2>
+          <h2 className="text-2xl font-bold mb-6" style={{
+            background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 15px rgba(179, 136, 255, 0.4)'
+          }}>📞 Emergency Helplines</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {helplines.map((helpline) => (
-              <div key={helpline.id} className="content-card border-l-4 border-l-red-500 hover:shadow-lg transition-all duration-300">
+              <div key={helpline.id} className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border-l-4 border-l-red-500 hover:shadow-xl transition-all duration-300">
                 <div className="p-4">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="font-semibold text-gray-900 text-sm">{helpline.name}</h3>
@@ -673,14 +341,14 @@ const ReportAbuse: React.FC = () => {
                   
                   <div className="flex space-x-1">
                     <button 
-                      className="gradient-btn-red flex-1 text-xs py-2 px-3 flex items-center justify-center"
+                      className="bg-red-500 hover:bg-red-600 text-white flex-1 text-xs py-2 px-3 flex items-center justify-center rounded transition-colors"
                       onClick={() => window.open(`tel:${helpline.phone}`, '_self')}
                     >
                       <Phone className="h-3 w-3 mr-1" />
                       Call
                     </button>
                     <button 
-                      className="gradient-btn-teal flex-1 text-xs py-2 px-3 flex items-center justify-center"
+                      className="bg-teal-500 hover:bg-teal-600 text-white flex-1 text-xs py-2 px-3 flex items-center justify-center rounded transition-colors"
                       onClick={() => window.open(`https://wa.me/${helpline.whatsapp}`, '_blank')}
                     >
                       <MessageSquare className="h-3 w-3 mr-1" />
@@ -697,7 +365,7 @@ const ReportAbuse: React.FC = () => {
         <div className="text-center mb-12">
           <button 
             onClick={() => setShowReportForm(true)}
-            className="gradient-btn-report px-8 py-3 text-lg flex items-center mx-auto"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg flex items-center mx-auto rounded-lg transition-colors"
           >
             <AlertTriangle className="h-5 w-5 mr-2" />
             Report Abuse
@@ -897,10 +565,15 @@ const ReportAbuse: React.FC = () => {
 
         {/* Recent Reports */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">📋 Recent Reports</h2>
+          <h2 className="text-2xl font-bold mb-6" style={{
+            background: 'linear-gradient(135deg, #00e5ff, #b388ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 15px rgba(179, 136, 255, 0.4)'
+          }}>📋 Recent Reports</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {reports.map((report) => (
-              <div key={report.id} className="report-card">
+              <div key={report.id} className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
                 <div className="relative h-48">
                   <img 
                     src={report.images[0] || 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=600'} 
@@ -945,14 +618,14 @@ const ReportAbuse: React.FC = () => {
                         const query = encodeURIComponent(report.location);
                         window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
                       }}
-                      className="action-btn btn-location flex-1 p-2 text-center"
+                      className="bg-teal-500 hover:bg-teal-600 text-white flex-1 p-2 text-center rounded transition-colors"
                       title="View Location"
                     >
                       <Navigation className="h-4 w-4 mx-auto" />
                     </button>
                     <button
                       onClick={() => shareReport(report)}
-                      className="action-btn btn-share flex-1 p-2 text-center"
+                      className="bg-orange-500 hover:bg-orange-600 text-white flex-1 p-2 text-center rounded transition-colors"
                       title="Share Report"
                     >
                       <Share2 className="h-4 w-4 mx-auto" />
@@ -965,10 +638,10 @@ const ReportAbuse: React.FC = () => {
         </div>
 
         {/* Educational Section */}
-        <div className="content-card p-8">
+        <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">📚 Know Your Rights & Responsibilities</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="content-card border-l-4 border-l-blue-500">
+            <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border-l-4 border-l-blue-500">
               <div className="p-6 text-center">
                 <Eye className="h-12 w-12 text-blue-600 mx-auto mb-4" />
                 <h3 className="font-semibold text-gray-900 mb-2">🔍 Identify Abuse</h3>
@@ -978,7 +651,7 @@ const ReportAbuse: React.FC = () => {
               </div>
             </div>
             
-            <div className="content-card border-l-4 border-l-green-500">
+            <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border-l-4 border-l-green-500">
               <div className="p-6 text-center">
                 <Shield className="h-12 w-12 text-green-600 mx-auto mb-4" />
                 <h3 className="font-semibold text-gray-900 mb-2">⚡ Immediate Action</h3>
@@ -988,7 +661,7 @@ const ReportAbuse: React.FC = () => {
               </div>
             </div>
             
-            <div className="content-card border-l-4 border-l-purple-500">
+            <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border-l-4 border-l-purple-500">
               <div className="p-6 text-center">
                 <Users className="h-12 w-12 text-purple-600 mx-auto mb-4" />
                 <h3 className="font-semibold text-gray-900 mb-2">⚖️ Legal Rights</h3>
